@@ -2,8 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const path = require('path');
 const http = require('http');
+const path = require('path');
 const { Server } = require('socket.io');
 
 const app = express();
@@ -15,7 +15,7 @@ const io = new Server(server, {
 // Подключение к MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ DB error:', err));
+  .catch(e => console.error('❌ DB error:', e));
 
 // Middleware
 app.use(cors());
@@ -32,6 +32,8 @@ app.use('/api/channels', require('./routes/channels'));
 
 // WebRTC Signaling
 io.on('connection', (socket) => {
+  console.log('📞 User connected:', socket.id);
+
   socket.on('join-room', (roomId) => {
     socket.join(roomId);
     socket.to(roomId).emit('user-connected', socket.id);
