@@ -3,26 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Myteam — Мессенджер для разработчиков</title>
+  <title>Myteam • GitHub Messenger</title>
   <style>
     :root {
       --bg: #f5f7fa;
       --main: #2c3e50;
-      --accent: #3498db;
+      --accent: #1DA1F2;
       --success: #2ecc71;
       --warning: #f39c12;
       --danger: #e74c3c;
-      --gray: #95a5a6;
+      --gray: #657786;
       --light: #ecf0f1;
-      --border: #dfe4ea;
-      --text: #2c3e50;
-      --text-light: #7f8c8d;
-      --chat-bg: #f8f9fa;
-      --msg-sent: #e6f7ff;
-      --msg-received: #ffffff;
-      --verified: #FFD700;
+      --border: #e1e8ed;
+      --text: #14171a;
+      --text-light: #657786;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
     body {
       background: var(--bg);
       color: var(--text);
@@ -30,34 +26,32 @@
       height: 100vh;
     }
 
-    /* === Левая панель — Главное меню (оставлено как есть) === */
+    /* === Боковое меню (Twitter-style) === */
     .sidebar {
-      width: 280px;
+      width: 260px;
       background: white;
       border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
       height: 100vh;
       overflow-y: auto;
+      position: relative;
     }
     .logo {
-      padding: 20px;
       font-size: 24px;
       font-weight: bold;
       color: var(--accent);
       text-align: center;
+      padding: 20px;
     }
     .nav-list {
-      flex: 1;
-      padding: 16px 0;
+      padding: 20px 0;
     }
     .nav-item {
       display: flex;
       align-items: center;
-      padding: 14px 20px;
+      padding: 12px 20px;
       cursor: pointer;
-      transition: all 0.2s;
       border-radius: 0 30px 30px 0;
+      transition: all 0.2s;
     }
     .nav-item:hover { background: #f5f8fa; }
     .nav-item.active { background: #eef7ff; }
@@ -67,7 +61,7 @@
       margin-right: 16px;
     }
     .nav-item span { font-size: 16px; }
-    .btn-new-chat {
+    .btn-tweet {
       margin: 20px;
       background: var(--accent);
       color: white;
@@ -80,525 +74,77 @@
       text-align: center;
     }
 
-    /* === Центральная панель — ЧАТЫ (как на скриншоте Myteam) === */
-    .chat-layout {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-    .chat-header {
-      padding: 16px;
-      background: white;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .chat-title {
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .chat-actions {
-      display: flex;
-      gap: 12px;
-    }
-    .chat-actions button {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: none;
-      background: var(--light);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .search-box {
-      padding: 8px 16px;
-      background: var(--light);
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    .search-box input {
-      background: transparent;
-      border: none;
-      outline: none;
-      width: 100%;
-      font-size: 14px;
-    }
-    .search-box svg { width: 16px; color: var(--gray); }
-
-    /* Левая колонка чатов */
-    .chats-sidebar {
-      width: 280px;
-      background: white;
+    /* === Главная лента (Twitter) === */
+    .home-feed {
+      flex: 1;
       border-right: 1px solid var(--border);
       overflow-y: auto;
-      flex-shrink: 0;
-    }
-    .chat-list {
-      padding: 8px 0;
-    }
-    .chat-item {
-      display: flex;
-      padding: 12px 16px;
-      cursor: pointer;
-      border-left: 4px solid transparent;
-      transition: all 0.2s;
-    }
-    .chat-item:hover { background: #f8f9fa; }
-    .chat-item.active { background: #eef7ff; border-left-color: var(--accent); }
-    .chat-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      margin-right: 12px;
-      position: relative;
-      flex-shrink: 0;
-    }
-    .chat-avatar img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    .verified-badge {
-      position: absolute;
-      bottom: -4px;
-      right: -4px;
-      width: 18px;
-      height: 18px;
-      background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI2ZmZDcwMCIvPjxwYXRoIGQ9Ik05IDE2LjE3TDQuODMuOTVsLTEuNDIgMS40MWwxLjQyIDEuNDJMMTAgMTkuMTdsNS01IDEuNDIgMS40MkwyMS4yOCAxMC43NGwtMS40Mi0xLjQxbC00Ljg0IDQuODRMMTAgMTcuMTdsLTUgLTUgLTEuNDIgMS40MnoiIGZpbGw9IndoaXRlIi8+PC9zdmc+') no-repeat center center;
-      background-size: contain;
-    }
-
-    /* Центральная область переписки */
-    .chat-window {
-      flex: 1;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
     }
-    .messages-container {
-      flex: 1;
-      overflow-y: auto;
+    .home-header {
       padding: 16px;
-      background: var(--chat-bg);
-    }
-    .message {
-      max-width: 70%;
-      padding: 10px 14px;
-      border-radius: 18px;
-      margin-bottom: 12px;
-      position: relative;
-    }
-    .message.sent {
-      background: var(--msg-sent);
-      margin-left: auto;
-      text-align: right;
-    }
-    .message.received {
-      background: var(--msg-received);
-      border: 1px solid #eee;
-    }
-    .message-header {
-      font-size: 12px;
-      opacity: 0.7;
-      margin-bottom: 4px;
-    }
-    .message-content {
-      font-size: 15px;
-    }
-    .message-time {
-      font-size: 10px;
-      opacity: 0.6;
-      text-align: right;
-      margin-top: 4px;
-    }
-
-    /* Правая панель — Поиск и профиль */
-    .right-panel {
-      width: 360px;
-      background: white;
-      border-left: 1px solid var(--border);
-      overflow-y: auto;
-      padding: 16px;
-    }
-    .section-title {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
-      margin-bottom: 16px;
-      color: var(--main);
+      border-bottom: 1px solid var(--border);
     }
-    .user-card {
-      display: flex;
+    .post-compose {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .post-compose textarea {
+      width: 100%;
+      height: 80px;
       padding: 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s;
+      border: 1px solid #ccc;
+      border-radius: 16px;
+      resize: none;
+      font-size: 16px;
     }
-    .user-card:hover { background #f5f8fa; }
-    .user-avatar {
-      width: 40px;
-      height: 40px;
+    .post-btn {
+      margin-top: 8px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 24px;
+      cursor: pointer;
+    }
+    .post {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .post-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .post-avatar {
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       background: #ddd;
       margin-right: 12px;
       position: relative;
     }
-    .user-avatar img {
+    .post-avatar img {
       width: 100%;
       height: 100%;
       border-radius: 50%;
       object-fit: cover;
     }
-    .user-info h4 {
-      margin-bottom: 4px;
-    }
-    .user-info p {
-      font-size: 12px;
-      color: var(--gray);
-    }
-    .btn-action {
-      margin-top: 8px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 6px 12px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    /* Нижняя панель ввода */
-    .input-area {
-      padding: 12px;
-      background: white;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 8px;
-    }
-    .input-area input {
-      flex: 1;
-      padding: 12px 16px;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      font-size: 15px;
-    }
-    .input-area button {
-      width: 40px;
-      height: 40px;
+    .verified-badge, .ambassador-badge {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
-      background: var(--accent);
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    /* Модальное окно видеозвонка */
-    .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
-      padding: 20px;
+      font-size: 10px;
+      font-weight: bold;
+      color: black;
     }
-    .modal-content {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      max-width: 500px;
-      width: 100%;
-    }
-    .modal video {
-      width: 100%;
-      max-width: 400px;
-      height: 225px;
-      background: #000;
-      border-radius: 8px;
-      margin: 10px 0;
-    }
-    .modal button {
-      margin-top: 16px;
-      padding: 10px 24px;
-      background: var(--danger);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    /* SVG иконки (встроены как inline base64) */
-    .svg-icon {
-      width: 24px;
-      height: 24px;
-      fill: currentColor;
-    }
-  </style>
-</head>
-<body>
-
-<!-- Основной интерфейс -->
-<div class="layout" style="display: grid; grid-template-columns: 280px 1fr 360px; height: 100vh;">
-  <!-- Левая панель -->
-  <div class="sidebar">
-    <div class="logo">Myteam</div>
-    <div class="nav-list">
-      <div class="nav-item active">
-        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        <span>Чаты</span>
-      </div>
-      <div class="nav-item">
-        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        <span>Контакты</span>
-      </div>
-      <div class="nav-item">
-        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        <span>Настройки</span>
-      </div>
-    </div>
-    <button class="btn-new-chat" onclick="showRegistration()">Регистрация</button>
-  </div>
-
-  <!-- Центральная панель — чаты -->
-  <div class="chat-layout">
-    <div class="chat-header">
-      <div class="chat-title">Саша Смирнов</div>
-      <div class="chat-actions">
-        <button title="Поиск" onclick="toggleSearch()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></button>
-        <button title="Видеозвонок" onclick="startVideoCall()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M19 11h-2V9h-2v2h-2v2h2v2h2v-2h2v-2zm-6 0v2H9v-2h4zm-6 0h2V9H7v2H5v2h2v2h2v-2z"/><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 14H7V7h10v10z"/></svg></button>
-      </div>
-    </div>
-
-    <div class="chat-window">
-      <div class="messages-container" id="messages">
-        <div class="message received">
-          <div class="message-header">Саша Смирнов</div>
-          <div class="message-content">Друзья, вы как насчёт того, чтобы подвинуть встречу на другой день? Сегодня в отпуске Андрей и Митя.</div>
-          <div class="message-time">12:44</div>
-        </div>
-        <div class="message sent">
-          <div class="message-header">Вы</div>
-          <div class="message-content">Отлично 👍</div>
-          <div class="message-time">12:44</div>
-        </div>
-        <div class="message received">
-          <div class="message-header">Саша Смирнов</div>
-          <div class="message-content">Спасибо!</div>
-          <div class="message-time">12:44</div>
-        </div>
-        <div class="message sent">
-          <div class="message-header">Вы</div>
-          <div class="message-content">Вы — лучшая команда :)</div>
-          <div class="message-time">12:44</div>
-        </div>
-        <div class="message received">
-          <div class="message-header">Андрей Яцков</div>
-          <div class="message-content">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI2ZmZDcwMCIvPjxwYXRoIGQ9Ik05IDE2LjE3TDQuODMuOTVsLTEuNDIgMS40MWwxLjQyIDEuNDJMMTAgMTkuMTdsNS01IDEuNDIgMS40MkwyMS4yOCAxMC43NGwtMS40Mi0xLjQxbC00Ljg0IDQuODRMMTAgMTcuMTdsLTUgLTUgLTEuNDIgMS40MnoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" width="60" height="60" style="border-radius:50%;margin:8px 0;" />
-          </div>
-          <div class="message-time">17:05</div>
-        </div>
-      </div>
-
-      <div class="input-area">
-        <input id="msgInput" type="text" placeholder="Сообщение..." onkeypress="if(event.key==='Enter') sendMsg()" />
-        <button onclick="sendMsg()">➤</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Правая панель — Поиск и профили -->
-  <div class="right-panel">
-    <div class="section-title">Поиск пользователей</div>
-    <div class="search-box">
-      <svg class="svg-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-      <input id="searchInput" type="text" placeholder="Имя пользователя..." oninput="searchUsers()" />
-    </div>
-
-    <div id="searchResults">
-      <div class="user-card" onclick="selectUser('Саша Смирнов', true)">
-        <div class="user-avatar">
-          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI2ZmZDcwMCIvPjxwYXRoIGQ9Ik05IDE2LjE3TDQuODMuOTVsLTEuNDIgMS40MWwxLjQyIDEuNDJMMTAgMTkuMTdsNS01IDEuNDIgMS40MkwyMS4yOCAxMC43NGwtMS40Mi0xLjQxbC00Ljg0IDQuODRMMTAgMTcuMTdsLTUgLTUgLTEuNDIgMS40MnoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" />
-        </div>
-        <div class="user-info">
-          <h4>Саша Смирнов</h4>
-          <p>@sasha</p>
-        </div>
-        <button class="btn-action">Написать</button>
-      </div>
-      <div class="user-card" onclick="selectUser('Анна Петрова', false)">
-        <div class="user-avatar">
-          <svg viewBox="0 0 24 24" width="40" height="40"><circle cx="12" cy="12" r="10" fill="#3498db"/></svg>
-        </div>
-        <div class="user-info">
-          <h4>Анна Петрова</h4>
-          <p>@anna</p>
-        </div>
-        <button class="btn-action">Написать</button>
-      </div>
-      <div class="user-card" onclick="selectUser('Ирина Филлипова', true)">
-        <div class="user-avatar">
-          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48Y2lyY2xlIGN4PSIxMiIg3k9IjEyIiByPSIxMCIgZmlsbD0iI2ZmZDcwMCIvPjxwYXRoIGQ9Ik05IDE2LjE3TDQuODMuOTVsLTEuNDIgMS40MWwxLjQyIDEuNDJMMTAgMTkuMTdsNS01IDEuNDIgMS40MkwyMS4yOCAxMC43NGwtMS40Mi0xLjQxbC00Ljg0IDQuODRMMTAgMTcuMTdsLTUgLTUgLTEuNDIgMS40MnoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" />
-        </div>
-        <div class="user-info">
-          <h4>Ирина Филлипова</h4>
-          <p>@irina</p>
-        </div>
-        <button class="btn-action">Написать</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Модальное окно регистрации -->
-<div id="regModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1000;flex items-center justify-center;">
-  <div style="background:white;padding:24px;border-radius:12px;width:400px;text-align:center;">
-    <h3>Регистрация</h3>
-    <input id="regName" placeholder="Ваше имя" style="width:100%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:6px;" />
-    <input id="regUsername" placeholder="Логин" style="width:100%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:6px;" />
-    <button onclick="registerUser()" style="background:#3498db;color:white;border:none;padding:10px 20px;border-radius:6px;margin-top:16px;">Зарегистрироваться</button>
-    <p style="margin-top:16px;font-size:12px;color:#999;">Админ: логин=tihon, пароль=2011</p>
-  </div>
-</div>
-
-<!-- Модальное окно видеозвонка -->
-<div id="videoModal" class="modal" style="display:none;">
-  <div class="modal-content">
-    <h3>Видеозвонок с Сашей Смирновым</h3>
-    <video id="localVideo" autoplay muted></video>
-    <video id="remoteVideo" autoplay></video>
-    <button onclick="endVideoCall()">Завершить звонок</button>
-  </div>
-</div>
-
-<script>
-  // === Данные пользователей (в localStorage) ===
-  function loadUsers() {
-    let users = JSON.parse(localStorage.getItem('myteam_users')) || [
-      { id: '1', name: 'Саша Смирнов', username: 'sasha', isVerified: true, avatar: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI2ZmZDcwMCIvPjxwYXRoIGQ9Ik05IDE2LjE3TDQuODMuOTVsLTEuNDIgMS40MWwxLjQyIDEuNDJMMTAgMTkuMTdsNS01IDEuNDIgMS40MkwyMS4yOCAxMC43NGwtMS40Mi0xLjQxbC00Ljg0IDQuODRMMTAgMTcuMTdsLTUgLTUgLTEuNDIgMS40MnoiIGZpbGw9IndoaXRlIi8+PC9zdmc+' },
-      { id: '2', name: 'Анна Петрова', username: 'anna', isVerified: false, avatar: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iIzM0OThkYiIvPjwvc3ZnPg==' },
-      { id: '3', name: 'Ирина Филлипова', username: 'irina', isVerified: true, avatar: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI2ZmZDcwMCIvPjxwYXRoIGQ9Ik05IDE2LjE3TDQuODMuOTVsLTEuNDIgMS40MWwxLjQyIDEuNDJMMTAgMTkuMTdsNS01IDEuNDIgMS40MkwyMS4yOCAxMC43NGwtMS40Mi0xLjQxbC00Ljg0IDQuODRMMTAgMTcuMTdsLTUgLTUgLTEuNDIgMS40MnoiIGZpbGw9IndoaXRlIi8+PC9zdmc+' },
-      { id: '4', name: 'Тихон В.', username: 'tihon', isVerified: true, isAdmin: true, avatar: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI2ZmZDcwMCIvPjxwYXRoIGQ9Ik05IDE2LjE3TDQuODMuOTVsLTEuNDIgMS40MWwxLjQyIDEuNDJMMTAgMTkuMTdsNS01IDEuNDIgMS40MkwyMS4yOCAxMC43NGwtMS40Mi0xLjQxbC00Ljg0IDQuODRMMTAgMTcuMTdsLTUgLTUgLTEuNDIgMS40MnoiIGZpbGw9IndoaXRlIi8+PC9zdmc+' }
-    ];
-    localStorage.setItem('myteam_users', JSON.stringify(users));
-    return users;
-  }
-
-  // === Регистрация ===
-  function showRegistration() {
-    document.getElementById('regModal').style.display = 'flex';
-  }
-
-  function registerUser() {
-    const name = document.getElementById('regName').value.trim();
-    const username = document.getElementById('regUsername').value.trim();
-    if (!name || !username) return alert('Заполните все поля');
-    
-    const users = loadUsers();
-    if (users.find(u => u.username === username)) return alert('Логин занят');
-
-    const newUser = {
-      id: Date.now().toString(),
-      name,
-      username,
-      isVerified: false,
-      avatar: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iIzM0OThkYiIvPjwvc3ZnPg=='
-    };
-    users.push(newUser);
-    localStorage.setItem('myteam_users', JSON.stringify(users));
-    alert(`Успешно зарегистрирован: ${name}`);
-    document.getElementById('regModal').style.display = 'none';
-  }
-
-  // === Поиск пользователей ===
-  function searchUsers() {
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    const users = loadUsers();
-    const results = users.filter(u => u.name.toLowerCase().includes(q) || u.username.toLowerCase().includes(q));
-    
-    const container = document.getElementById('searchResults');
-    container.innerHTML = '';
-    results.forEach(u => {
-      container.innerHTML += `
-        <div class="user-card" onclick="selectUser('${u.name}', ${u.isVerified})">
-          <div class="user-avatar">
-            <img src="${u.avatar}" width="40" height="40" />
-            ${u.isVerified ? '<div class="verified-badge"></div>' : ''}
-          </div>
-          <div class="user-info">
-            <h4>${u.name}</h4>
-            <p>@${u.username}</p>
-          </div>
-          <button class="btn-action" onclick="event.stopPropagation(); startChat('${u.name}', '${u.id}')">Написать</button>
-        </div>
-      `;
-    });
-  }
-
-  // === Выбор пользователя → переход в чат ===
-  function selectUser(name, isVerified) {
-    document.querySelector('.chat-title').textContent = name;
-    document.querySelector('.chat-header .message-header').textContent = name;
-    if (isVerified) {
-      document.querySelector('.chat-title').innerHTML = `${name} <span class="verified-badge" style="display:inline-block;width:16px;height:16px;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI2ZmZDcwMCIvPjxwYXRoIGQ9Ik05IDE2LjE3TDQuODMuOTVsLTEuNDIgMS40MWwxLjQyIDEuNDJMMTAgMTkuMTdsNS01IDEuNDIgMS40MkwyMS4yOCAxMC43NGwtMS40Mi0xLjQxbC00Ljg0IDQuODRMMTAgMTcuMTdsLTUgLTUgLTEuNDIgMS40MnoiIGZpbGw9IndoaXRlIi8+PC9zdmc+) no-repeat center; background-size:contain;"></span>`;
-    }
-  }
-
-  function startChat(name, userId) {
-    selectUser(name, true);
-    // Здесь можно загрузить историю чата
-  }
-
-  // === Отправка сообщения ===
-  function sendMsg() {
-    const input = document.getElementById('msgInput');
-    const text = input.value.trim();
-    if (!text) return;
-
-    const msgDiv = document.createElement('div');
-    msgDiv.className = 'message sent';
-    msgDiv.innerHTML = `
-      <div class="message-header">Вы</div>
-      <div class="message-content">${text}</div>
-      <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-    `;
-    document.getElementById('messages').appendChild(msgDiv);
-    input.value = '';
-  }
-
-  // === Видеозвонок ===
-  function startVideoCall() {
-    document.getElementById('videoModal').style.display = 'flex';
-    // Мок WebRTC
-    setTimeout(() => {
-      const local = document.getElementById('localVideo');
-      const remote = document.getElementById('remoteVideo');
-      local.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iIzIyMjIyMiIvPjxwYXRoIGQ9Ik0xMiAxNi41djItMi41bC0yLjUtMi41bDIuNS0yLjV2MmwyLjUgMi41eiIgZmlsbD0id2hpdGUiLz48L3N2Zz4=';
-      remote.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iIzQ0NDQ0NCIvPjxwYXRoIGQ9Ik0xMiAxNi41djItMi41bC0yLjUtMi41bDIuNS0yLjV2MmwyLjUgMi41eiIgZmlsbD0id2hpdGUiLz48L3N2Zz4';
-    }, 500);
-  }
-
-  function endVideoCall() {
-    document.getElementById('videoModal').style.display = 'none';
-  }
-
-  // === Инициализация ===
-  window.onload = () => {
-    loadUsers();
-    // Автоматически показать чат с Сашей
-    selectUser('Саша Смирнов', true);
-  };
-
-  // === SVG иконки (встроены выше в стилях и HTML) ===
-</script>
-</body>
-</html>
+    .verified-badge { background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABMklEQVRIx+2UQQqDMBBEJzvIHXqH3qF36B16h96hd+gd5iRZk2xSbKlQyPjDMLNvZpL8JGnWtq3rOq/X63Vd1/W6rus6z/Oc53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me
