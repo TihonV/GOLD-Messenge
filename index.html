@@ -1,150 +1,281 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Myteam • GitHub Messenger</title>
-  <style>
-    :root {
-      --bg: #f5f7fa;
-      --main: #2c3e50;
-      --accent: #1DA1F2;
-      --success: #2ecc71;
-      --warning: #f39c12;
-      --danger: #e74c3c;
-      --gray: #657786;
-      --light: #ecf0f1;
-      --border: #e1e8ed;
-      --text: #14171a;
-      --text-light: #657786;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      overflow: hidden;
-      height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📞 Messenger - Звонки через GitHub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* === Боковое меню (Twitter-style) === */
-    .sidebar {
-      width: 260px;
-      background: white;
-      border-right: 1px solid var(--border);
-      height: 100vh;
-      overflow-y: auto;
-      position: relative;
-    }
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: var(--accent);
-      text-align: center;
-      padding: 20px;
-    }
-    .nav-list {
-      padding: 20px 0;
-    }
-    .nav-item {
-      display: flex;
-      align-items: center;
-      padding: 12px 20px;
-      cursor: pointer;
-      border-radius: 0 30px 30px 0;
-      transition: all 0.2s;
-    }
-    .nav-item:hover { background: #f5f8fa; }
-    .nav-item.active { background: #eef7ff; }
-    .nav-item img {
-      width: 24px;
-      height: 24px;
-      margin-right: 16px;
-    }
-    .nav-item span { font-size: 16px; }
-    .btn-tweet {
-      margin: 20px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 30px;
-      padding: 12px 24px;
-      font-weight: bold;
-      cursor: pointer;
-      width: calc(100% - 40px);
-      text-align: center;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
 
-    /* === Главная лента (Twitter) === */
-    .home-feed {
-      flex: 1;
-      border-right: 1px solid var(--border);
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-    }
-    .home-header {
-      padding: 16px;
-      font-size: 20px;
-      font-weight: bold;
-      border-bottom: 1px solid var(--border);
-    }
-    .post-compose {
-      padding: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .post-compose textarea {
-      width: 100%;
-      height: 80px;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 16px;
-      resize: none;
-      font-size: 16px;
-    }
-    .post-btn {
-      margin-top: 8px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 20px;
-      padding: 8px 24px;
-      cursor: pointer;
-    }
-    .post {
-      padding: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .post-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .post-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #ddd;
-      margin-right: 12px;
-      position: relative;
-    }
-    .post-avatar img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    .verified-badge, .ambassador-badge {
-      position: absolute;
-      bottom: -4px;
-      right: -4px;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: bold;
-      color: black;
-    }
-    .verified-badge { background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABMklEQVRIx+2UQQqDMBBEJzvIHXqH3qF36B16h96hd+gd5iRZk2xSbKlQyPjDMLNvZpL8JGnWtq3rOq/X63Vd1/W6rus6z/Oc53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me53me
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 2rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .github-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: transform 0.3s, background 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 4rem 0;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+
+        .demo-video {
+            max-width: 800px;
+            margin: 4rem auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .demo-video video {
+            width: 100%;
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📞 Messenger</h1>
+            <div class="subtitle">
+                Полноценный мессенджер с видеозвонками, работающий полностью на GitHub
+            </div>
+            <div class="github-badge">
+                <svg height="20" viewBox="0 0 16 16" width="20" fill="white">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+                Работает на GitHub Pages + GitHub Actions
+            </div>
+        </header>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎥</div>
+                <h3>Видеозвонки P2P</h3>
+                <p>Высококачественные видеозвонки прямо в браузере с использованием WebRTC. Работает без установки приложений.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>Чат в реальном времени</h3>
+                <p>Обменивайтесь сообщениями, файлами и стикерами. История чатов сохраняется в вашем GitHub репозитории.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>100% на GitHub</h3>
+                <p>Вся инфраструктура работает на GitHub: фронтенд на Pages, бэкенд на Actions, данные в репозитории.</p>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Начните общаться прямо сейчас!</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">
+                Бесплатно, без регистрации, работает в любом современном браузере
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="/frontend/" class="btn btn-primary">
+                    <span>🚀 Открыть Messenger</span>
+                </a>
+                <a href="https://github.com/ваш-юзернейм/messenger" class="btn btn-secondary">
+                    <svg height="20" viewBox="0 0 16 16" width="20" fill="white">
+                        <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                    </svg>
+                    Исходный код
+                </a>
+            </div>
+        </div>
+
+        <div class="tech-stack">
+            <div class="tech-item">GitHub Pages</div>
+            <div class="tech-item">GitHub Actions</div>
+            <div class="tech-item">WebRTC</div>
+            <div class="tech-item">JavaScript</div>
+            <div class="tech-item">HTML5</div>
+            <div class="tech-item">CSS3</div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Messenger. Работает полностью на GitHub.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+            Для работы видеозвонков разрешите доступ к камере и микрофону
+        </p>
+    </footer>
+
+    <script>
+        // Анимация для кнопок
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
