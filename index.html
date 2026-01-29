@@ -3,34 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📞 Messenger - Звонки через GitHub</title>
+    <title>Telegram Web Messenger</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --sidebar-bg: #182533;
+            --chat-bg: #0e1621;
+            --message-out-bg: #2b5278;
+            --message-in-bg: #182533;
+            --text-primary: #ffffff;
+            --text-secondary: #8a8a8a;
+            --border-color: #2d3b4d;
+            --hover-bg: #2a3b52;
+            --primary-color: #0088cc;
+        }
+        
+        body {
+            background: var(--chat-bg);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Лендинг секция */
+        .landing-section {
+            background: var(--primary-gradient);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
             color: white;
         }
-
-        .container {
+        
+        .landing-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
         }
-
-        header {
-            text-align: center;
+        
+        .landing-header {
             margin-bottom: 3rem;
-            padding-top: 2rem;
         }
-
-        h1 {
+        
+        .landing-title {
             font-size: 3.5rem;
             margin-bottom: 0.5rem;
             display: flex;
@@ -38,14 +63,14 @@
             justify-content: center;
             gap: 1rem;
         }
-
-        .subtitle {
+        
+        .landing-subtitle {
             font-size: 1.2rem;
             opacity: 0.9;
             max-width: 600px;
             margin: 0 auto 2rem;
         }
-
+        
         .github-badge {
             background: rgba(255, 255, 255, 0.1);
             padding: 0.5rem 1rem;
@@ -54,15 +79,16 @@
             align-items: center;
             gap: 0.5rem;
             margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
         }
-
+        
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-bottom: 3rem;
         }
-
+        
         .feature-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -71,38 +97,30 @@
             transition: transform 0.3s, background 0.3s;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
+        
         .feature-card:hover {
             transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.15);
         }
-
+        
         .feature-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
         }
-
+        
         .feature-card h3 {
             font-size: 1.5rem;
             margin-bottom: 1rem;
         }
-
-        .cta-section {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 3rem;
-            margin: 4rem 0;
-        }
-
-        .cta-buttons {
+        
+        .action-buttons {
             display: flex;
             gap: 1rem;
             justify-content: center;
             margin-top: 2rem;
             flex-wrap: wrap;
         }
-
+        
         .btn {
             padding: 1rem 2rem;
             border: none;
@@ -116,50 +134,38 @@
             gap: 0.5rem;
             text-decoration: none;
         }
-
+        
         .btn-primary {
             background: white;
             color: #667eea;
         }
-
+        
         .btn-primary:hover {
             background: #f0f0f0;
             transform: scale(1.05);
         }
-
+        
         .btn-secondary {
             background: transparent;
             color: white;
             border: 2px solid rgba(255, 255, 255, 0.3);
         }
-
+        
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.1);
             border-color: white;
         }
-
-        .demo-video {
-            max-width: 800px;
-            margin: 4rem auto;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .demo-video video {
-            width: 100%;
-            display: block;
-        }
-
-        footer {
-            text-align: center;
+        
+        .ambassador-section {
             margin-top: 4rem;
             padding: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            font-size: 0.9rem;
-            opacity: 0.7;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
-
+        
         .tech-stack {
             display: flex;
             justify-content: center;
@@ -167,106 +173,1310 @@
             margin: 2rem 0;
             flex-wrap: wrap;
         }
-
+        
         .tech-item {
             background: rgba(255, 255, 255, 0.1);
             padding: 0.5rem 1rem;
             border-radius: 10px;
             font-size: 0.9rem;
         }
-
+        
+        /* Мессенджер (скрыт по умолчанию) */
+        .messenger-app {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+        }
+        
+        .messenger-app.active {
+            display: flex;
+        }
+        
+        .app-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 60px);
+        }
+        
+        /* Навигационная панель */
+        .nav-bar {
+            height: 60px;
+            background: var(--sidebar-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.2s;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Сайдбар с чатами */
+        .left-sidebar {
+            width: 25%;
+            min-width: 300px;
+            max-width: 400px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .sidebar-header {
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            min-height: 60px;
+        }
+        
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+        
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .profile-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .profile-status {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .sidebar-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .sidebar-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-icon:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+        
+        .search-container {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .search-box {
+            background: var(--chat-bg);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .search-input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            flex: 1;
+            font-size: 0.9rem;
+        }
+        
+        .search-input:focus {
+            outline: none;
+        }
+        
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 1rem;
+        }
+        
+        .chat-item {
+            padding: 0.75rem 1rem;
+            display: flex;
+            gap: 0.75rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s;
+        }
+        
+        .chat-item:hover, .chat-item.active {
+            background: var(--hover-bg);
+        }
+        
+        .chat-avatar {
+            position: relative;
+        }
+        
+        .chat-avatar-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .chat-status {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4CAF50;
+            border: 2px solid var(--sidebar-bg);
+        }
+        
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+        
+        .chat-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .chat-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        
+        .chat-preview {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .chat-preview-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+        
+        .unread-badge {
+            background: var(--primary-color);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+            margin-left: 0.25rem;
+        }
+        
+        /* Основной чат */
+        .main-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: var(--chat-bg);
+        }
+        
+        .chat-header-main {
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            min-height: 60px;
+        }
+        
+        .chat-contact {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .chat-contact-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-contact-name {
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .verified-badge {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+        
+        .chat-contact-status {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4CAF50;
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .chat-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .chat-action-btn:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+        
+        .messages-container {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            background: url('https://raw.githubusercontent.com/telegramdesktop/tdesktop/dev/Telegram/Resources/art/bg_initial.jpg') center/cover;
+        }
+        
+        .message-date {
+            text-align: center;
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .date-label {
+            background: var(--sidebar-bg);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: inline-block;
+        }
+        
+        .message {
+            max-width: 65%;
+            margin-bottom: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            animation: messageAppear 0.2s ease-out;
+        }
+        
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message.outgoing {
+            align-self: flex-end;
+        }
+        
+        .message.incoming {
+            align-self: flex-start;
+        }
+        
+        .message-bubble {
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            position: relative;
+            word-wrap: break-word;
+        }
+        
+        .message.outgoing .message-bubble {
+            background: var(--message-out-bg);
+            border-bottom-right-radius: 2px;
+        }
+        
+        .message.incoming .message-bubble {
+            background: var(--message-in-bg);
+            border-bottom-left-radius: 2px;
+        }
+        
+        .message-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .message-status {
+            font-size: 0.7rem;
+        }
+        
+        .message.status-check { color: #4CAF50; }
+        .message.status-double-check { color: #4CAF50; }
+        
+        .message-input-container {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--sidebar-bg);
+        }
+        
+        .input-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .input-action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+        
+        .input-action-btn:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+        
+        .message-input-wrapper {
+            flex: 1;
+            background: var(--chat-bg);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .message-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            resize: none;
+            max-height: 100px;
+            min-height: 20px;
+            padding: 0.25rem 0;
+        }
+        
+        .message-input:focus {
+            outline: none;
+        }
+        
+        .send-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            font-size: 1.1rem;
+        }
+        
+        .send-button:hover {
+            background: #0077b3;
+        }
+        
+        /* Видеозвонок */
+        .call-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .call-modal.active {
+            display: flex;
+        }
+        
+        .call-container {
+            width: 90%;
+            height: 80%;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .remote-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .local-video {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 150px;
+            border-radius: 10px;
+            border: 2px solid white;
+            object-fit: cover;
+            background: #333;
+        }
+        
+        .call-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            z-index: 10;
+        }
+        
+        .call-contact {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .call-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .call-status {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        .call-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1.5rem;
+            z-index: 10;
+        }
+        
+        .call-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .call-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .call-btn.end-call {
+            background: #ff3b30;
+        }
+        
+        .call-btn.end-call:hover {
+            background: #ff1f1f;
+        }
+        
+        .call-btn.active {
+            background: var(--primary-color);
+        }
+        
+        /* Адаптивность */
         @media (max-width: 768px) {
-            h1 {
+            .landing-title {
                 font-size: 2.5rem;
             }
             
-            .container {
-                padding: 1rem;
+            .features-grid {
+                grid-template-columns: 1fr;
             }
             
-            .feature-card {
-                padding: 1.5rem;
-            }
-            
-            .cta-buttons {
+            .action-buttons {
                 flex-direction: column;
             }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .left-sidebar {
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .main-chat {
+                display: none;
+            }
+            
+            .main-chat.active {
+                display: flex;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 50;
+            }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            opacity: 0.7;
+            background: rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📞 Messenger</h1>
-            <div class="subtitle">
-                Полноценный мессенджер с видеозвонками, работающий полностью на GitHub
-            </div>
-            <div class="github-badge">
-                <svg height="20" viewBox="0 0 16 16" width="20" fill="white">
-                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
-                </svg>
-                Работает на GitHub Pages + GitHub Actions
-            </div>
-        </header>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🎥</div>
-                <h3>Видеозвонки P2P</h3>
-                <p>Высококачественные видеозвонки прямо в браузере с использованием WebRTC. Работает без установки приложений.</p>
+    <!-- Лендинг секция -->
+    <section id="landing" class="landing-section">
+        <div class="landing-container">
+            <div class="landing-header">
+                <h1 class="landing-title">📞 Telegram Web Messenger</h1>
+                <div class="landing-subtitle">
+                    Полноценный мессенджер с видеозвонками, работающий полностью на GitHub
+                </div>
+                <div class="github-badge">
+                    <svg height="20" viewBox="0 0 16 16" width="20" fill="white">
+                        <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                    </svg>
+                    Работает на GitHub Pages + GitHub Actions
+                </div>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon">💬</div>
-                <h3>Чат в реальном времени</h3>
-                <p>Обменивайтесь сообщениями, файлами и стикерами. История чатов сохраняется в вашем GitHub репозитории.</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎥</div>
+                    <h3>Видеозвонки P2P</h3>
+                    <p>Высококачественные видеозвонки прямо в браузере с использованием WebRTC. Работает без установки приложений.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Чат в реальном времени</h3>
+                    <p>Обменивайтесь сообщениями, файлами и стикерами. История чатов сохраняется в вашем GitHub репозитории.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>100% на GitHub</h3>
+                    <p>Вся инфраструктура работает на GitHub: фронтенд на Pages, бэкенд на Actions, данные в репозитории.</p>
+                </div>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>100% на GitHub</h3>
-                <p>Вся инфраструктура работает на GitHub: фронтенд на Pages, бэкенд на Actions, данные в репозитории.</p>
-            </div>
-        </div>
-
-        <div class="cta-section">
-            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Начните общаться прямо сейчас!</h2>
-            <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">
-                Бесплатно, без регистрации, работает в любом современном браузере
-            </p>
-            
-            <div class="cta-buttons">
-                <a href="/frontend/" class="btn btn-primary">
+            <div class="action-buttons">
+                <button id="openMessengerBtn" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i>
                     <span>🚀 Открыть Messenger</span>
-                </a>
-                <a href="https://github.com/ваш-юзернейм/messenger" class="btn btn-secondary">
+                </button>
+                <a href="https://github.com/ваш-юзернейм/messenger" class="btn btn-secondary" target="_blank">
                     <svg height="20" viewBox="0 0 16 16" width="20" fill="white">
                         <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
                     </svg>
                     Исходный код
                 </a>
             </div>
+            
+            <div class="ambassador-section">
+                <h3><i class="fas fa-star"></i> Стать амбассадором проекта</h3>
+                <p style="margin: 1rem 0; opacity: 0.9;">
+                    Помогите развитию проекта! Получите ранний доступ к новым функциям и общайтесь напрямую с разработчиками.
+                </p>
+                <button id="becomeAmbassadorBtn" class="btn btn-secondary" style="margin-top: 1rem;">
+                    <i class="fas fa-comments"></i>
+                    Начать чат с админом
+                </button>
+            </div>
+            
+            <div class="tech-stack">
+                <div class="tech-item">GitHub Pages</div>
+                <div class="tech-item">GitHub Actions</div>
+                <div class="tech-item">WebRTC</div>
+                <div class="tech-item">JavaScript</div>
+                <div class="tech-item">HTML5</div>
+                <div class="tech-item">CSS3</div>
+            </div>
+            
+            <footer>
+                <p>© 2024 Telegram Web Messenger. Работает полностью на GitHub.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+                    Для работы видеозвонков разрешите доступ к камере и микрофону
+                </p>
+            </footer>
         </div>
-
-        <div class="tech-stack">
-            <div class="tech-item">GitHub Pages</div>
-            <div class="tech-item">GitHub Actions</div>
-            <div class="tech-item">WebRTC</div>
-            <div class="tech-item">JavaScript</div>
-            <div class="tech-item">HTML5</div>
-            <div class="tech-item">CSS3</div>
+    </section>
+    
+    <!-- Мессенджер (скрыт изначально) -->
+    <div id="messengerApp" class="messenger-app">
+        <!-- Навигационная панель -->
+        <div class="nav-bar">
+            <div class="nav-logo">
+                <i class="fab fa-telegram"></i>
+                <span>Telegram Web</span>
+            </div>
+            <div class="nav-controls">
+                <button id="backToLanding" class="nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    На главную
+                </button>
+                <button id="toggleDarkMode" class="nav-btn">
+                    <i class="fas fa-moon"></i>
+                    Тема
+                </button>
+            </div>
+        </div>
+        
+        <!-- Основной интерфейс мессенджера -->
+        <div class="app-container">
+            <!-- Левый сайдбар с чатами -->
+            <div class="left-sidebar">
+                <div class="sidebar-header">
+                    <div class="profile-section" id="profileMenu">
+                        <div class="profile-avatar">
+                            TM
+                        </div>
+                        <div class="profile-info">
+                            <div class="profile-name">Тихон Метелкин 🎧</div>
+                            <div class="profile-status">
+                                <i class="fas fa-circle" style="color: #4CAF50; font-size: 0.6rem;"></i>
+                                онлайн
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar-actions">
+                        <div class="sidebar-icon" title="Новый чат">
+                            <i class="far fa-edit"></i>
+                        </div>
+                        <div class="sidebar-icon" title="Меню">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" placeholder="Поиск">
+                    </div>
+                </div>
+                
+                <div class="chat-list" id="chatList">
+                    <!-- Чат с админом (амбассадор) -->
+                    <div class="chat-item active" data-chat="admin">
+                        <div class="chat-avatar">
+                            <div class="chat-avatar-img" style="background: linear-gradient(135deg, #FF5722, #FF9800);">А</div>
+                            <div class="chat-status" style="background: #4CAF50;"></div>
+                        </div>
+                        <div class="chat-info">
+                            <div class="chat-header">
+                                <div class="chat-name">Администратор</div>
+                                <div class="chat-time">только что</div>
+                            </div>
+                            <div class="chat-preview">
+                                <div class="chat-preview-text">
+                                    Добро пожаловать! Чем могу помочь?
+                                </div>
+                                <div class="unread-badge">1</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Другие чаты -->
+                    <div class="chat-item" data-chat="olga">
+                        <div class="chat-avatar">
+                            <div class="chat-avatar-img">ОВ</div>
+                            <div class="chat-status"></div>
+                        </div>
+                        <div class="chat-info">
+                            <div class="chat-header">
+                                <div class="chat-name">Ольга Метелкина</div>
+                                <div class="chat-time">15:30</div>
+                            </div>
+                            <div class="chat-preview">
+                                <div class="chat-preview-text">
+                                    <i class="fas fa-check-double" style="color: #4CAF50;"></i>
+                                    Как там твои дела?
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-item" data-chat="pavel">
+                        <div class="chat-avatar">
+                            <div class="chat-avatar-img">ПВ</div>
+                            <div class="chat-status" style="background: #ff9800;"></div>
+                        </div>
+                        <div class="chat-info">
+                            <div class="chat-header">
+                                <div class="chat-name">Павел Вилков</div>
+                                <div class="chat-time">Вчера</div>
+                            </div>
+                            <div class="chat-preview">
+                                <div class="chat-preview-text">
+                                    Встречаемся в 18:00
+                                </div>
+                                <div class="unread-badge">3</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Каналы -->
+                    <div class="chat-item" data-chat="channel1">
+                        <div class="chat-avatar">
+                            <div class="chat-avatar-img" style="background: linear-gradient(135deg, #2196F3, #03A9F4);">Б2</div>
+                        </div>
+                        <div class="chat-info">
+                            <div class="chat-header">
+                                <div class="chat-name">Брат 2</div>
+                                <div class="chat-time">10:15</div>
+                            </div>
+                            <div class="chat-preview">
+                                <div class="chat-preview-text">
+                                    КАК ТАМ ВАШИ СТАВКИ НА КЛУ...
+                                </div>
+                                <div class="unread-badge">42</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Основной чат -->
+            <div class="main-chat active" id="mainChat">
+                <div class="chat-header-main">
+                    <div class="chat-contact">
+                        <div class="chat-avatar">
+                            <div class="chat-avatar-img" style="background: linear-gradient(135deg, #FF5722, #FF9800);">А</div>
+                        </div>
+                        <div class="chat-contact-info">
+                            <div class="chat-contact-name">
+                                Администратор
+                                <i class="fas fa-check-circle verified-badge"></i>
+                            </div>
+                            <div class="chat-contact-status">
+                                <span class="online-dot"></span>
+                                в сети • отвечает в течение минуты
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <div class="chat-action-btn" title="Поиск">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="chat-action-btn" title="Видеозвонок" id="startVideoCall">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <div class="chat-action-btn" title="Информация">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <div class="message-date">
+                        <span class="date-label">Сегодня</span>
+                    </div>
+                    
+                    <!-- Сообщение от админа -->
+                    <div class="message incoming">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                👋 Привет! Я администратор этого мессенджера.
+                            </div>
+                            <div class="message-time">
+                                12:00
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="message incoming">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Спасибо, что интересуетесь проектом! Вы хотите стать амбассадором?
+                            </div>
+                            <div class="message-time">
+                                12:01
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Исходящее сообщение -->
+                    <div class="message outgoing">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Да, хочу помочь развитию проекта!
+                            </div>
+                            <div class="message-time">
+                                12:02
+                                <i class="fas fa-check-double message-status status-double-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="message incoming">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Отлично! Как амбассадор вы получите:
+                                <br>1. Ранний доступ к новым функциям
+                                <br>2. Возможность влиять на развитие
+                                <br>3. Прямую связь с разработчиками
+                                <br>4. Эксклюзивный бейдж в профиле
+                            </div>
+                            <div class="message-time">
+                                12:03
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="message incoming">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Хотите протестировать видеозвонок прямо сейчас?
+                            </div>
+                            <div class="message-time">
+                                12:04
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-input-container">
+                    <div class="input-actions">
+                        <div class="input-action-btn" title="Прикрепить файл">
+                            <i class="fas fa-paperclip"></i>
+                        </div>
+                        <div class="input-action-btn" title="Смайлики">
+                            <i class="far fa-smile"></i>
+                        </div>
+                    </div>
+                    <div class="message-input-wrapper">
+                        <textarea class="message-input" placeholder="Сообщение" rows="1" id="messageInput"></textarea>
+                        <div class="input-action-btn" title="Запись голосового сообщения">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                    </div>
+                    <button class="send-button" title="Отправить" id="sendMessageBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно видеозвонка -->
+    <div class="call-modal" id="callModal">
+        <div class="call-container">
+            <div class="call-info">
+                <div class="call-contact">
+                    <div class="call-name">Администратор</div>
+                </div>
+                <div class="call-status" id="callStatus">Установка соединения...</div>
+            </div>
+            
+            <video class="remote-video" id="remoteVideo" autoplay playsinline></video>
+            <video class="local-video" id="localVideo" autoplay playsinline muted></video>
+            
+            <div class="call-controls">
+                <button class="call-btn" id="toggleAudioBtn">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="call-btn" id="toggleVideoBtn">
+                    <i class="fas fa-video"></i>
+                </button>
+                <button class="call-btn end-call" id="endCallBtn">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+            </div>
         </div>
     </div>
 
-    <footer>
-        <p>© 2024 Messenger. Работает полностью на GitHub.</p>
-        <p style="margin-top: 0.5rem; font-size: 0.8rem;">
-            Для работы видеозвонков разрешите доступ к камере и микрофону
-        </p>
-    </footer>
-
     <script>
-        // Анимация для кнопок
+        // Элементы DOM
+        const landingSection = document.getElementById('landing');
+        const messengerApp = document.getElementById('messengerApp');
+        const openMessengerBtn = document.getElementById('openMessengerBtn');
+        const backToLandingBtn = document.getElementById('backToLanding');
+        const becomeAmbassadorBtn = document.getElementById('becomeAmbassadorBtn');
+        const chatList = document.getElementById('chatList');
+        const mainChat = document.getElementById('mainChat');
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const startVideoCallBtn = document.getElementById('startVideoCall');
+        const callModal = document.getElementById('callModal');
+        const endCallBtn = document.getElementById('endCallBtn');
+        const toggleAudioBtn = document.getElementById('toggleAudioBtn');
+        const toggleVideoBtn = document.getElementById('toggleVideoBtn');
+        const remoteVideo = document.getElementById('remoteVideo');
+        const localVideo = document.getElementById('localVideo');
+        const callStatus = document.getElementById('callStatus');
+        
+        // Состояние приложения
+        let currentChat = 'admin';
+        let isAudioMuted = false;
+        let isVideoOff = false;
+        let localStream = null;
+        let peerConnection = null;
+        
+        // Открыть мессенджер
+        openMessengerBtn.addEventListener('click', () => {
+            landingSection.classList.add('hidden');
+            messengerApp.classList.add('active');
+            
+            // Показать уведомление
+            showNotification('Добро пожаловать в Telegram Web Messenger!', 'success');
+        });
+        
+        // Вернуться на главную
+        backToLandingBtn.addEventListener('click', () => {
+            messengerApp.classList.remove('active');
+            landingSection.classList.remove('hidden');
+            
+            // Завершить звонок если активен
+            if (callModal.classList.contains('active')) {
+                endCall();
+            }
+        });
+        
+        // Стать амбассадором
+        becomeAmbassadorBtn.addEventListener('click', () => {
+            landingSection.classList.add('hidden');
+            messengerApp.classList.add('active');
+            
+            // Автоматически открыть чат с админом
+            switchChat('admin');
+            
+            showNotification('Чат с администратором открыт!', 'info');
+        });
+        
+        // Переключение между чатами
+        chatList.addEventListener('click', (e) => {
+            const chatItem = e.target.closest('.chat-item');
+            if (chatItem) {
+                const chatId = chatItem.dataset.chat;
+                switchChat(chatId);
+            }
+        });
+        
+        function switchChat(chatId) {
+            currentChat = chatId;
+            
+            // Обновить активный чат в списке
+            document.querySelectorAll('.chat-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-chat="${chatId}"]`).classList.add('active');
+            
+            // Обновить заголовок чата
+            const chatName = document.querySelector(`[data-chat="${chatId}"] .chat-name`).textContent;
+            document.querySelector('.chat-contact-name').innerHTML = `${chatName} <i class="fas fa-check-circle verified-badge"></i>`;
+            
+            // Загрузить историю сообщений для выбранного чата
+            loadChatHistory(chatId);
+        }
+        
+        function loadChatHistory(chatId) {
+            // Здесь будет загрузка сообщений с сервера
+            // Пока что просто очищаем и добавляем демо-сообщения
+            messagesContainer.innerHTML = `
+                <div class="message-date">
+                    <span class="date-label">Сегодня</span>
+                </div>
+            `;
+            
+            if (chatId === 'admin') {
+                addMessage('incoming', '👋 Привет! Я администратор этого мессенджера.', '12:00');
+                addMessage('incoming', 'Чем могу помочь?', '12:01');
+            } else if (chatId === 'olga') {
+                addMessage('incoming', 'Привет! Как дела?', '15:30');
+                addMessage('outgoing', 'Всё отлично! А у тебя?', '15:32');
+            }
+        }
+        
+        function addMessage(type, text, time) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    <div class="message-text">${text}</div>
+                    <div class="message-time">
+                        ${time}
+                        ${type === 'outgoing' ? '<i class="fas fa-check-double message-status status-double-check"></i>' : ''}
+                    </div>
+                </div>
+            `;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // Отправка сообщения
+        sendMessageBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (text) {
+                addMessage('outgoing', text, getCurrentTime());
+                messageInput.value = '';
+                
+                // Автоответ для админа
+                if (currentChat === 'admin') {
+                    setTimeout(() => {
+                        const responses = [
+                            'Интересно! Расскажите подробнее.',
+                            'Хорошо, я записал это.',
+                            'Спасибо за обратную связь!',
+                            'Как вам видеозвонок? Работает хорошо?'
+                        ];
+                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                        addMessage('incoming', randomResponse, getCurrentTime());
+                    }, 1000);
+                }
+            }
+        }
+        
+        // Видеозвонок
+        startVideoCallBtn.addEventListener('click', startVideoCall);
+        endCallBtn.addEventListener('click', endCall);
+        toggleAudioBtn.addEventListener('click', toggleAudio);
+        toggleVideoBtn.addEventListener('click', toggleVideo);
+        
+        async function startVideoCall() {
+            try {
+                callModal.classList.add('active');
+                callStatus.textContent = 'Запрос доступа к камере и микрофону...';
+                
+                // Запрашиваем медиапоток
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                });
+                
+                localVideo.srcObject = localStream;
+                callStatus.textContent = 'Соединение установлено';
+                
+                // Имитация удаленного видео (для демо)
+                setTimeout(() => {
+                    remoteVideo.style.background = '#333';
+                    callStatus.textContent = 'Звонок с администратором';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Ошибка доступа к медиаустройствам:', error);
+                callStatus.textContent = 'Ошибка: нет доступа к камере/микрофону';
+                showNotification('Разрешите доступ к камере и микрофону для звонков', 'error');
+            }
+        }
+        
+        function endCall() {
+            callModal.classList.remove('active');
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+                localStream = null;
+            }
+            localVideo.srcObject = null;
+            remoteVideo.srcObject = null;
+        }
+        
+        function toggleAudio() {
+            if (localStream) {
+                const audioTrack = localStream.getAudioTracks()[0];
+                if (audioTrack) {
+                    audioTrack.enabled = !audioTrack.enabled;
+                    isAudioMuted = !audioTrack.enabled;
+                    toggleAudioBtn.innerHTML = isAudioMuted ? 
+                        '<i class="fas fa-microphone-slash"></i>' : 
+                        '<i class="fas fa-microphone"></i>';
+                    toggleAudioBtn.classList.toggle('active', !isAudioMuted);
+                }
+            }
+        }
+        
+        function toggleVideo() {
+            if (localStream) {
+                const videoTrack = localStream.getVideoTracks()[0];
+                if (videoTrack) {
+                    videoTrack.enabled = !videoTrack.enabled;
+                    isVideoOff = !videoTrack.enabled;
+                    toggleVideoBtn.innerHTML = isVideoOff ? 
+                        '<i class="fas fa-video-slash"></i>' : 
+                        '<i class="fas fa-video"></i>';
+                    toggleVideoBtn.classList.toggle('active', !isVideoOff);
+                }
+            }
+        }
+        
+        // Вспомогательные функции
+        function getCurrentTime() {
+            const now = new Date();
+            return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        }
+        
+        function showNotification(message, type = 'info') {
+            // Создаем уведомление
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <div class="notification-header">
+                    <div class="notification-title">
+                        ${type === 'error' ? '⚠️ Ошибка' : type === 'success' ? '✅ Успешно' : 'ℹ️ Информация'}
+                    </div>
+                    <div class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="notification-body">${message}</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Показываем с анимацией
+            setTimeout(() => notification.classList.add('active'), 10);
+            
+            // Автоудаление через 5 секунд
+            setTimeout(() => {
+                notification.classList.remove('active');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+        
+        // Анимация кнопок на лендинге
         document.querySelectorAll('.btn').forEach(btn => {
             btn.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-2px)';
@@ -275,6 +1485,23 @@
             btn.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0)';
             });
+        });
+        
+        // Переключение темы
+        document.getElementById('toggleDarkMode').addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            showNotification('Тема изменена', 'info');
+        });
+        
+        // Инициализация
+        window.addEventListener('DOMContentLoaded', () => {
+            // Загружаем чат с админом по умолчанию
+            loadChatHistory('admin');
+            
+            // Показываем приветственное сообщение
+            setTimeout(() => {
+                showNotification('Добро пожаловать! Используйте кнопки выше для навигации.', 'info');
+            }, 1000);
         });
     </script>
 </body>
