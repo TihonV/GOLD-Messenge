@@ -4,6 +4,103 @@ const cors = require('cors');
 const { Octokit } = require('@octokit/rest');
 const jwt = require('jsonwebtoken');
 const app = express();
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 3000 });
+
+const users = new Map();
+
+wss.on('connection', (ws) => {
+    ws.on('message', (message) => {
+        const data = JSON.parse(message);
+        
+        switch(data.type) {
+            case 'login':
+                users.set(data.user.id, { ws, ...data.user });
+                broadcastUsersList();
+                break;
+                
+            case 'chat':
+                const receiver = users.get(data.message.receiverId);
+                if (receiver) {
+                    receiver.ws.send(JSON.stringify({
+                        type: 'chat',
+                        message: data.message
+                    }));
+                }
+                break;
+                
+            case 'call_offer':
+                const receiver = users.get(data.to);
+                if (receiver) {
+                    receiver.ws.send(JSON.stringify({
+                        type: 'call_offer',
+                        from: data.from,
+                        offer: data.offer,
+                        callType: data.callType
+                    }));
+                }
+                break;
+                
+            case 'call_answer':
+                const caller = users.get(data.to);
+                if (caller) {
+                    caller.ws.send(JSON.stringify({
+                        type: 'call_answer',
+                        from: data.from,
+                        answer: data.answer
+                    }));
+                }
+                break;
+                
+            case 'ice_candidate':
+                const target = users.get(data.to);
+                if (target) {
+                    target.ws.send(JSON.stringify({
+                        type: 'ice_candidate',
+                        candidate: data.candidate
+                    }));
+                }
+                break;
+                
+            case 'call_end':
+            case 'call_rejected':
+                const otherUser = users.get(data.to);
+                if (otherUser) {
+                    otherUser.ws.send(JSON.stringify({
+                        type: data.type,
+                        from: data.from
+                    }));
+                }
+                break;
+        }
+    });
+    
+    ws.on('close', () => {
+        // Удаляем пользователя при отключении
+        for (let [id, user] of users.entries()) {
+            if (user.ws === ws) {
+                users.delete(id);
+                broadcastUsersList();
+                break;
+            }
+        }
+    });
+});
+
+function broadcastUsersList() {
+    const usersList = Array.from(users.values()).map(user => ({
+        id: user.id,
+        name: user.name,
+        isOnline: true
+    }));
+    
+    for (let user of users.values()) {
+        user.ws.send(JSON.stringify({
+            type: 'users',
+            users: usersList.filter(u => u.id !== user.id)
+        }));
+    }
+}
 
 app.use(cors());
 app.use(express.json());
