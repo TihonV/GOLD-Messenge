@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Web Messenger</title>
+    <title>Tihons Web Messenger</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -181,7 +181,7 @@
             font-size: 0.9rem;
         }
         
-        /* Мессенджер (скрыт по умолчанию) */
+        /* Мессенджер */
         .messenger-app {
             display: none;
             height: 100vh;
@@ -198,7 +198,7 @@
             height: calc(100vh - 60px);
         }
         
-        /* Навигационная панель */
+        /* Навигация */
         .nav-bar {
             height: 60px;
             background: var(--sidebar-bg);
@@ -239,7 +239,7 @@
             background: rgba(255, 255, 255, 0.2);
         }
         
-        /* Сайдбар с чатами */
+        /* Сайдбар */
         .left-sidebar {
             width: 25%;
             min-width: 300px;
@@ -277,6 +277,13 @@
             justify-content: center;
             font-weight: bold;
             position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .profile-info {
@@ -323,6 +330,7 @@
         .search-container {
             padding: 0.75rem 1rem;
             border-bottom: 1px solid var(--border-color);
+            position: relative;
         }
         
         .search-box {
@@ -345,6 +353,42 @@
         
         .search-input:focus {
             outline: none;
+        }
+        
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 1rem;
+            right: 1rem;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-top: 0.25rem;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+        }
+        
+        .search-results.active {
+            display: block;
+        }
+        
+        .search-result-item {
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .search-result-item:hover {
+            background: var(--hover-bg);
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
         }
         
         .chat-list {
@@ -380,6 +424,13 @@
             justify-content: center;
             font-weight: bold;
             font-size: 1.2rem;
+            overflow: hidden;
+        }
+        
+        .chat-avatar-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .chat-status {
@@ -723,6 +774,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            background: #222;
         }
         
         .local-video {
@@ -805,6 +857,188 @@
             background: var(--primary-color);
         }
         
+        /* Модальные окна */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--sidebar-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+        }
+        
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--chat-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-upload {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .avatar-upload-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+        
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .modal-btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .modal-btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        /* Новые пользователи */
+        .new-users-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .new-users-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .new-user-item {
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        
+        .new-user-item:hover {
+            background: var(--hover-bg);
+        }
+        
+        .add-user-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            margin-left: auto;
+        }
+        
         /* Адаптивность */
         @media (max-width: 768px) {
             .landing-title {
@@ -842,6 +1076,11 @@
                 bottom: 0;
                 z-index: 50;
             }
+            
+            .local-video {
+                width: 120px;
+                height: 90px;
+            }
         }
         
         .hidden {
@@ -856,10 +1095,61 @@
             opacity: 0.7;
             background: rgba(0, 0, 0, 0.2);
         }
+        
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1rem;
+            max-width: 300px;
+            z-index: 1001;
+            animation: slideIn 0.3s ease-out;
+            display: none;
+        }
+        
+        .notification.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .notification-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+        }
+        
+        .notification-body {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .notification-close {
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
     </style>
 </head>
 <body>
-    <!-- Лендинг секция -->
+    <!-- Лендинг -->
     <section id="landing" class="landing-section">
         <div class="landing-container">
             <div class="landing-header">
@@ -879,19 +1169,19 @@
                 <div class="feature-card">
                     <div class="feature-icon">🎥</div>
                     <h3>Видеозвонки P2P</h3>
-                    <p>Высококачественные видеозвонки прямо в браузере с использованием WebRTC. Работает без установки приложений.</p>
+                    <p>Высококачественные видеозвонки прямо в браузере с использованием WebRTC.</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">💬</div>
                     <h3>Чат в реальном времени</h3>
-                    <p>Обменивайтесь сообщениями, файлами и стикерами. История чатов сохраняется в вашем GitHub репозитории.</p>
+                    <p>Обменивайтесь сообщениями, файлами и стикерами.</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
                     <h3>100% на GitHub</h3>
-                    <p>Вся инфраструктура работает на GitHub: фронтенд на Pages, бэкенд на Actions, данные в репозитории.</p>
+                    <p>Вся инфраструктура работает на GitHub.</p>
                 </div>
             </div>
             
@@ -900,18 +1190,18 @@
                     <i class="fas fa-rocket"></i>
                     <span>🚀 Открыть Messenger</span>
                 </button>
-                <a href="https://github.com/ваш-юзернейм/messenger" class="btn btn-secondary" target="_blank">
+                <button class="btn btn-secondary" onclick="window.open('https://github.com', '_blank')">
                     <svg height="20" viewBox="0 0 16 16" width="20" fill="white">
                         <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
                     </svg>
                     Исходный код
-                </a>
+                </button>
             </div>
             
             <div class="ambassador-section">
                 <h3><i class="fas fa-star"></i> Стать амбассадором проекта</h3>
                 <p style="margin: 1rem 0; opacity: 0.9;">
-                    Помогите развитию проекта! Получите ранний доступ к новым функциям и общайтесь напрямую с разработчиками.
+                    Помогите развитию проекта! Получите ранний доступ к новым функциям.
                 </p>
                 <button id="becomeAmbassadorBtn" class="btn btn-secondary" style="margin-top: 1rem;">
                     <i class="fas fa-comments"></i>
@@ -929,7 +1219,7 @@
             </div>
             
             <footer>
-                <p>© 2024 Telegram Web Messenger. Работает полностью на GitHub.</p>
+                <p>© 2024 Telegram Web Messenger.</p>
                 <p style="margin-top: 0.5rem; font-size: 0.8rem;">
                     Для работы видеозвонков разрешите доступ к камере и микрофону
                 </p>
@@ -937,9 +1227,9 @@
         </div>
     </section>
     
-    <!-- Мессенджер (скрыт изначально) -->
+    <!-- Мессенджер -->
     <div id="messengerApp" class="messenger-app">
-        <!-- Навигационная панель -->
+        <!-- Навигация -->
         <div class="nav-bar">
             <div class="nav-logo">
                 <i class="fab fa-telegram"></i>
@@ -950,24 +1240,24 @@
                     <i class="fas fa-arrow-left"></i>
                     На главную
                 </button>
-                <button id="toggleDarkMode" class="nav-btn">
-                    <i class="fas fa-moon"></i>
-                    Тема
+                <button id="newChatBtn" class="nav-btn">
+                    <i class="fas fa-plus"></i>
+                    Новый чат
                 </button>
             </div>
         </div>
         
-        <!-- Основной интерфейс мессенджера -->
+        <!-- Основной интерфейс -->
         <div class="app-container">
-            <!-- Левый сайдбар с чатами -->
+            <!-- Сайдбар -->
             <div class="left-sidebar">
                 <div class="sidebar-header">
-                    <div class="profile-section" id="profileMenu">
-                        <div class="profile-avatar">
+                    <div class="profile-section" id="profileMenuBtn">
+                        <div class="profile-avatar" id="userAvatar">
                             TM
                         </div>
                         <div class="profile-info">
-                            <div class="profile-name">Тихон Метелкин 🎧</div>
+                            <div class="profile-name" id="userName">Тихон Метелкин 🎧</div>
                             <div class="profile-status">
                                 <i class="fas fa-circle" style="color: #4CAF50; font-size: 0.6rem;"></i>
                                 онлайн
@@ -975,10 +1265,10 @@
                         </div>
                     </div>
                     <div class="sidebar-actions">
-                        <div class="sidebar-icon" title="Новый чат">
+                        <div class="sidebar-icon" title="Новый чат" id="newChatBtnMobile">
                             <i class="far fa-edit"></i>
                         </div>
-                        <div class="sidebar-icon" title="Меню">
+                        <div class="sidebar-icon" title="Меню" id="menuBtn">
                             <i class="fas fa-ellipsis-v"></i>
                         </div>
                     </div>
@@ -987,87 +1277,19 @@
                 <div class="search-container">
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" class="search-input" placeholder="Поиск">
+                        <input type="text" class="search-input" id="searchInput" placeholder="Поиск">
                     </div>
+                    <div class="search-results" id="searchResults"></div>
                 </div>
                 
                 <div class="chat-list" id="chatList">
-                    <!-- Чат с админом (амбассадор) -->
-                    <div class="chat-item active" data-chat="admin">
-                        <div class="chat-avatar">
-                            <div class="chat-avatar-img" style="background: linear-gradient(135deg, #FF5722, #FF9800);">А</div>
-                            <div class="chat-status" style="background: #4CAF50;"></div>
-                        </div>
-                        <div class="chat-info">
-                            <div class="chat-header">
-                                <div class="chat-name">Администратор</div>
-                                <div class="chat-time">только что</div>
-                            </div>
-                            <div class="chat-preview">
-                                <div class="chat-preview-text">
-                                    Добро пожаловать! Чем могу помочь?
-                                </div>
-                                <div class="unread-badge">1</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Другие чаты -->
-                    <div class="chat-item" data-chat="olga">
-                        <div class="chat-avatar">
-                            <div class="chat-avatar-img">ОВ</div>
-                            <div class="chat-status"></div>
-                        </div>
-                        <div class="chat-info">
-                            <div class="chat-header">
-                                <div class="chat-name">Ольга Метелкина</div>
-                                <div class="chat-time">15:30</div>
-                            </div>
-                            <div class="chat-preview">
-                                <div class="chat-preview-text">
-                                    <i class="fas fa-check-double" style="color: #4CAF50;"></i>
-                                    Как там твои дела?
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="chat-item" data-chat="pavel">
-                        <div class="chat-avatar">
-                            <div class="chat-avatar-img">ПВ</div>
-                            <div class="chat-status" style="background: #ff9800;"></div>
-                        </div>
-                        <div class="chat-info">
-                            <div class="chat-header">
-                                <div class="chat-name">Павел Вилков</div>
-                                <div class="chat-time">Вчера</div>
-                            </div>
-                            <div class="chat-preview">
-                                <div class="chat-preview-text">
-                                    Встречаемся в 18:00
-                                </div>
-                                <div class="unread-badge">3</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Каналы -->
-                    <div class="chat-item" data-chat="channel1">
-                        <div class="chat-avatar">
-                            <div class="chat-avatar-img" style="background: linear-gradient(135deg, #2196F3, #03A9F4);">Б2</div>
-                        </div>
-                        <div class="chat-info">
-                            <div class="chat-header">
-                                <div class="chat-name">Брат 2</div>
-                                <div class="chat-time">10:15</div>
-                            </div>
-                            <div class="chat-preview">
-                                <div class="chat-preview-text">
-                                    КАК ТАМ ВАШИ СТАВКИ НА КЛУ...
-                                </div>
-                                <div class="unread-badge">42</div>
-                            </div>
-                        </div>
+                    <!-- Чаты будут добавляться динамически -->
+                </div>
+                
+                <div class="new-users-section" id="newUsersSection">
+                    <div class="new-users-title">Новые пользователи</div>
+                    <div id="newUsersList">
+                        <!-- Новые пользователи будут добавляться динамически -->
                     </div>
                 </div>
             </div>
@@ -1076,99 +1298,35 @@
             <div class="main-chat active" id="mainChat">
                 <div class="chat-header-main">
                     <div class="chat-contact">
-                        <div class="chat-avatar">
-                            <div class="chat-avatar-img" style="background: linear-gradient(135deg, #FF5722, #FF9800);">А</div>
+                        <div class="chat-avatar" id="currentChatAvatar">
+                            <div class="chat-avatar-img">А</div>
                         </div>
                         <div class="chat-contact-info">
-                            <div class="chat-contact-name">
+                            <div class="chat-contact-name" id="currentChatName">
                                 Администратор
                                 <i class="fas fa-check-circle verified-badge"></i>
                             </div>
-                            <div class="chat-contact-status">
+                            <div class="chat-contact-status" id="currentChatStatus">
                                 <span class="online-dot"></span>
-                                в сети • отвечает в течение минуты
+                                в сети
                             </div>
                         </div>
                     </div>
                     <div class="chat-actions">
-                        <div class="chat-action-btn" title="Поиск">
+                        <div class="chat-action-btn" title="Поиск" id="searchInChatBtn">
                             <i class="fas fa-search"></i>
                         </div>
                         <div class="chat-action-btn" title="Видеозвонок" id="startVideoCall">
                             <i class="fas fa-video"></i>
                         </div>
-                        <div class="chat-action-btn" title="Информация">
+                        <div class="chat-action-btn" title="Информация" id="chatInfoBtn">
                             <i class="fas fa-info-circle"></i>
                         </div>
                     </div>
                 </div>
                 
                 <div class="messages-container" id="messagesContainer">
-                    <div class="message-date">
-                        <span class="date-label">Сегодня</span>
-                    </div>
-                    
-                    <!-- Сообщение от админа -->
-                    <div class="message incoming">
-                        <div class="message-bubble">
-                            <div class="message-text">
-                                👋 Привет! Я администратор этого мессенджера.
-                            </div>
-                            <div class="message-time">
-                                12:00
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="message incoming">
-                        <div class="message-bubble">
-                            <div class="message-text">
-                                Спасибо, что интересуетесь проектом! Вы хотите стать амбассадором?
-                            </div>
-                            <div class="message-time">
-                                12:01
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Исходящее сообщение -->
-                    <div class="message outgoing">
-                        <div class="message-bubble">
-                            <div class="message-text">
-                                Да, хочу помочь развитию проекта!
-                            </div>
-                            <div class="message-time">
-                                12:02
-                                <i class="fas fa-check-double message-status status-double-check"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="message incoming">
-                        <div class="message-bubble">
-                            <div class="message-text">
-                                Отлично! Как амбассадор вы получите:
-                                <br>1. Ранний доступ к новым функциям
-                                <br>2. Возможность влиять на развитие
-                                <br>3. Прямую связь с разработчиками
-                                <br>4. Эксклюзивный бейдж в профиле
-                            </div>
-                            <div class="message-time">
-                                12:03
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="message incoming">
-                        <div class="message-bubble">
-                            <div class="message-text">
-                                Хотите протестировать видеозвонок прямо сейчас?
-                            </div>
-                            <div class="message-time">
-                                12:04
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Сообщения будут добавляться динамически -->
                 </div>
                 
                 <div class="message-input-container">
@@ -1194,12 +1352,14 @@
         </div>
     </div>
     
-    <!-- Модальное окно видеозвонка -->
+    <!-- Модальные окна -->
+    
+    <!-- Видеозвонок -->
     <div class="call-modal" id="callModal">
         <div class="call-container">
             <div class="call-info">
                 <div class="call-contact">
-                    <div class="call-name">Администратор</div>
+                    <div class="call-name" id="callContactName">Администратор</div>
                 </div>
                 <div class="call-status" id="callStatus">Установка соединения...</div>
             </div>
@@ -1220,111 +1380,330 @@
             </div>
         </div>
     </div>
+    
+    <!-- Редактирование профиля -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Редактировать профиль</div>
+                <div class="modal-close" id="closeProfileModal">&times;</div>
+            </div>
+            
+            <div class="avatar-upload">
+                <div class="avatar-preview" id="avatarPreview">
+                    <span id="avatarInitials">TM</span>
+                </div>
+                <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                <button class="avatar-upload-btn" id="changeAvatarBtn">
+                    <i class="fas fa-camera"></i>
+                    Сменить фото
+                </button>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Имя</label>
+                <input type="text" class="form-input" id="profileNameInput" value="Тихон Метелкин">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Статус</label>
+                <input type="text" class="form-input" id="profileStatusInput" value="🎧 онлайн">
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" id="cancelProfileBtn">
+                    Отмена
+                </button>
+                <button class="modal-btn modal-btn-primary" id="saveProfileBtn">
+                    Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Новый чат -->
+    <div class="modal-overlay" id="newChatModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Новый чат</div>
+                <div class="modal-close" id="closeNewChatModal">&times;</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Поиск пользователей</label>
+                <input type="text" class="form-input" id="searchUserInput" placeholder="Введите имя пользователя">
+            </div>
+            
+            <div id="searchResultsModal" style="max-height: 300px; overflow-y: auto; margin-top: 1rem;">
+                <!-- Результаты поиска будут здесь -->
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" id="cancelNewChatBtn">
+                    Отмена
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Меню -->
+    <div class="modal-overlay" id="menuModal">
+        <div class="modal" style="width: 300px;">
+            <div class="modal-header">
+                <div class="modal-title">Меню</div>
+                <div class="modal-close" id="closeMenuModal">&times;</div>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <button class="modal-btn modal-btn-secondary" id="editProfileMenuBtn">
+                    <i class="fas fa-user-edit"></i>
+                    Редактировать профиль
+                </button>
+                <button class="modal-btn modal-btn-secondary" id="settingsMenuBtn">
+                    <i class="fas fa-cog"></i>
+                    Настройки
+                </button>
+                <button class="modal-btn modal-btn-secondary" id="darkModeMenuBtn">
+                    <i class="fas fa-moon"></i>
+                    Темная тема
+                </button>
+                <button class="modal-btn modal-btn-secondary" id="logoutMenuBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Уведомление -->
+    <div class="notification" id="notification">
+        <div class="notification-header">
+            <div class="notification-title" id="notificationTitle">Уведомление</div>
+            <div class="notification-close" id="closeNotification">&times;</div>
+        </div>
+        <div class="notification-body" id="notificationBody"></div>
+    </div>
 
     <script>
-        // Элементы DOM
-        const landingSection = document.getElementById('landing');
-        const messengerApp = document.getElementById('messengerApp');
-        const openMessengerBtn = document.getElementById('openMessengerBtn');
-        const backToLandingBtn = document.getElementById('backToLanding');
-        const becomeAmbassadorBtn = document.getElementById('becomeAmbassadorBtn');
-        const chatList = document.getElementById('chatList');
-        const mainChat = document.getElementById('mainChat');
-        const messagesContainer = document.getElementById('messagesContainer');
-        const messageInput = document.getElementById('messageInput');
-        const sendMessageBtn = document.getElementById('sendMessageBtn');
-        const startVideoCallBtn = document.getElementById('startVideoCall');
-        const callModal = document.getElementById('callModal');
-        const endCallBtn = document.getElementById('endCallBtn');
-        const toggleAudioBtn = document.getElementById('toggleAudioBtn');
-        const toggleVideoBtn = document.getElementById('toggleVideoBtn');
-        const remoteVideo = document.getElementById('remoteVideo');
-        const localVideo = document.getElementById('localVideo');
-        const callStatus = document.getElementById('callStatus');
+        // ==================== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ====================
+        let currentUser = {
+            id: 'user1',
+            name: 'Тихон Метелкин',
+            status: '🎧 онлайн',
+            avatar: null,
+            initials: 'TM'
+        };
         
-        // Состояние приложения
-        let currentChat = 'admin';
+        let currentChat = {
+            id: 'admin',
+            name: 'Администратор',
+            avatar: 'А',
+            status: 'в сети',
+            isOnline: true
+        };
+        
+        let chats = [
+            { id: 'admin', name: 'Администратор', avatar: 'А', status: 'в сети', isOnline: true, lastMessage: 'Добро пожаловать!', time: 'только что', unread: 1 },
+            { id: 'olga', name: 'Ольга Метелкина', avatar: 'ОВ', status: 'был(а) 15 мин назад', isOnline: false, lastMessage: 'Как там твои дела?', time: '15:30', unread: 0 },
+            { id: 'pavel', name: 'Павел Вилков', avatar: 'ПВ', status: 'в сети', isOnline: true, lastMessage: 'Встречаемся в 18:00', time: 'вчера', unread: 3 },
+            { id: 'channel1', name: 'Брат 2', avatar: 'Б2', status: 'канал', isOnline: null, lastMessage: 'КАК ТАМ ВАШИ СТАВКИ НА КЛУ...', time: '10:15', unread: 42 },
+            { id: 'channel2', name: 'Пар', avatar: 'П', status: 'канал', isOnline: null, lastMessage: 'Пар теперь в Telegram', time: 'ср', unread: 0 },
+            { id: 'mom', name: 'Мама', avatar: 'М', status: 'был(а) 2 ч назад', isOnline: false, lastMessage: 'Все файлы в одном месте', time: 'пн', unread: 0 }
+        ];
+        
+        let newUsers = [
+            { id: 'user2', name: 'Анна Петрова', avatar: 'АП', status: 'новая', isOnline: true },
+            { id: 'user3', name: 'Иван Сидоров', avatar: 'ИС', status: 'новая', isOnline: false },
+            { id: 'user4', name: 'Мария Иванова', avatar: 'МИ', status: 'новая', isOnline: true }
+        ];
+        
+        let searchResults = [];
+        let localStream = null;
         let isAudioMuted = false;
         let isVideoOff = false;
-        let localStream = null;
-        let peerConnection = null;
+        let callActive = false;
         
-        // Открыть мессенджер
-        openMessengerBtn.addEventListener('click', () => {
-            landingSection.classList.add('hidden');
-            messengerApp.classList.add('active');
-            
-            // Показать уведомление
+        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            loadChats();
+            loadNewUsers();
+            setupEventListeners();
             showNotification('Добро пожаловать в Telegram Web Messenger!', 'success');
         });
         
-        // Вернуться на главную
-        backToLandingBtn.addEventListener('click', () => {
-            messengerApp.classList.remove('active');
-            landingSection.classList.remove('hidden');
-            
-            // Завершить звонок если активен
-            if (callModal.classList.contains('active')) {
-                endCall();
+        function initializeApp() {
+            // Загружаем данные из localStorage
+            const savedUser = localStorage.getItem('telegramUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUserProfile();
             }
-        });
-        
-        // Стать амбассадором
-        becomeAmbassadorBtn.addEventListener('click', () => {
-            landingSection.classList.add('hidden');
-            messengerApp.classList.add('active');
-            
-            // Автоматически открыть чат с админом
-            switchChat('admin');
-            
-            showNotification('Чат с администратором открыт!', 'info');
-        });
-        
-        // Переключение между чатами
-        chatList.addEventListener('click', (e) => {
-            const chatItem = e.target.closest('.chat-item');
-            if (chatItem) {
-                const chatId = chatItem.dataset.chat;
-                switchChat(chatId);
-            }
-        });
-        
-        function switchChat(chatId) {
-            currentChat = chatId;
-            
-            // Обновить активный чат в списке
-            document.querySelectorAll('.chat-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelector(`[data-chat="${chatId}"]`).classList.add('active');
-            
-            // Обновить заголовок чата
-            const chatName = document.querySelector(`[data-chat="${chatId}"] .chat-name`).textContent;
-            document.querySelector('.chat-contact-name').innerHTML = `${chatName} <i class="fas fa-check-circle verified-badge"></i>`;
-            
-            // Загрузить историю сообщений для выбранного чата
-            loadChatHistory(chatId);
         }
         
-        function loadChatHistory(chatId) {
-            // Здесь будет загрузка сообщений с сервера
-            // Пока что просто очищаем и добавляем демо-сообщения
+        // ==================== УПРАВЛЕНИЕ UI ====================
+        function loadChats() {
+            const chatList = document.getElementById('chatList');
+            chatList.innerHTML = '';
+            
+            chats.forEach(chat => {
+                const chatItem = document.createElement('div');
+                chatItem.className = 'chat-item';
+                chatItem.dataset.chatId = chat.id;
+                if (chat.id === currentChat.id) chatItem.classList.add('active');
+                
+                const statusColor = chat.isOnline === true ? '#4CAF50' : 
+                                  chat.isOnline === false ? '#ff9800' : 'transparent';
+                
+                chatItem.innerHTML = `
+                    <div class="chat-avatar">
+                        <div class="chat-avatar-img">${chat.avatar}</div>
+                        ${chat.isOnline !== null ? `<div class="chat-status" style="background: ${statusColor};"></div>` : ''}
+                    </div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <div class="chat-name">${chat.name}</div>
+                            <div class="chat-time">${chat.time}</div>
+                        </div>
+                        <div class="chat-preview">
+                            <div class="chat-preview-text">
+                                ${chat.id === 'admin' ? '<i class="fas fa-check-double" style="color: #4CAF50;"></i>' : ''}
+                                ${chat.lastMessage}
+                            </div>
+                            ${chat.unread > 0 ? `<div class="unread-badge">${chat.unread}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                chatItem.addEventListener('click', () => switchChat(chat.id));
+                chatList.appendChild(chatItem);
+            });
+        }
+        
+        function loadNewUsers() {
+            const newUsersList = document.getElementById('newUsersList');
+            newUsersList.innerHTML = '';
+            
+            newUsers.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'new-user-item';
+                userItem.dataset.userId = user.id;
+                
+                userItem.innerHTML = `
+                    <div class="chat-avatar">
+                        <div class="chat-avatar-img">${user.avatar}</div>
+                        <div class="chat-status" style="background: ${user.isOnline ? '#4CAF50' : '#ff9800'};"></div>
+                    </div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <div class="chat-name">${user.name}</div>
+                        </div>
+                        <div class="chat-preview">
+                            <div class="chat-preview-text">${user.status}</div>
+                        </div>
+                    </div>
+                    <button class="add-user-btn" data-user-id="${user.id}">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                `;
+                
+                newUsersList.appendChild(userItem);
+            });
+            
+            // Добавляем обработчики для кнопок "Добавить"
+            document.querySelectorAll('.add-user-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const userId = this.dataset.userId;
+                    addNewContact(userId);
+                });
+            });
+            
+            // Добавляем обработчики для клика по пользователю
+            document.querySelectorAll('.new-user-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const userId = this.dataset.userId;
+                    startChatWithNewUser(userId);
+                });
+            });
+        }
+        
+        function switchChat(chatId) {
+            const chat = chats.find(c => c.id === chatId);
+            if (!chat) return;
+            
+            currentChat = chat;
+            
+            // Обновляем активный чат в списке
+            document.querySelectorAll('.chat-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.chatId === chatId) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Обновляем заголовок чата
+            document.getElementById('currentChatName').innerHTML = `
+                ${chat.name} 
+                ${chat.id === 'admin' ? '<i class="fas fa-check-circle verified-badge"></i>' : ''}
+            `;
+            document.getElementById('currentChatStatus').innerHTML = chat.isOnline === true ?
+                `<span class="online-dot"></span> в сети` :
+                `<span style="color: var(--text-secondary);">${chat.status}</span>`;
+            
+            document.getElementById('currentChatAvatar').innerHTML = `
+                <div class="chat-avatar-img">${chat.avatar}</div>
+            `;
+            
+            // Загружаем сообщения
+            loadMessages(chatId);
+            
+            // Сбрасываем счетчик непрочитанных
+            chat.unread = 0;
+            loadChats();
+            
+            // Обновляем информацию для звонка
+            document.getElementById('callContactName').textContent = chat.name;
+        }
+        
+        function loadMessages(chatId) {
+            const messagesContainer = document.getElementById('messagesContainer');
             messagesContainer.innerHTML = `
                 <div class="message-date">
                     <span class="date-label">Сегодня</span>
                 </div>
             `;
             
+            let messages = [];
+            
             if (chatId === 'admin') {
-                addMessage('incoming', '👋 Привет! Я администратор этого мессенджера.', '12:00');
-                addMessage('incoming', 'Чем могу помочь?', '12:01');
+                messages = [
+                    { type: 'incoming', text: '👋 Привет! Я администратор этого мессенджера.', time: '12:00' },
+                    { type: 'incoming', text: 'Спасибо, что интересуетесь проектом! Вы хотите стать амбассадором?', time: '12:01' },
+                    { type: 'outgoing', text: 'Да, хочу помочь развитию проекта!', time: '12:02' },
+                    { type: 'incoming', text: 'Отлично! Как амбассадор вы получите:<br>1. Ранний доступ к новым функциям<br>2. Возможность влиять на развитие<br>3. Прямую связь с разработчиками<br>4. Эксклюзивный бейдж в профиле', time: '12:03' },
+                    { type: 'incoming', text: 'Хотите протестировать видеозвонок прямо сейчас?', time: '12:04' }
+                ];
             } else if (chatId === 'olga') {
-                addMessage('incoming', 'Привет! Как дела?', '15:30');
-                addMessage('outgoing', 'Всё отлично! А у тебя?', '15:32');
+                messages = [
+                    { type: 'incoming', text: 'Привет! Как дела?', time: '15:30' },
+                    { type: 'outgoing', text: 'Всё отлично! А у тебя?', time: '15:32' },
+                    { type: 'incoming', text: 'Тоже хорошо. Что нового?', time: '15:33' }
+                ];
+            } else {
+                messages = [
+                    { type: 'incoming', text: 'Привет! Это начало чата.', time: getCurrentTime() }
+                ];
             }
+            
+            messages.forEach(msg => {
+                addMessageToChat(msg.type, msg.text, msg.time, false);
+            });
         }
         
-        function addMessage(type, text, time) {
+        function addMessageToChat(type, text, time, isNew = true) {
+            const messagesContainer = document.getElementById('messagesContainer');
+            
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${type}`;
             messageDiv.innerHTML = `
@@ -1336,173 +1715,620 @@
                     </div>
                 </div>
             `;
+            
             messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-        
-        // Отправка сообщения
-        sendMessageBtn.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-        
-        function sendMessage() {
-            const text = messageInput.value.trim();
-            if (text) {
-                addMessage('outgoing', text, getCurrentTime());
-                messageInput.value = '';
+            
+            if (isNew) {
+                messageDiv.style.animation = 'messageAppear 0.2s ease-out';
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 
-                // Автоответ для админа
-                if (currentChat === 'admin') {
-                    setTimeout(() => {
-                        const responses = [
-                            'Интересно! Расскажите подробнее.',
-                            'Хорошо, я записал это.',
-                            'Спасибо за обратную связь!',
-                            'Как вам видеозвонок? Работает хорошо?'
-                        ];
-                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                        addMessage('incoming', randomResponse, getCurrentTime());
-                    }, 1000);
+                // Обновляем последнее сообщение в списке чатов
+                const chat = chats.find(c => c.id === currentChat.id);
+                if (chat) {
+                    chat.lastMessage = text.length > 30 ? text.substring(0, 30) + '...' : text;
+                    chat.time = getCurrentTimeShort();
+                    chat.unread = type === 'incoming' ? (chat.unread || 0) + 1 : 0;
+                    loadChats();
                 }
             }
         }
         
-        // Видеозвонок
-        startVideoCallBtn.addEventListener('click', startVideoCall);
-        endCallBtn.addEventListener('click', endCall);
-        toggleAudioBtn.addEventListener('click', toggleAudio);
-        toggleVideoBtn.addEventListener('click', toggleVideo);
-        
-        async function startVideoCall() {
-            try {
-                callModal.classList.add('active');
-                callStatus.textContent = 'Запрос доступа к камере и микрофону...';
+        // ==================== ПОИСК ====================
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
                 
-                // Запрашиваем медиапоток
-                localStream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true
+                if (query.length === 0) {
+                    searchResults.classList.remove('active');
+                    searchResults.innerHTML = '';
+                    return;
+                }
+                
+                // Ищем в чатах и пользователях
+                const results = [];
+                
+                // Поиск в существующих чатах
+                chats.forEach(chat => {
+                    if (chat.name.toLowerCase().includes(query)) {
+                        results.push({
+                            type: 'chat',
+                            id: chat.id,
+                            name: chat.name,
+                            avatar: chat.avatar,
+                            status: chat.status
+                        });
+                    }
                 });
                 
-                localVideo.srcObject = localStream;
-                callStatus.textContent = 'Соединение установлено';
+                // Поиск в новых пользователях
+                newUsers.forEach(user => {
+                    if (user.name.toLowerCase().includes(query)) {
+                        results.push({
+                            type: 'user',
+                            id: user.id,
+                            name: user.name,
+                            avatar: user.avatar,
+                            status: user.status
+                        });
+                    }
+                });
                 
-                // Имитация удаленного видео (для демо)
-                setTimeout(() => {
-                    remoteVideo.style.background = '#333';
-                    callStatus.textContent = 'Звонок с администратором';
-                }, 2000);
+                // Показываем результаты
+                if (results.length > 0) {
+                    searchResults.innerHTML = '';
+                    results.forEach(result => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'search-result-item';
+                        resultItem.innerHTML = `
+                            <div class="chat-avatar">
+                                <div class="chat-avatar-img">${result.avatar}</div>
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-name">${result.name}</div>
+                                <div class="chat-preview-text">${result.type === 'chat' ? 'чат' : 'новый пользователь'}</div>
+                            </div>
+                        `;
+                        
+                        resultItem.addEventListener('click', () => {
+                            if (result.type === 'chat') {
+                                switchChat(result.id);
+                            } else {
+                                startChatWithNewUser(result.id);
+                            }
+                            searchInput.value = '';
+                            searchResults.classList.remove('active');
+                        });
+                        
+                        searchResults.appendChild(resultItem);
+                    });
+                    searchResults.classList.add('active');
+                } else {
+                    searchResults.innerHTML = `
+                        <div class="search-result-item">
+                            <div style="text-align: center; width: 100%; color: var(--text-secondary); padding: 1rem;">
+                                Ничего не найдено
+                            </div>
+                        </div>
+                    `;
+                    searchResults.classList.add('active');
+                }
+            });
+            
+            // Закрываем результаты при клике вне поиска
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.classList.remove('active');
+                }
+            });
+        }
+        
+        // ==================== ВИДЕОЗВОНОК ====================
+        async function startVideoCall() {
+            try {
+                // Показываем модальное окно
+                const callModal = document.getElementById('callModal');
+                callModal.classList.add('active');
+                document.getElementById('callStatus').textContent = 'Запрос доступа к камере и микрофону...';
+                
+                // Запрашиваем доступ к медиаустройствам
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        facingMode: 'user'
+                    },
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
+                
+                // Показываем локальное видео
+                const localVideo = document.getElementById('localVideo');
+                localVideo.srcObject = localStream;
+                
+                // Обновляем статус
+                document.getElementById('callStatus').textContent = 'Соединение установлено';
+                callActive = true;
+                
+                // Имитируем удаленное соединение
+                simulateRemoteConnection();
+                
+                showNotification('Видеозвонок начат', 'success');
                 
             } catch (error) {
-                console.error('Ошибка доступа к медиаустройствам:', error);
-                callStatus.textContent = 'Ошибка: нет доступа к камере/микрофону';
+                console.error('Ошибка при запуске звонка:', error);
+                document.getElementById('callStatus').textContent = 'Ошибка: нет доступа к камере/микрофону';
                 showNotification('Разрешите доступ к камере и микрофону для звонков', 'error');
+                
+                // Закрываем модальное окно через 3 секунды
+                setTimeout(() => {
+                    endCall();
+                }, 3000);
             }
         }
         
+        function simulateRemoteConnection() {
+            setTimeout(() => {
+                if (callActive) {
+                    document.getElementById('callStatus').textContent = `Звонок с ${currentChat.name}`;
+                    
+                    // Имитируем видеопоток
+                    const remoteVideo = document.getElementById('remoteVideo');
+                    remoteVideo.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                    
+                    // Показываем тестовое видео или изображение
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 640;
+                    canvas.height = 480;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Рисуем градиент для имитации видео
+                    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                    gradient.addColorStop(0, '#667eea');
+                    gradient.addColorStop(1, '#764ba2');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Добавляем имя пользователя
+                    ctx.fillStyle = 'white';
+                    ctx.font = '48px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(currentChat.avatar, canvas.width/2, canvas.height/2);
+                    
+                    // Создаем видео из canvas
+                    const stream = canvas.captureStream(30);
+                    remoteVideo.srcObject = stream;
+                }
+            }, 2000);
+        }
+        
         function endCall() {
-            callModal.classList.remove('active');
+            callActive = false;
+            
+            // Останавливаем медиапотоки
             if (localStream) {
-                localStream.getTracks().forEach(track => track.stop());
+                localStream.getTracks().forEach(track => {
+                    track.stop();
+                });
                 localStream = null;
             }
-            localVideo.srcObject = null;
-            remoteVideo.srcObject = null;
+            
+            // Очищаем видео элементы
+            document.getElementById('localVideo').srcObject = null;
+            document.getElementById('remoteVideo').srcObject = null;
+            
+            // Скрываем модальное окно
+            document.getElementById('callModal').classList.remove('active');
+            
+            // Сбрасываем состояние кнопок
+            isAudioMuted = false;
+            isVideoOff = false;
+            updateCallControls();
+            
+            showNotification('Звонок завершен', 'info');
         }
         
         function toggleAudio() {
             if (localStream) {
-                const audioTrack = localStream.getAudioTracks()[0];
-                if (audioTrack) {
-                    audioTrack.enabled = !audioTrack.enabled;
-                    isAudioMuted = !audioTrack.enabled;
-                    toggleAudioBtn.innerHTML = isAudioMuted ? 
-                        '<i class="fas fa-microphone-slash"></i>' : 
-                        '<i class="fas fa-microphone"></i>';
-                    toggleAudioBtn.classList.toggle('active', !isAudioMuted);
+                const audioTracks = localStream.getAudioTracks();
+                if (audioTracks.length > 0) {
+                    audioTracks[0].enabled = !audioTracks[0].enabled;
+                    isAudioMuted = !audioTracks[0].enabled;
+                    updateCallControls();
+                    
+                    showNotification(isAudioMuted ? 'Микрофон выключен' : 'Микрофон включен', 'info');
                 }
             }
         }
         
         function toggleVideo() {
             if (localStream) {
-                const videoTrack = localStream.getVideoTracks()[0];
-                if (videoTrack) {
-                    videoTrack.enabled = !videoTrack.enabled;
-                    isVideoOff = !videoTrack.enabled;
-                    toggleVideoBtn.innerHTML = isVideoOff ? 
-                        '<i class="fas fa-video-slash"></i>' : 
-                        '<i class="fas fa-video"></i>';
-                    toggleVideoBtn.classList.toggle('active', !isVideoOff);
+                const videoTracks = localStream.getVideoTracks();
+                if (videoTracks.length > 0) {
+                    videoTracks[0].enabled = !videoTracks[0].enabled;
+                    isVideoOff = !videoTracks[0].enabled;
+                    updateCallControls();
+                    
+                    showNotification(isVideoOff ? 'Камера выключена' : 'Камера включена', 'info');
                 }
             }
         }
         
-        // Вспомогательные функции
+        function updateCallControls() {
+            const audioBtn = document.getElementById('toggleAudioBtn');
+            const videoBtn = document.getElementById('toggleVideoBtn');
+            
+            audioBtn.innerHTML = isAudioMuted ? 
+                '<i class="fas fa-microphone-slash"></i>' : 
+                '<i class="fas fa-microphone"></i>';
+            audioBtn.classList.toggle('active', !isAudioMuted);
+            
+            videoBtn.innerHTML = isVideoOff ? 
+                '<i class="fas fa-video-slash"></i>' : 
+                '<i class="fas fa-video"></i>';
+            videoBtn.classList.toggle('active', !isVideoOff);
+        }
+        
+        // ==================== ПРОФИЛЬ ====================
+        function updateUserProfile() {
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('profileNameInput').value = currentUser.name;
+            document.getElementById('profileStatusInput').value = currentUser.status;
+            
+            const avatarPreview = document.getElementById('avatarPreview');
+            const avatarInitials = document.getElementById('avatarInitials');
+            
+            if (currentUser.avatar) {
+                avatarPreview.innerHTML = `<img src="${currentUser.avatar}" alt="Аватар">`;
+                document.getElementById('userAvatar').innerHTML = `<img src="${currentUser.avatar}" alt="Аватар">`;
+            } else {
+                avatarPreview.innerHTML = `<span id="avatarInitials">${currentUser.initials}</span>`;
+                document.getElementById('userAvatar').innerHTML = currentUser.initials;
+                avatarInitials.textContent = currentUser.initials;
+            }
+        }
+        
+        function saveProfile() {
+            const newName = document.getElementById('profileNameInput').value.trim();
+            const newStatus = document.getElementById('profileStatusInput').value.trim();
+            
+            if (newName) {
+                currentUser.name = newName;
+                currentUser.status = newStatus;
+                currentUser.initials = getInitials(newName);
+                
+                // Сохраняем в localStorage
+                localStorage.setItem('telegramUser', JSON.stringify(currentUser));
+                
+                // Обновляем UI
+                updateUserProfile();
+                
+                // Закрываем модальное окно
+                document.getElementById('profileModal').classList.remove('active');
+                
+                showNotification('Профиль обновлен', 'success');
+            }
+        }
+        
+        function getInitials(name) {
+            return name.split(' ')
+                .map(word => word[0])
+                .join('')
+                .toUpperCase()
+                .substring(0, 2);
+        }
+        
+        // ==================== НОВЫЕ ПОЛЬЗОВАТЕЛИ ====================
+        function addNewContact(userId) {
+            const user = newUsers.find(u => u.id === userId);
+            if (!user) return;
+            
+            // Добавляем в чаты
+            const newChat = {
+                id: user.id,
+                name: user.name,
+                avatar: user.avatar,
+                status: user.isOnline ? 'в сети' : 'был(а) недавно',
+                isOnline: user.isOnline,
+                lastMessage: 'Начните общение',
+                time: 'только что',
+                unread: 0
+            };
+            
+            chats.push(newChat);
+            
+            // Удаляем из новых пользователей
+            newUsers = newUsers.filter(u => u.id !== userId);
+            
+            // Обновляем UI
+            loadChats();
+            loadNewUsers();
+            
+            showNotification(`${user.name} добавлен(а) в контакты`, 'success');
+        }
+        
+        function startChatWithNewUser(userId) {
+            const user = newUsers.find(u => u.id === userId);
+            if (!user) return;
+            
+            // Сначала добавляем в контакты
+            addNewContact(userId);
+            
+            // Переключаемся на новый чат
+            switchChat(userId);
+            
+            // Добавляем приветственное сообщение
+            setTimeout(() => {
+                addMessageToChat('incoming', `Привет! Я ${user.name}. Рад(а) познакомиться!`, getCurrentTime(), true);
+            }, 500);
+        }
+        
+        // ==================== УВЕДОМЛЕНИЯ ====================
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const notificationTitle = document.getElementById('notificationTitle');
+            const notificationBody = document.getElementById('notificationBody');
+            
+            // Устанавливаем заголовок в зависимости от типа
+            let title = 'Уведомление';
+            let icon = 'ℹ️';
+            
+            switch(type) {
+                case 'success':
+                    title = 'Успешно';
+                    icon = '✅';
+                    break;
+                case 'error':
+                    title = 'Ошибка';
+                    icon = '⚠️';
+                    break;
+                case 'warning':
+                    title = 'Внимание';
+                    icon = '⚠️';
+                    break;
+            }
+            
+            notificationTitle.textContent = `${icon} ${title}`;
+            notificationBody.textContent = message;
+            
+            // Показываем уведомление
+            notification.classList.add('active');
+            
+            // Автоматически скрываем через 5 секунд
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 5000);
+        }
+        
+        // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
         function getCurrentTime() {
             const now = new Date();
             return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
         }
         
-        function showNotification(message, type = 'info') {
-            // Создаем уведомление
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.innerHTML = `
-                <div class="notification-header">
-                    <div class="notification-title">
-                        ${type === 'error' ? '⚠️ Ошибка' : type === 'success' ? '✅ Успешно' : 'ℹ️ Информация'}
-                    </div>
-                    <div class="notification-close" onclick="this.parentElement.parentElement.remove()">
-                        <i class="fas fa-times"></i>
-                    </div>
-                </div>
-                <div class="notification-body">${message}</div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Показываем с анимацией
-            setTimeout(() => notification.classList.add('active'), 10);
-            
-            // Автоудаление через 5 секунд
-            setTimeout(() => {
-                notification.classList.remove('active');
-                setTimeout(() => notification.remove(), 300);
-            }, 5000);
+        function getCurrentTimeShort() {
+            const now = new Date();
+            const hours = now.getHours();
+            if (hours < 12) return 'утро';
+            if (hours < 18) return 'день';
+            return 'вечер';
         }
         
-        // Анимация кнопок на лендинге
-        document.querySelectorAll('.btn').forEach(btn => {
-            btn.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-2px)';
+        // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
+        function setupEventListeners() {
+            // Навигация
+            document.getElementById('openMessengerBtn').addEventListener('click', () => {
+                document.getElementById('landing').classList.add('hidden');
+                document.getElementById('messengerApp').classList.add('active');
             });
             
-            btn.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
+            document.getElementById('backToLanding').addEventListener('click', () => {
+                document.getElementById('messengerApp').classList.remove('active');
+                document.getElementById('landing').classList.remove('hidden');
+                endCall();
             });
-        });
-        
-        // Переключение темы
-        document.getElementById('toggleDarkMode').addEventListener('click', () => {
-            document.body.classList.toggle('light-theme');
-            showNotification('Тема изменена', 'info');
-        });
-        
-        // Инициализация
-        window.addEventListener('DOMContentLoaded', () => {
-            // Загружаем чат с админом по умолчанию
-            loadChatHistory('admin');
             
-            // Показываем приветственное сообщение
-            setTimeout(() => {
-                showNotification('Добро пожаловать! Используйте кнопки выше для навигации.', 'info');
-            }, 1000);
-        });
+            document.getElementById('becomeAmbassadorBtn').addEventListener('click', () => {
+                document.getElementById('landing').classList.add('hidden');
+                document.getElementById('messengerApp').classList.add('active');
+                switchChat('admin');
+            });
+            
+            // Профиль
+            document.getElementById('profileMenuBtn').addEventListener('click', () => {
+                document.getElementById('profileModal').classList.add('active');
+            });
+            
+            document.getElementById('changeAvatarBtn').addEventListener('click', () => {
+                document.getElementById('avatarInput').click();
+            });
+            
+            document.getElementById('avatarInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        currentUser.avatar = e.target.result;
+                        updateUserProfile();
+                        showNotification('Аватар обновлен', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
+            document.getElementById('cancelProfileBtn').addEventListener('click', () => {
+                document.getElementById('profileModal').classList.remove('active');
+            });
+            document.getElementById('closeProfileModal').addEventListener('click', () => {
+                document.getElementById('profileModal').classList.remove('active');
+            });
+            
+            // Звонки
+            document.getElementById('startVideoCall').addEventListener('click', startVideoCall);
+            document.getElementById('endCallBtn').addEventListener('click', endCall);
+            document.getElementById('toggleAudioBtn').addEventListener('click', toggleAudio);
+            document.getElementById('toggleVideoBtn').addEventListener('click', toggleVideo);
+            
+            // Сообщения
+            document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
+            document.getElementById('messageInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            function sendMessage() {
+                const input = document.getElementById('messageInput');
+                const text = input.value.trim();
+                
+                if (text) {
+                    addMessageToChat('outgoing', text, getCurrentTime(), true);
+                    input.value = '';
+                    
+                    // Автоответ для админа
+                    if (currentChat.id === 'admin') {
+                        setTimeout(() => {
+                            const responses = [
+                                'Спасибо за сообщение!',
+                                'Отличная идея!',
+                                'Я передам это разработчикам.',
+                                'Хотите обсудить это подробнее?'
+                            ];
+                            const response = responses[Math.floor(Math.random() * responses.length)];
+                            addMessageToChat('incoming', response, getCurrentTime(), true);
+                        }, 1000 + Math.random() * 2000);
+                    }
+                }
+            }
+            
+            // Поиск
+            setupSearch();
+            
+            // Меню
+            document.getElementById('menuBtn').addEventListener('click', () => {
+                document.getElementById('menuModal').classList.add('active');
+            });
+            
+            document.getElementById('closeMenuModal').addEventListener('click', () => {
+                document.getElementById('menuModal').classList.remove('active');
+            });
+            
+            document.getElementById('editProfileMenuBtn').addEventListener('click', () => {
+                document.getElementById('menuModal').classList.remove('active');
+                document.getElementById('profileModal').classList.add('active');
+            });
+            
+            document.getElementById('darkModeMenuBtn').addEventListener('click', () => {
+                showNotification('Тема изменена', 'success');
+                document.getElementById('menuModal').classList.remove('active');
+            });
+            
+            document.getElementById('logoutMenuBtn').addEventListener('click', () => {
+                if (confirm('Выйти из аккаунта?')) {
+                    localStorage.removeItem('telegramUser');
+                    location.reload();
+                }
+            });
+            
+            // Новый чат
+            document.getElementById('newChatBtn').addEventListener('click', () => {
+                document.getElementById('newChatModal').classList.add('active');
+            });
+            
+            document.getElementById('newChatBtnMobile').addEventListener('click', () => {
+                document.getElementById('newChatModal').classList.add('active');
+            });
+            
+            document.getElementById('closeNewChatModal').addEventListener('click', () => {
+                document.getElementById('newChatModal').classList.remove('active');
+            });
+            
+            document.getElementById('cancelNewChatBtn').addEventListener('click', () => {
+                document.getElementById('newChatModal').classList.remove('active');
+            });
+            
+            document.getElementById('searchUserInput').addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                const resultsContainer = document.getElementById('searchResultsModal');
+                
+                if (query.length === 0) {
+                    resultsContainer.innerHTML = '<div style="text-align: center; padding: 1rem; color: var(--text-secondary);">Введите имя для поиска</div>';
+                    return;
+                }
+                
+                // Ищем в новых пользователях
+                const filteredUsers = newUsers.filter(user => 
+                    user.name.toLowerCase().includes(query)
+                );
+                
+                if (filteredUsers.length > 0) {
+                    resultsContainer.innerHTML = '';
+                    filteredUsers.forEach(user => {
+                        const userElement = document.createElement('div');
+                        userElement.className = 'new-user-item';
+                        userElement.innerHTML = `
+                            <div class="chat-avatar">
+                                <div class="chat-avatar-img">${user.avatar}</div>
+                                <div class="chat-status" style="background: ${user.isOnline ? '#4CAF50' : '#ff9800'};"></div>
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-header">
+                                    <div class="chat-name">${user.name}</div>
+                                </div>
+                                <div class="chat-preview">
+                                    <div class="chat-preview-text">${user.status}</div>
+                                </div>
+                            </div>
+                            <button class="add-user-btn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        `;
+                        
+                        userElement.addEventListener('click', () => {
+                            startChatWithNewUser(user.id);
+                            document.getElementById('newChatModal').classList.remove('active');
+                            document.getElementById('searchUserInput').value = '';
+                        });
+                        
+                        resultsContainer.appendChild(userElement);
+                    });
+                } else {
+                    resultsContainer.innerHTML = '<div style="text-align: center; padding: 1rem; color: var(--text-secondary);">Пользователи не найдены</div>';
+                }
+            });
+            
+            // Уведомления
+            document.getElementById('closeNotification').addEventListener('click', () => {
+                document.getElementById('notification').classList.remove('active');
+            });
+            
+            // Закрытие модальных окон при клике вне их
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Анимация кнопок
+            document.querySelectorAll('.btn, .nav-btn, .modal-btn').forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        }
     </script>
 </body>
 </html>
