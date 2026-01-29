@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Web</title>
+    <title>Telegram Web - Реальный мессенджер</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* (Все стили остаются такими же как в вашем исходном файле) */
         * {
             margin: 0;
             padding: 0;
@@ -21,15 +20,731 @@
             overflow: hidden;
         }
 
-        /* (Все остальные стили остаются без изменений) */
-        /* ... остальные стили ... */
-        
-        /* Скрытые элементы */
-        .hidden {
-            display: none !important;
+        /* АВТОРИЗАЦИЯ */
+        .auth-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s;
         }
 
-        /* Загрузка */
+        .auth-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s;
+        }
+
+        .auth-tab.active {
+            color: #fff;
+            border-bottom: 2px solid #fff;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 15px;
+            background: #fff;
+            color: #667eea;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-error {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        .auth-error.active {
+            display: block;
+        }
+
+        /* ГЛАВНЫЙ КОНТЕЙНЕР */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* ЛЕВЫЙ БОКОВОЙ БАР */
+        .left-menu {
+            width: 70px;
+            background: #182533;
+            border-right: 1px solid #2d3b4d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            gap: 25px;
+            z-index: 10;
+        }
+
+        .menu-item {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8a8a8a;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            background: #2a3b52;
+            color: #fff;
+        }
+
+        .menu-item.active {
+            background: #2b5278;
+            color: #fff;
+        }
+
+        /* САЙДБАР */
+        .sidebar {
+            width: 350px;
+            background: #182533;
+            border-right: 1px solid #2d3b4d;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #2d3b4d;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .user-status {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4CAF50;
+            border: 2px solid #182533;
+        }
+
+        /* СПИСОК ЧАТОВ */
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+
+        .chat-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #2d3b4d;
+            transition: background 0.2s;
+        }
+
+        .chat-item:hover {
+            background: #2a3b52;
+        }
+
+        .chat-item.active {
+            background: #2b5278;
+        }
+
+        .chat-avatar-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-name {
+            font-weight: 600;
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ОСНОВНОЙ ЧАТ */
+        .main-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #0e1621;
+        }
+
+        .chat-header-main {
+            padding: 15px 20px;
+            border-bottom: 1px solid #2d3b4d;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #182533;
+        }
+
+        .chat-contact {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-contact-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #8a8a8a;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .chat-action-btn:hover {
+            background: #2a3b52;
+            color: #fff;
+        }
+
+        /* СООБЩЕНИЯ */
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 70%;
+            margin-bottom: 10px;
+        }
+
+        .message.outgoing {
+            align-self: flex-end;
+        }
+
+        .message.incoming {
+            align-self: flex-start;
+        }
+
+        .message-bubble {
+            padding: 10px 15px;
+            border-radius: 12px;
+            position: relative;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .message.outgoing .message-bubble {
+            background: #2b5278;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.incoming .message-bubble {
+            background: #182533;
+            border-bottom-left-radius: 5px;
+        }
+
+        /* ВВОД СООБЩЕНИЙ */
+        .message-input-container {
+            padding: 15px 20px;
+            border-top: 1px solid #2d3b4d;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #182533;
+        }
+
+        .message-input-wrapper {
+            flex: 1;
+            background: #0e1621;
+            border-radius: 25px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .message-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 15px;
+            resize: none;
+            max-height: 120px;
+            min-height: 20px;
+            padding: 5px 0;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .send-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #0088cc;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            font-size: 18px;
+            transition: background 0.2s;
+        }
+
+        .send-button:hover {
+            background: #0077b3;
+        }
+
+        /* ВИДЕОЗВОНОК */
+        .call-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .call-overlay.active {
+            display: flex;
+        }
+
+        .call-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remote-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #111;
+        }
+
+        .local-video {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 150px;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            object-fit: cover;
+            background: #333;
+        }
+
+        .call-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            z-index: 10;
+        }
+
+        .call-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .call-status {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .call-controls {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .call-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .call-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .call-btn.end-call {
+            background: #ff3b30;
+        }
+
+        .call-btn.end-call:hover {
+            background: #ff1f1f;
+        }
+
+        .call-btn.muted {
+            background: #ff3b30;
+        }
+
+        /* УВЕДОМЛЕНИЕ О ВХОДЯЩЕМ ЗВОНКЕ */
+        .incoming-call-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #182533;
+            border: 2px solid #2b5278;
+            border-radius: 15px;
+            padding: 20px;
+            width: 300px;
+            z-index: 2000;
+            display: none;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .incoming-call-notification.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .call-notification-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .call-notification-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .call-notification-info {
+            flex: 1;
+        }
+
+        .call-notification-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .call-notification-type {
+            font-size: 14px;
+            color: #8a8a8a;
+        }
+
+        .call-notification-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .call-notification-btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .accept-call-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .accept-call-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .reject-call-btn {
+            background: #ff3b30;
+            color: white;
+        }
+
+        .reject-call-btn:hover {
+            background: #ff1f1f;
+            transform: translateY(-2px);
+        }
+
+        /* ЗВОНЯЩИЙ ЭКРАН */
+        .calling-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #1a2b3c, #0e1621);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .calling-screen.active {
+            display: flex;
+        }
+
+        .calling-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        .calling-name {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .calling-status {
+            font-size: 18px;
+            color: #8a8a8a;
+            margin-bottom: 50px;
+        }
+
+        .calling-controls {
+            display: flex;
+            gap: 20px;
+        }
+
+        .calling-control-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: none;
+            background: #ff3b30;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .calling-control-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* УВЕДОМЛЕНИЯ */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #182533;
+            border: 1px solid #2d3b4d;
+            border-radius: 10px;
+            padding: 15px;
+            max-width: 300px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+            display: none;
+        }
+
+        .notification.active {
+            display: block;
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .notification-title {
+            font-weight: 600;
+        }
+
+        .notification-body {
+            font-size: 14px;
+            color: #8a8a8a;
+        }
+
+        .notification-close {
+            cursor: pointer;
+            color: #8a8a8a;
+        }
+
+        /* ЗАГРУЗКА */
         .loading {
             display: flex;
             align-items: center;
@@ -57,6 +772,11 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* СКРЫТЫЕ ЭЛЕМЕНТЫ */
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -69,19 +789,14 @@
             </div>
             
             <form class="auth-form active" id="loginForm" onsubmit="return login(event)">
-                <div class="auth-title">Вход в Telegram</div>
+                <div class="auth-title">Вход в мессенджер</div>
                 
                 <div class="form-group">
-                    <label class="form-label">Имя пользователя или Email</label>
-                    <input type="text" class="form-input" id="loginUsername" placeholder="tihon или tihon@example.com" required>
+                    <label class="form-label">Имя пользователя</label>
+                    <input type="text" class="form-input" id="loginUsername" placeholder="Введите имя" required>
                 </div>
                 
-                <div class="form-group">
-                    <label class="form-label">Пароль</label>
-                    <input type="password" class="form-input" id="loginPassword" placeholder="●●●●●●" required>
-                </div>
-                
-                <div class="auth-error" id="loginError">Неверный логин или пароль</div>
+                <div class="auth-error" id="loginError"></div>
                 
                 <button type="submit" class="auth-btn">Войти</button>
             </form>
@@ -91,27 +806,7 @@
                 
                 <div class="form-group">
                     <label class="form-label">Имя пользователя</label>
-                    <input type="text" class="form-input" id="registerUsername" placeholder="tihon" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="registerEmail" placeholder="tihon@example.com" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Имя</label>
-                    <input type="text" class="form-input" id="registerName" placeholder="Тихон Метелкин" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Пароль</label>
-                    <input type="password" class="form-input" id="registerPassword" placeholder="●●●●●●" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Повторите пароль</label>
-                    <input type="password" class="form-input" id="registerPasswordConfirm" placeholder="●●●●●●" required>
+                    <input type="text" class="form-input" id="registerUsername" placeholder="Придумайте имя" required>
                 </div>
                 
                 <div class="auth-error" id="registerError"></div>
@@ -132,48 +827,20 @@
         <div class="left-menu">
             <div class="menu-item active" title="Чаты" onclick="showChats()">
                 <i class="fas fa-comment-alt"></i>
-                <span class="badge" id="unreadBadge">0</span>
             </div>
-            <div class="menu-item" title="Каналы" onclick="showChannels()">
-                <i class="fas fa-broadcast-tower"></i>
-                <span class="badge" id="channelBadge">0</span>
-            </div>
-            <div class="menu-item" title="Настройки" onclick="showSettings()">
-                <i class="fas fa-cog"></i>
-            </div>
-        </div>
-
-        <!-- КНОПКА МЕНЮ ДЛЯ МОБИЛЬНОЙ ВЕРСИИ -->
-        <div class="mobile-menu-btn" onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
         </div>
 
         <!-- САЙДБАР С ЧАТАМИ -->
         <div class="sidebar" id="sidebar">
-            <!-- ШАПКА САЙДБАРА -->
             <div class="sidebar-header">
-                <div class="user-profile" onclick="showProfileModal()">
+                <div class="user-profile" onclick="showProfile()">
                     <div class="user-avatar" id="userAvatar">
                         <!-- Аватар загрузится через JS -->
                     </div>
                     <div class="user-info">
                         <div class="user-name" id="userName">Загрузка...</div>
-                        <div class="user-online">
-                            <i class="fas fa-circle" style="color: #4CAF50; font-size: 8px;"></i>
-                            <span id="userStatus">онлайн</span>
-                        </div>
+                        <div class="user-status" id="userStatusDot"></div>
                     </div>
-                </div>
-                <div class="chat-action-btn" title="Новый чат" onclick="startNewChat()">
-                    <i class="fas fa-edit"></i>
-                </div>
-            </div>
-
-            <!-- ПОИСК -->
-            <div class="search-container">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" class="search-input" placeholder="Поиск" id="searchInput" oninput="searchChats()">
                 </div>
             </div>
 
@@ -181,16 +848,10 @@
             <div class="chat-list" id="chatList">
                 <!-- ЧАТЫ БУДУТ ДОБАВЛЯТЬСЯ ЗДЕСЬ -->
             </div>
-
-            <!-- КАНАЛЫ (скрыто по умолчанию) -->
-            <div class="chat-list hidden" id="channelList">
-                <!-- КАНАЛЫ БУДУТ ДОБАВЛЯТЬСЯ ЗДЕСЬ -->
-            </div>
         </div>
 
         <!-- ОСНОВНОЙ ЧАТ -->
         <div class="main-chat">
-            <!-- ШАПКА ЧАТА -->
             <div class="chat-header-main">
                 <div class="chat-contact">
                     <div class="user-avatar" id="currentChatAvatar">
@@ -198,9 +859,6 @@
                     </div>
                     <div class="chat-contact-info">
                         <div class="chat-contact-name" id="currentChatName">Выберите чат</div>
-                        <div class="chat-contact-status" id="currentChatStatus">
-                            <!-- Статус загрузится через JS -->
-                        </div>
                     </div>
                 </div>
                 <div class="chat-actions">
@@ -219,11 +877,6 @@
 
             <!-- ВВОД СООБЩЕНИЙ -->
             <div class="message-input-container" id="messageInputContainer" style="display: none;">
-                <div class="input-actions">
-                    <div class="input-action-btn" title="Прикрепить файл" onclick="attachFile()">
-                        <i class="fas fa-paperclip"></i>
-                    </div>
-                </div>
                 <div class="message-input-wrapper">
                     <textarea class="message-input" placeholder="Сообщение" rows="1" id="messageInput"></textarea>
                 </div>
@@ -257,75 +910,41 @@
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО ПРОФИЛЯ -->
-    <div class="modal-overlay" id="profileModal">
-        <div class="modal">
-            <div class="modal-header">
-                <div class="modal-title">Редактировать профиль</div>
-                <div class="modal-close" onclick="hideProfileModal()">×</div>
+    <!-- УВЕДОМЛЕНИЕ О ВХОДЯЩЕМ ЗВОНКЕ -->
+    <div class="incoming-call-notification" id="incomingCallNotification">
+        <div class="call-notification-header">
+            <div class="call-notification-avatar" id="incomingCallAvatar"></div>
+            <div class="call-notification-info">
+                <div class="call-notification-name" id="incomingCallName"></div>
+                <div class="call-notification-type" id="incomingCallType">Входящий видеозвонок</div>
             </div>
-            
-            <div class="avatar-upload">
-                <div class="avatar-preview" id="avatarPreview" onclick="triggerAvatarUpload()">
-                    <!-- Аватар будет загружен через JS -->
-                    <div class="avatar-change">Изменить</div>
-                </div>
-                <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Имя</label>
-                <input type="text" class="form-input" id="profileName" placeholder="Введите ваше имя">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Статус</label>
-                <input type="text" class="form-input" id="profileStatus" placeholder="Введите ваш статус">
-            </div>
-            
-            <div class="modal-actions">
-                <button class="modal-btn modal-btn-secondary" onclick="hideProfileModal()">
-                    Отмена
-                </button>
-                <button class="modal-btn modal-btn-primary" onclick="saveProfile()">
-                    Сохранить
-                </button>
-            </div>
+        </div>
+        <div class="call-notification-actions">
+            <button class="call-notification-btn reject-call-btn" onclick="rejectIncomingCall()">
+                <i class="fas fa-phone-slash"></i> Отклонить
+            </button>
+            <button class="call-notification-btn accept-call-btn" onclick="acceptIncomingCall()">
+                <i class="fas fa-phone"></i> Принять
+            </button>
         </div>
     </div>
 
-    <!-- ПАНЕЛЬ НАСТРОЕК -->
-    <div class="settings-panel" id="settingsPanel">
-        <div class="settings-header">
-            <div class="settings-title">Настройки</div>
-            <div class="settings-close" onclick="hideSettings()">×</div>
-        </div>
-        <div class="settings-content">
-            <div class="settings-section">
-                <div class="settings-section-title">Аккаунт</div>
-                <div class="setting-item" onclick="showProfileModal()">
-                    <div class="setting-label">Изменить профиль</div>
-                    <div class="setting-desc">Имя, фото, статус</div>
-                </div>
-                <div class="setting-item" onclick="changePassword()">
-                    <div class="setting-label">Изменить пароль</div>
-                    <div class="setting-desc">Безопасность аккаунта</div>
-                </div>
-            </div>
-            
-            <div class="settings-section">
-                <div class="setting-item" onclick="logout()" style="background: #ff3b30; color: white;">
-                    <div class="setting-label">Выйти</div>
-                    <div class="setting-desc">Завершить сеанс</div>
-                </div>
-            </div>
+    <!-- ЭКРАН ЗВОНКА (ЗВОНИТ) -->
+    <div class="calling-screen" id="callingScreen">
+        <div class="calling-avatar" id="callingAvatar"></div>
+        <div class="calling-name" id="callingName"></div>
+        <div class="calling-status" id="callingStatus">Вызов...</div>
+        <div class="calling-controls">
+            <button class="calling-control-btn" onclick="cancelOutgoingCall()">
+                <i class="fas fa-phone-slash"></i>
+            </button>
         </div>
     </div>
 
     <!-- УВЕДОМЛЕНИЕ -->
     <div class="notification" id="notification">
         <div class="notification-header">
-            <div class="notification-title" id="notificationTitle">Telegram</div>
+            <div class="notification-title" id="notificationTitle">Мессенджер</div>
             <div class="notification-close" onclick="hideNotification()">×</div>
         </div>
         <div class="notification-body" id="notificationBody">Сообщение</div>
@@ -333,56 +952,56 @@
 
     <script>
         // ==================== КОНФИГУРАЦИЯ ====================
-        const API_BASE_URL = window.location.hostname === 'localhost' ? 
-            'http://localhost:3000/api' : '/api';
-        const WS_URL = window.location.hostname === 'localhost' ?
-            'ws://localhost:3000' : `wss://${window.location.host}`;
+        const SERVER_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000' 
+            : window.location.origin;
+        
+        const WS_URL = window.location.hostname === 'localhost'
+            ? 'ws://localhost:3000'
+            : `wss://${window.location.host}`;
 
         // ==================== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ====================
         let currentUser = null;
         let currentChat = null;
+        let users = [];
         let chats = [];
         let socket = null;
+        let peerConnection = null;
         let localStream = null;
-        let isCallActive = false;
+        let remoteStream = null;
+        let isCaller = false;
+        let isInCall = false;
+        let currentCall = null;
+        let callOffer = null;
         let isAudioMuted = false;
         let isVideoOff = false;
 
+        // Конфигурация STUN/ТURN серверов
+        const iceServers = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' },
+                { urls: 'stun:stun2.l.google.com:19302' },
+                { urls: 'stun:stun3.l.google.com:19302' },
+                { urls: 'stun:stun4.l.google.com:19302' }
+            ]
+        };
+
         // ==================== ИНИЦИАЛИЗАЦИЯ ====================
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Проверяем токен авторизации
-            const token = localStorage.getItem('token');
-            if (token) {
-                try {
-                    showLoading();
-                    const user = await verifyToken(token);
-                    if (user) {
-                        completeLogin(user, token);
-                        return;
-                    }
-                } catch (error) {
-                    console.error('Ошибка проверки токена:', error);
-                }
-            }
-            showAuthScreen();
+        document.addEventListener('DOMContentLoaded', function() {
+            checkExistingUser();
         });
 
-        // ==================== АВТОРИЗАЦИЯ ====================
-        async function verifyToken(token) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/verify`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                if (response.ok) {
-                    return await response.json();
-                }
-                return null;
-            } catch (error) {
-                console.error('Ошибка верификации токена:', error);
-                return null;
+        function checkExistingUser() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                showLoading();
+                setTimeout(() => {
+                    currentUser = JSON.parse(savedUser);
+                    completeLogin();
+                }, 1000);
+            } else {
+                showAuthScreen();
             }
         }
 
@@ -399,6 +1018,7 @@
             document.getElementById('loading').classList.add('hidden');
         }
 
+        // ==================== АВТОРИЗАЦИЯ ====================
         function showLoginForm() {
             document.getElementById('loginForm').classList.add('active');
             document.getElementById('registerForm').classList.remove('active');
@@ -426,38 +1046,34 @@
             event.preventDefault();
             
             const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
             
-            if (!username || !password) {
-                showError('loginError', 'Заполните все поля');
+            if (!username) {
+                showError('loginError', 'Введите имя пользователя');
                 return false;
             }
 
             showLoading();
             
             try {
-                const response = await fetch(`${API_BASE_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        username,
-                        password
-                    })
-                });
-                
-                const data = await response.json();
+                // Проверяем существование пользователя на сервере
+                const response = await fetch(`${SERVER_URL}/api/users/${username}`);
                 
                 if (response.ok) {
-                    completeLogin(data.user, data.token);
+                    const user = await response.json();
+                    currentUser = user;
+                    completeLogin();
+                } else if (response.status === 404) {
+                    // Пользователь не найден, создаем нового
+                    await registerUser(username);
                 } else {
                     hideLoading();
-                    showError('loginError', data.message || 'Ошибка авторизации');
+                    showError('loginError', 'Ошибка сервера');
                 }
             } catch (error) {
                 hideLoading();
-                showError('loginError', 'Ошибка соединения с сервером');
+                showError('loginError', 'Ошибка соединения');
+                // Для демонстрации создаем локального пользователя
+                createLocalUser(username);
             }
             
             return false;
@@ -467,70 +1083,66 @@
             event.preventDefault();
             
             const username = document.getElementById('registerUsername').value.trim();
-            const email = document.getElementById('registerEmail').value.trim();
-            const name = document.getElementById('registerName').value.trim();
-            const password = document.getElementById('registerPassword').value;
-            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
             
-            // Валидация
-            if (!username || !email || !name || !password) {
-                showError('registerError', 'Заполните все поля');
+            if (!username) {
+                showError('registerError', 'Введите имя пользователя');
                 return false;
             }
-            
-            if (password.length < 6) {
-                showError('registerError', 'Пароль должен быть не менее 6 символов');
-                return false;
-            }
-            
-            if (password !== passwordConfirm) {
-                showError('registerError', 'Пароли не совпадают');
-                return false;
-            }
-            
-            if (username.length < 3) {
-                showError('registerError', 'Имя пользователя должно быть не менее 3 символов');
+
+            if (username.length < 2) {
+                showError('registerError', 'Имя должно быть не менее 2 символов');
                 return false;
             }
 
             showLoading();
             
             try {
-                const response = await fetch(`${API_BASE_URL}/auth/register`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        username,
-                        email,
-                        name,
-                        password
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    completeLogin(data.user, data.token);
-                } else {
-                    hideLoading();
-                    showError('registerError', data.message || 'Ошибка регистрации');
-                }
+                await registerUser(username);
             } catch (error) {
                 hideLoading();
-                showError('registerError', 'Ошибка соединения с сервером');
+                showError('registerError', 'Ошибка регистрации');
+                // Для демонстрации создаем локального пользователя
+                createLocalUser(username);
             }
             
             return false;
         }
 
-        function completeLogin(user, token) {
-            currentUser = user;
-            
-            // Сохраняем токен
-            localStorage.setItem('token', token);
-            localStorage.setItem('user', JSON.stringify(user));
+        async function registerUser(username) {
+            const response = await fetch(`${SERVER_URL}/api/users`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    name: username
+                })
+            });
+
+            if (response.ok) {
+                const user = await response.json();
+                currentUser = user;
+                completeLogin();
+            } else {
+                hideLoading();
+                showError('registerError', 'Имя пользователя уже занято');
+            }
+        }
+
+        function createLocalUser(username) {
+            currentUser = {
+                id: Date.now().toString(),
+                username: username,
+                name: username,
+                isOnline: true
+            };
+            completeLogin();
+        }
+
+        function completeLogin() {
+            // Сохраняем пользователя
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
             
             // Показываем главный экран
             document.getElementById('authScreen').classList.add('hidden');
@@ -539,10 +1151,10 @@
             
             // Инициализируем интерфейс
             updateUserProfile();
-            loadUserChats();
+            loadUsers();
             connectWebSocket();
             
-            showNotification(`Добро пожаловать, ${user.name}!`, 'success');
+            showNotification(`Добро пожаловать, ${currentUser.name}!`, 'success');
         }
 
         function showError(elementId, message) {
@@ -553,23 +1165,59 @@
 
         // ==================== WEB SOCKET ====================
         function connectWebSocket() {
-            const token = localStorage.getItem('token');
-            socket = new WebSocket(`${WS_URL}?token=${token}`);
+            socket = new WebSocket(`${WS_URL}/ws`);
             
             socket.onopen = function() {
                 console.log('WebSocket подключен');
-                showNotification('Соединение установлено', 'success');
+                // Отправляем информацию о пользователе
+                socket.send(JSON.stringify({
+                    type: 'login',
+                    user: currentUser
+                }));
+                
+                showNotification('Подключено к серверу', 'success');
             };
             
-            socket.onmessage = function(event) {
+            socket.onmessage = async function(event) {
                 const data = JSON.parse(event.data);
-                handleWebSocketMessage(data);
+                console.log('Получено сообщение:', data);
+                
+                switch (data.type) {
+                    case 'users':
+                        handleUsersList(data.users);
+                        break;
+                    case 'chat':
+                        handleChatMessage(data.message);
+                        break;
+                    case 'call_offer':
+                        handleCallOffer(data);
+                        break;
+                    case 'call_answer':
+                        handleCallAnswer(data);
+                        break;
+                    case 'ice_candidate':
+                        handleIceCandidate(data.candidate);
+                        break;
+                    case 'call_end':
+                        handleCallEnd(data);
+                        break;
+                    case 'call_rejected':
+                        handleCallRejected(data);
+                        break;
+                    case 'user_online':
+                        handleUserOnline(data.userId);
+                        break;
+                    case 'user_offline':
+                        handleUserOffline(data.userId);
+                        break;
+                }
             };
             
             socket.onclose = function() {
                 console.log('WebSocket отключен');
-                // Пытаемся переподключиться через 5 секунд
-                setTimeout(connectWebSocket, 5000);
+                showNotification('Соединение потеряно. Переподключение...', 'error');
+                // Пытаемся переподключиться
+                setTimeout(connectWebSocket, 3000);
             };
             
             socket.onerror = function(error) {
@@ -577,92 +1225,63 @@
             };
         }
 
-        function handleWebSocketMessage(data) {
-            switch (data.type) {
-                case 'new_message':
-                    handleNewMessage(data.message);
-                    break;
-                case 'message_read':
-                    handleMessageRead(data.chatId, data.messageIds);
-                    break;
-                case 'user_status':
-                    handleUserStatus(data.userId, data.status);
-                    break;
-                case 'new_chat':
-                    handleNewChat(data.chat);
-                    break;
+        function sendWebSocketMessage(message) {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify(message));
             }
         }
 
-        function handleNewMessage(message) {
-            if (currentChat && message.chatId === currentChat._id) {
-                addMessageToUI(message);
-                chatSystem.markMessagesAsRead(currentChat._id, currentUser._id);
-            } else {
-                // Обновляем список чатов
-                loadUserChats();
-                showNotification(`Новое сообщение от ${message.sender.name}`, 'info');
+        // ==================== ПОЛЬЗОВАТЕЛИ ====================
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${SERVER_URL}/api/users`);
+                if (response.ok) {
+                    const allUsers = await response.json();
+                    // Фильтруем текущего пользователя
+                    users = allUsers.filter(user => user.id !== currentUser.id);
+                    renderUserList();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки пользователей:', error);
             }
         }
 
-        function handleMessageRead(chatId, messageIds) {
-            if (currentChat && currentChat._id === chatId) {
-                // Обновляем статус сообщений в UI
-                messageIds.forEach(msgId => {
-                    const msgElement = document.querySelector(`[data-message-id="${msgId}"]`);
-                    if (msgElement) {
-                        const checkIcon = msgElement.querySelector('.fa-check');
-                        if (checkIcon) {
-                            checkIcon.classList.add('fa-check-double');
-                        }
-                    }
-                });
-            }
+        function handleUsersList(userList) {
+            users = userList.filter(user => user.id !== currentUser.id);
+            renderUserList();
         }
 
-        function handleUserStatus(userId, status) {
-            // Обновляем статус в UI
-            if (currentChat && currentChat.participants.some(p => p._id === userId)) {
-                updateChatUI();
-            }
-            loadUserChats();
-        }
-
-        function handleNewChat(chat) {
-            chats.push(chat);
-            loadUserChats();
-        }
-
-        // ==================== ОСНОВНОЙ ИНТЕРФЕЙС ====================
-        function updateUserProfile() {
-            if (!currentUser) return;
+        function renderUserList() {
+            const chatList = document.getElementById('chatList');
+            chatList.innerHTML = '';
             
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userStatus').textContent = currentUser.status || 'онлайн';
-            
-            const avatarElement = document.getElementById('userAvatar');
-            if (currentUser.avatar) {
-                avatarElement.innerHTML = `<img src="/uploads/${currentUser.avatar}" alt="${currentUser.name}">`;
-            } else {
-                avatarElement.innerHTML = getInitials(currentUser.name);
-                avatarElement.style.background = getAvatarColor(currentUser._id);
-            }
-            
-            // Для модального окна профиля
-            document.getElementById('profileName').value = currentUser.name;
-            document.getElementById('profileStatus').value = currentUser.status || '';
-            
-            const avatarPreview = document.getElementById('avatarPreview');
-            if (currentUser.avatar) {
-                avatarPreview.innerHTML = `<img src="/uploads/${currentUser.avatar}" alt="${currentUser.name}">`;
-            } else {
-                avatarPreview.innerHTML = getInitials(currentUser.name);
-                avatarPreview.style.background = getAvatarColor(currentUser._id);
-            }
+            users.forEach(user => {
+                const chatItem = document.createElement('div');
+                chatItem.className = 'chat-item';
+                if (currentChat && user.id === currentChat.id) {
+                    chatItem.classList.add('active');
+                }
+                
+                chatItem.innerHTML = `
+                    <div class="chat-avatar-img" style="background: ${getAvatarColor(user.id)}">
+                        ${getUserInitials(user)}
+                    </div>
+                    <div class="chat-info">
+                        <div class="chat-name">
+                            ${user.name}
+                            ${user.isOnline ? '<span style="color: #4CAF50; font-size: 12px;"> ●</span>' : ''}
+                        </div>
+                    </div>
+                `;
+                
+                chatItem.onclick = () => selectUser(user);
+                chatList.appendChild(chatItem);
+            });
         }
 
-        function getInitials(name) {
-            return name.split(' ')
+        function getUserInitials(user) {
+            return user.name
+                .split(' ')
                 .map(word => word[0])
                 .join('')
                 .toUpperCase()
@@ -678,7 +1297,6 @@
                 'linear-gradient(135deg, #E91E63, #9C27B0)'
             ];
             
-            // Простое преобразование строки в число
             let hash = 0;
             for (let i = 0; i < id.length; i++) {
                 hash = id.charCodeAt(i) + ((hash << 5) - hash);
@@ -687,287 +1305,80 @@
             return colors[index];
         }
 
-        async function loadUserChats() {
-            if (!currentUser) return;
+        function selectUser(user) {
+            currentChat = user;
+            updateChatUI();
+            loadMessages();
             
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/chats`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                if (response.ok) {
-                    chats = await response.json();
-                    renderChatList();
-                    updateUnreadBadge();
-                }
-            } catch (error) {
-                console.error('Ошибка загрузки чатов:', error);
-            }
-        }
-
-        function renderChatList() {
-            const chatList = document.getElementById('chatList');
-            chatList.innerHTML = '';
+            document.getElementById('messageInputContainer').style.display = 'flex';
+            document.getElementById('videoCallBtn').style.display = 'flex';
             
-            // Сортируем чаты по последнему сообщению
-            chats.sort((a, b) => new Date(b.lastMessageAt) - new Date(a.lastMessageAt));
-            
-            chats.forEach(chat => {
-                const chatItem = createChatItem(chat);
-                chatList.appendChild(chatItem);
-            });
-        }
-
-        function createChatItem(chat) {
-            const chatItem = document.createElement('div');
-            chatItem.className = 'chat-item';
-            
-            if (currentChat && chat._id === currentChat._id) {
-                chatItem.classList.add('active');
-            }
-            
-            const chatInfo = getChatInfo(chat);
-            const unreadCount = getUnreadCount(chat);
-            
-            chatItem.innerHTML = `
-                <div class="chat-avatar">
-                    <div class="chat-avatar-img" style="background: ${chatInfo.avatarColor}">
-                        ${chatInfo.avatar}
-                    </div>
-                    ${chatInfo.isOnline ? '<div class="chat-status"></div>' : ''}
-                </div>
-                <div class="chat-info">
-                    <div class="chat-header">
-                        <div class="chat-name">${chatInfo.name}</div>
-                        <div class="chat-time">${formatTime(chat.lastMessageAt)}</div>
-                    </div>
-                    <div class="chat-preview">
-                        <div class="chat-preview-text">${getLastMessagePreview(chat)}</div>
-                        ${unreadCount > 0 ? `<div class="chat-unread">${unreadCount}</div>` : ''}
-                    </div>
-                </div>
-            `;
-            
-            chatItem.onclick = () => selectChat(chat);
-            return chatItem;
-        }
-
-        function getChatInfo(chat) {
-            if (chat.type === 'group' || chat.type === 'channel') {
-                return {
-                    name: chat.name,
-                    avatar: chat.avatar ? `<img src="/uploads/${chat.avatar}" alt="${chat.name}">` : getInitials(chat.name),
-                    avatarColor: getAvatarColor(chat._id),
-                    isOnline: false,
-                    id: chat._id
-                };
-            } else {
-                // Для приватного чата находим собеседника
-                const otherUser = chat.participants.find(p => p._id !== currentUser._id);
-                if (otherUser) {
-                    return {
-                        name: otherUser.name,
-                        avatar: otherUser.avatar ? `<img src="/uploads/${otherUser.avatar}" alt="${otherUser.name}">` : getInitials(otherUser.name),
-                        avatarColor: getAvatarColor(otherUser._id),
-                        isOnline: otherUser.isOnline || false,
-                        id: otherUser._id
-                    };
-                }
-            }
-            
-            return {
-                name: 'Неизвестный',
-                avatar: '?',
-                avatarColor: getAvatarColor('unknown'),
-                isOnline: false,
-                id: 'unknown'
-            };
-        }
-
-        function getLastMessagePreview(chat) {
-            if (!chat.lastMessage) {
-                return 'Нет сообщений';
-            }
-            
-            const isFromCurrentUser = chat.lastMessage.sender._id === currentUser._id;
-            const prefix = isFromCurrentUser ? 'Вы: ' : '';
-            const messageText = chat.lastMessage.text || 'Вложение';
-            
-            return prefix + (messageText.length > 30 
-                ? messageText.substring(0, 30) + '...' 
-                : messageText);
-        }
-
-        function getUnreadCount(chat) {
-            if (!chat.unreadCount) return 0;
-            return chat.unreadCount[currentUser._id] || 0;
-        }
-
-        function formatTime(dateString) {
-            if (!dateString) return '';
-            
-            const date = new Date(dateString);
-            const now = new Date();
-            const diff = now - date;
-            
-            if (diff < 24 * 60 * 60 * 1000) {
-                // Сегодня
-                return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-            } else if (diff < 7 * 24 * 60 * 60 * 1000) {
-                // На этой неделе
-                const days = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-                return days[date.getDay()];
-            } else {
-                // Ранее
-                return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-            }
-        }
-
-        async function selectChat(chat) {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/chats/${chat._id}/messages`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                if (response.ok) {
-                    const messages = await response.json();
-                    chat.messages = messages;
-                    currentChat = chat;
-                    
-                    // Обновляем UI
-                    updateChatUI();
-                    loadMessages();
-                    
-                    // Показываем поле ввода
-                    document.getElementById('messageInputContainer').style.display = 'flex';
-                    document.getElementById('videoCallBtn').style.display = 'flex';
-                    
-                    // Отмечаем сообщения как прочитанные
-                    markMessagesAsRead();
-                    
-                    // Обновляем список чатов
-                    loadUserChats();
-                    
-                    // На мобильных устройствах скрываем сайдбар
-                    if (window.innerWidth <= 768) {
-                        document.getElementById('sidebar').classList.remove('active');
-                    }
-                }
-            } catch (error) {
-                console.error('Ошибка загрузки сообщений:', error);
-                showNotification('Ошибка загрузки чата', 'error');
-            }
+            // Обновляем список
+            renderUserList();
         }
 
         function updateChatUI() {
             if (!currentChat) return;
             
-            const chatInfo = getChatInfo(currentChat);
-            
-            document.getElementById('currentChatName').textContent = chatInfo.name;
+            document.getElementById('currentChatName').textContent = currentChat.name;
             document.getElementById('currentChatAvatar').innerHTML = `
-                <div class="chat-avatar-img" style="background: ${chatInfo.avatarColor}">
-                    ${chatInfo.avatar}
+                <div class="chat-avatar-img" style="background: ${getAvatarColor(currentChat.id)}">
+                    ${getUserInitials(currentChat)}
                 </div>
             `;
             
-            const statusText = chatInfo.isOnline ? 'в сети' : 'был(а) недавно';
-            const statusHtml = chatInfo.isOnline 
-                ? '<span class="online-indicator"></span> в сети'
-                : `<span style="color: #8a8a8a;">${statusText}</span>`;
-            
-            document.getElementById('currentChatStatus').innerHTML = statusHtml;
-            document.getElementById('callContactName').textContent = chatInfo.name;
+            document.getElementById('callContactName').textContent = currentChat.name;
         }
 
-        function loadMessages() {
-            if (!currentChat || !currentChat.messages) return;
+        function updateUserProfile() {
+            if (!currentUser) return;
             
-            const container = document.getElementById('messagesContainer');
-            container.innerHTML = '';
-            
-            // Группируем сообщения по датам
-            let currentDate = null;
-            
-            currentChat.messages.forEach(msg => {
-                const messageDate = new Date(msg.createdAt).toDateString();
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userAvatar').innerHTML = getUserInitials(currentUser);
+            document.getElementById('userAvatar').style.background = getAvatarColor(currentUser.id);
+        }
+
+        function handleUserOnline(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                user.isOnline = true;
+                renderUserList();
                 
-                if (currentDate !== messageDate) {
-                    currentDate = messageDate;
-                    const dateDiv = document.createElement('div');
-                    dateDiv.className = 'message-date';
-                    dateDiv.innerHTML = `<span class="date-label">${formatDate(msg.createdAt)}</span>`;
-                    container.appendChild(dateDiv);
+                if (currentChat && currentChat.id === userId) {
+                    updateChatUI();
                 }
+            }
+        }
+
+        function handleUserOffline(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                user.isOnline = false;
+                renderUserList();
                 
-                addMessageToUI(msg, false);
-            });
-            
-            // Прокручиваем вниз
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            
-            if (date.toDateString() === now.toDateString()) {
-                return 'Сегодня';
-            }
-            
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            if (date.toDateString() === yesterday.toDateString()) {
-                return 'Вчера';
-            }
-            
-            return date.toLocaleDateString('ru-RU', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-        }
-
-        function addMessageToUI(message, scroll = true) {
-            if (!currentChat) return;
-            
-            const container = document.getElementById('messagesContainer');
-            const isOutgoing = message.sender._id === currentUser._id;
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isOutgoing ? 'outgoing' : 'incoming'}`;
-            messageDiv.setAttribute('data-message-id', message._id);
-            
-            const sender = message.sender;
-            const senderName = sender ? sender.name : 'Неизвестный';
-            
-            let messageHtml = `
-                <div class="message-bubble">${message.text}</div>
-                <div class="message-time">${formatTime(message.createdAt)}`;
-            
-            if (isOutgoing) {
-                messageHtml += ` <i class="fas fa-check${message.readBy && message.readBy.length > 0 ? '-double' : ''}" 
-                    style="color: ${message.readBy && message.readBy.length > 0 ? '#4CAF50' : '#8a8a8a'};"></i>`;
-            }
-            
-            messageHtml += `</div>`;
-            messageDiv.innerHTML = messageHtml;
-            
-            container.appendChild(messageDiv);
-            
-            if (scroll) {
-                container.scrollTop = container.scrollHeight;
+                if (currentChat && currentChat.id === userId) {
+                    updateChatUI();
+                }
             }
         }
 
         // ==================== СООБЩЕНИЯ ====================
-        async function sendMessage() {
+        function loadMessages() {
+            const container = document.getElementById('messagesContainer');
+            container.innerHTML = `
+                <div class="message-date">
+                    <span class="date-label">Начните общение</span>
+                </div>
+            `;
+        }
+
+        function handleChatMessage(message) {
+            if (currentChat && message.senderId === currentChat.id) {
+                addMessageToUI(message, false);
+            }
+        }
+
+        function sendMessage() {
             if (!currentChat || !currentUser) return;
             
             const input = document.getElementById('messageInput');
@@ -975,70 +1386,68 @@
             
             if (!text) return;
             
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/chats/${currentChat._id}/messages`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ text })
-                });
-                
-                if (response.ok) {
-                    const message = await response.json();
-                    
-                    // Добавляем в UI
-                    addMessageToUI(message);
-                    
-                    // Обновляем список чатов
-                    loadUserChats();
-                    
-                    // Очищаем поле ввода
-                    input.value = '';
-                    adjustTextareaHeight(input);
-                }
-            } catch (error) {
-                console.error('Ошибка отправки сообщения:', error);
-                showNotification('Ошибка отправки сообщения', 'error');
-            }
-        }
-
-        async function markMessagesAsRead() {
-            if (!currentChat) return;
+            const message = {
+                id: Date.now().toString(),
+                senderId: currentUser.id,
+                receiverId: currentChat.id,
+                text: text,
+                timestamp: new Date().toISOString()
+            };
             
-            try {
-                const token = localStorage.getItem('token');
-                await fetch(`${API_BASE_URL}/chats/${currentChat._id}/read`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                // Обновляем список чатов
-                loadUserChats();
-            } catch (error) {
-                console.error('Ошибка отметки сообщений как прочитанных:', error);
-            }
+            // Отправляем через WebSocket
+            sendWebSocketMessage({
+                type: 'chat',
+                message: message
+            });
+            
+            // Добавляем в UI
+            addMessageToUI(message, true);
+            
+            // Очищаем поле ввода
+            input.value = '';
         }
 
-        // ==================== ВИДЕОЗВОНКИ ====================
+        function addMessageToUI(message, isOutgoing = true) {
+            const container = document.getElementById('messagesContainer');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isOutgoing ? 'outgoing' : 'incoming'}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-bubble">${message.text}</div>
+            `;
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // ==================== ВИДЕОЗВОНКИ (WebRTC) ====================
         async function startVideoCall() {
             if (!currentChat || !currentUser) {
-                showNotification('Выберите чат для звонка', 'error');
+                showNotification('Выберите собеседника', 'error');
                 return;
             }
 
-            try {
-                showNotification('Запуск видеозвонка...', 'info');
-                
-                // Показываем экран звонка
-                document.getElementById('callOverlay').classList.add('active');
-                document.getElementById('callStatus').textContent = 'Запрос доступа к камере...';
+            if (!currentChat.isOnline) {
+                showNotification('Пользователь не в сети', 'error');
+                return;
+            }
 
-                // Запрашиваем доступ к медиаустройствам
+            isCaller = true;
+            currentCall = {
+                from: currentUser.id,
+                to: currentChat.id,
+                type: 'video'
+            };
+
+            // Показываем экран звонка
+            document.getElementById('callingScreen').classList.add('active');
+            document.getElementById('callingName').textContent = currentChat.name;
+            document.getElementById('callingAvatar').innerHTML = getUserInitials(currentChat);
+            document.getElementById('callingStatus').textContent = 'Вызов...';
+
+            try {
+                // Запрашиваем медиаустройства
                 localStream = await navigator.mediaDevices.getUserMedia({
                     video: {
                         width: { ideal: 1280 },
@@ -1052,70 +1461,290 @@
                     }
                 });
 
-                // Показываем локальное видео
-                const localVideo = document.getElementById('localVideo');
-                localVideo.srcObject = localStream;
+                // Создаем PeerConnection
+                await createPeerConnection();
 
-                // Обновляем статус
-                document.getElementById('callStatus').textContent = 'Соединение установлено';
-                isCallActive = true;
+                // Добавляем локальный поток
+                localStream.getTracks().forEach(track => {
+                    peerConnection.addTrack(track, localStream);
+                });
 
-                // Симуляция ответа от другого устройства
-                setTimeout(() => {
-                    if (isCallActive) {
-                        simulateRemoteVideo();
-                        showNotification('Соединение установлено', 'success');
-                    }
-                }, 2000);
+                // Создаем offer
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+
+                // Отправляем offer другому пользователю
+                sendWebSocketMessage({
+                    type: 'call_offer',
+                    from: currentUser.id,
+                    to: currentChat.id,
+                    offer: offer,
+                    callType: 'video'
+                });
 
             } catch (error) {
-                console.error('Ошибка звонка:', error);
-                document.getElementById('callStatus').textContent = 'Ошибка: нет доступа к камере';
-                showNotification('Разрешите доступ к камере и микрофону', 'error');
-                
-                setTimeout(() => {
-                    endCall();
-                }, 3000);
+                console.error('Ошибка начала звонка:', error);
+                showNotification('Ошибка доступа к камере/микрофону', 'error');
+                cancelOutgoingCall();
             }
         }
 
-        function simulateRemoteVideo() {
-            const remoteVideo = document.getElementById('remoteVideo');
-            
-            // Создаем тестовое видео
-            const canvas = document.createElement('canvas');
-            canvas.width = 640;
-            canvas.height = 480;
-            const ctx = canvas.getContext('2d');
+        async function createPeerConnection() {
+            peerConnection = new RTCPeerConnection(iceServers);
 
-            // Анимация для имитации видео
-            function drawFrame() {
-                if (!isCallActive) return;
+            // Обработка удаленного потока
+            peerConnection.ontrack = (event) => {
+                if (event.streams && event.streams[0]) {
+                    remoteStream = event.streams[0];
+                    document.getElementById('remoteVideo').srcObject = remoteStream;
+                }
+            };
 
-                // Градиентный фон
-                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-                gradient.addColorStop(0, '#667eea');
-                gradient.addColorStop(1, '#764ba2');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Обработка ICE кандидатов
+            peerConnection.onicecandidate = (event) => {
+                if (event.candidate) {
+                    sendWebSocketMessage({
+                        type: 'ice_candidate',
+                        from: currentUser.id,
+                        to: currentChat.id,
+                        candidate: event.candidate
+                    });
+                }
+            };
 
-                // Имя пользователя
-                ctx.fillStyle = 'white';
-                ctx.font = '48px Arial';
-                ctx.textAlign = 'center';
+            // Обработка состояния соединения
+            peerConnection.onconnectionstatechange = () => {
+                console.log('Состояние соединения:', peerConnection.connectionState);
                 
-                const chatInfo = getChatInfo(currentChat);
-                const initials = chatInfo.avatar.replace(/<[^>]*>/g, '');
-                ctx.fillText(initials, canvas.width/2, canvas.height/2);
+                switch (peerConnection.connectionState) {
+                    case 'connected':
+                        showNotification('Соединение установлено', 'success');
+                        document.getElementById('callStatus').textContent = 'Соединено';
+                        break;
+                    case 'disconnected':
+                        showNotification('Соединение прервано', 'error');
+                        break;
+                    case 'failed':
+                        showNotification('Ошибка соединения', 'error');
+                        endCall();
+                        break;
+                    case 'closed':
+                        endCall();
+                        break;
+                }
+            };
+        }
 
-                // Преобразуем canvas в stream
-                const stream = canvas.captureStream(30);
-                remoteVideo.srcObject = stream;
-
-                requestAnimationFrame(drawFrame);
+        // ==================== ОБРАБОТКА ВХОДЯЩИХ ЗВОНКОВ ====================
+        function handleCallOffer(data) {
+            if (isInCall) {
+                // Уже в звонке, отклоняем
+                sendWebSocketMessage({
+                    type: 'call_rejected',
+                    from: currentUser.id,
+                    to: data.from,
+                    reason: 'Пользователь занят'
+                });
+                return;
             }
 
-            drawFrame();
+            callOffer = data;
+            currentCall = {
+                from: data.from,
+                to: currentUser.id,
+                type: data.callType
+            };
+
+            // Находим информацию о звонящем
+            const caller = users.find(user => user.id === data.from);
+            if (!caller) return;
+
+            // Показываем уведомление о входящем звонке
+            document.getElementById('incomingCallName').textContent = caller.name;
+            document.getElementById('incomingCallAvatar').innerHTML = getUserInitials(caller);
+            document.getElementById('incomingCallType').textContent = 
+                data.callType === 'video' ? 'Входящий видеозвонок' : 'Входящий аудиозвонок';
+            
+            document.getElementById('incomingCallNotification').classList.add('active');
+
+            // Автоматически скрываем через 30 секунд
+            setTimeout(() => {
+                if (document.getElementById('incomingCallNotification').classList.contains('active')) {
+                    rejectIncomingCall();
+                }
+            }, 30000);
+        }
+
+        async function acceptIncomingCall() {
+            if (!callOffer) return;
+
+            isCaller = false;
+            isInCall = true;
+
+            // Скрываем уведомление
+            document.getElementById('incomingCallNotification').classList.remove('active');
+
+            // Показываем экран звонка
+            document.getElementById('callOverlay').classList.add('active');
+            document.getElementById('callStatus').textContent = 'Соединение...';
+
+            try {
+                // Получаем медиаустройства
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    video: callOffer.callType === 'video' ? {
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        facingMode: 'user'
+                    } : false,
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        sampleRate: 44100
+                    }
+                });
+
+                // Показываем локальное видео
+                document.getElementById('localVideo').srcObject = localStream;
+
+                // Создаем PeerConnection
+                await createPeerConnection();
+
+                // Добавляем локальный поток
+                localStream.getTracks().forEach(track => {
+                    peerConnection.addTrack(track, localStream);
+                });
+
+                // Устанавливаем удаленное описание (offer)
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(callOffer.offer));
+
+                // Создаем answer
+                const answer = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(answer);
+
+                // Отправляем answer
+                sendWebSocketMessage({
+                    type: 'call_answer',
+                    from: currentUser.id,
+                    to: callOffer.from,
+                    answer: answer
+                });
+
+            } catch (error) {
+                console.error('Ошибка принятия звонка:', error);
+                showNotification('Ошибка принятия звонка', 'error');
+                endCall();
+            }
+        }
+
+        function rejectIncomingCall() {
+            document.getElementById('incomingCallNotification').classList.remove('active');
+            
+            if (callOffer) {
+                sendWebSocketMessage({
+                    type: 'call_rejected',
+                    from: currentUser.id,
+                    to: callOffer.from,
+                    reason: 'Отклонен'
+                });
+            }
+            
+            callOffer = null;
+            currentCall = null;
+        }
+
+        function handleCallAnswer(data) {
+            if (!peerConnection || !isCaller) return;
+
+            // Скрываем экран звонка
+            document.getElementById('callingScreen').classList.remove('active');
+
+            // Показываем экран разговора
+            document.getElementById('callOverlay').classList.add('active');
+
+            // Устанавливаем удаленный description
+            peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer))
+                .then(() => {
+                    console.log('Удаленное описание установлено');
+                    isInCall = true;
+                })
+                .catch(error => {
+                    console.error('Ошибка установки удаленного описания:', error);
+                    endCall();
+                });
+        }
+
+        function handleIceCandidate(candidate) {
+            if (peerConnection && peerConnection.remoteDescription) {
+                peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
+                    .catch(error => {
+                        console.error('Ошибка добавления ICE кандидата:', error);
+                    });
+            }
+        }
+
+        function handleCallEnd(data) {
+            showNotification('Звонок завершен', 'info');
+            endCall();
+        }
+
+        function handleCallRejected(data) {
+            document.getElementById('callingScreen').classList.remove('active');
+            showNotification('Звонок отклонен', 'error');
+            endCall();
+        }
+
+        // ==================== УПРАВЛЕНИЕ ЗВОНКОМ ====================
+        function cancelOutgoingCall() {
+            document.getElementById('callingScreen').classList.remove('active');
+            
+            if (currentCall) {
+                sendWebSocketMessage({
+                    type: 'call_end',
+                    from: currentUser.id,
+                    to: currentCall.to
+                });
+            }
+            
+            endCall();
+        }
+
+        function endCall() {
+            isInCall = false;
+            isCaller = false;
+            currentCall = null;
+            callOffer = null;
+            
+            // Останавливаем медиапотоки
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+                localStream = null;
+            }
+            
+            // Закрываем PeerConnection
+            if (peerConnection) {
+                peerConnection.close();
+                peerConnection = null;
+            }
+            
+            // Очищаем видео
+            document.getElementById('localVideo').srcObject = null;
+            document.getElementById('remoteVideo').srcObject = null;
+            
+            // Скрываем все экраны звонка
+            document.getElementById('callOverlay').classList.remove('active');
+            document.getElementById('callingScreen').classList.remove('active');
+            document.getElementById('incomingCallNotification').classList.remove('active');
+            
+            // Сбрасываем состояние кнопок
+            isAudioMuted = false;
+            isVideoOff = false;
+            
+            const audioBtn = document.getElementById('toggleAudioBtn');
+            const videoBtn = document.getElementById('toggleVideoBtn');
+            audioBtn.classList.remove('muted');
+            audioBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            videoBtn.classList.remove('muted');
+            videoBtn.innerHTML = '<i class="fas fa-video"></i>';
         }
 
         function toggleAudio() {
@@ -1160,360 +1789,22 @@
             }
         }
 
-        function endCall() {
-            isCallActive = false;
-            
-            // Останавливаем медиапотоки
-            if (localStream) {
-                localStream.getTracks().forEach(track => track.stop());
-                localStream = null;
-            }
-            
-            // Очищаем видео
-            document.getElementById('localVideo').srcObject = null;
-            document.getElementById('remoteVideo').srcObject = null;
-            
-            // Скрываем экран звонка
-            document.getElementById('callOverlay').classList.remove('active');
-            
-            // Сбрасываем состояние
-            isAudioMuted = false;
-            isVideoOff = false;
-            
-            // Обновляем кнопки
-            const audioBtn = document.getElementById('toggleAudioBtn');
-            const videoBtn = document.getElementById('toggleVideoBtn');
-            audioBtn.classList.remove('muted');
-            audioBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-            videoBtn.classList.remove('muted');
-            videoBtn.innerHTML = '<i class="fas fa-video"></i>';
-            
-            showNotification('Звонок завершен', 'info');
-        }
-
-        // ==================== ПРОФИЛЬ ====================
-        function showProfileModal() {
-            document.getElementById('profileModal').classList.add('active');
-        }
-
-        function hideProfileModal() {
-            document.getElementById('profileModal').classList.remove('active');
-        }
-
-        function triggerAvatarUpload() {
-            document.getElementById('avatarInput').click();
-        }
-
-        async function handleAvatarUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            if (!file.type.startsWith('image/')) {
-                showNotification('Пожалуйста, выберите изображение', 'error');
-                return;
-            }
-            
-            if (file.size > 5 * 1024 * 1024) {
-                showNotification('Изображение должно быть меньше 5MB', 'error');
-                return;
-            }
-            
-            const formData = new FormData();
-            formData.append('avatar', file);
-            
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/users/avatar`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: formData
+        function showProfile() {
+            // Простая реализация профиля
+            const newName = prompt('Изменить имя:', currentUser.name);
+            if (newName && newName.trim()) {
+                currentUser.name = newName.trim();
+                updateUserProfile();
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // Обновляем на сервере через WebSocket
+                sendWebSocketMessage({
+                    type: 'update_profile',
+                    user: currentUser
                 });
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    currentUser.avatar = data.avatar;
-                    localStorage.setItem('user', JSON.stringify(currentUser));
-                    updateUserProfile();
-                    showNotification('Аватар обновлен', 'success');
-                }
-            } catch (error) {
-                showNotification('Ошибка загрузки аватара', 'error');
+                showNotification('Имя изменено', 'success');
             }
-        }
-
-        async function saveProfile() {
-            const name = document.getElementById('profileName').value.trim();
-            const status = document.getElementById('profileStatus').value.trim();
-            
-            if (!name) {
-                showNotification('Введите имя', 'error');
-                return;
-            }
-            
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/users/profile`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        name,
-                        status
-                    })
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    currentUser = data.user;
-                    localStorage.setItem('user', JSON.stringify(currentUser));
-                    
-                    // Обновляем UI
-                    updateUserProfile();
-                    loadUserChats();
-                    
-                    // Закрываем модальное окно
-                    hideProfileModal();
-                    
-                    showNotification('Профиль обновлен', 'success');
-                }
-            } catch (error) {
-                showNotification('Ошибка обновления профиля', 'error');
-            }
-        }
-
-        // ==================== НАСТРОЙКИ ====================
-        function showSettings() {
-            document.getElementById('settingsPanel').classList.add('active');
-        }
-
-        function hideSettings() {
-            document.getElementById('settingsPanel').classList.remove('active');
-        }
-
-        async function changePassword() {
-            const oldPassword = prompt('Введите текущий пароль:');
-            if (!oldPassword) return;
-            
-            const newPassword = prompt('Введите новый пароль:');
-            if (!newPassword) return;
-            
-            if (newPassword.length < 6) {
-                showNotification('Пароль должен быть не менее 6 символов', 'error');
-                return;
-            }
-            
-            const confirmPassword = prompt('Повторите новый пароль:');
-            if (newPassword !== confirmPassword) {
-                showNotification('Пароли не совпадают', 'error');
-                return;
-            }
-            
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/users/password`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        oldPassword,
-                        newPassword
-                    })
-                });
-                
-                if (response.ok) {
-                    showNotification('Пароль изменен', 'success');
-                } else {
-                    const data = await response.json();
-                    showNotification(data.message || 'Ошибка изменения пароля', 'error');
-                }
-            } catch (error) {
-                showNotification('Ошибка изменения пароля', 'error');
-            }
-        }
-
-        function logout() {
-            if (confirm('Выйти из аккаунта?')) {
-                // Очищаем локальное хранилище
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                
-                // Закрываем WebSocket соединение
-                if (socket) {
-                    socket.close();
-                }
-                
-                // Перезагружаем страницу
-                location.reload();
-            }
-        }
-
-        // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
-        function showChats() {
-            document.getElementById('chatList').classList.remove('hidden');
-            document.getElementById('channelList').classList.add('hidden');
-            updateMenuActive('chats');
-        }
-
-        function showChannels() {
-            document.getElementById('chatList').classList.add('hidden');
-            document.getElementById('channelList').classList.remove('hidden');
-            updateMenuActive('channels');
-            renderChannels();
-        }
-
-        async function renderChannels() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/channels`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                if (response.ok) {
-                    const channels = await response.json();
-                    const channelList = document.getElementById('channelList');
-                    channelList.innerHTML = '';
-                    
-                    channels.forEach(channel => {
-                        const channelItem = document.createElement('div');
-                        channelItem.className = 'channel-item';
-                        
-                        channelItem.innerHTML = `
-                            <div class="channel-avatar" style="background: ${getAvatarColor(channel._id)}">
-                                ${channel.avatar ? `<img src="/uploads/${channel.avatar}" alt="${channel.name}">` : getInitials(channel.name)}
-                            </div>
-                            <div class="chat-info">
-                                <div class="chat-header">
-                                    <div class="chat-name">${channel.name}</div>
-                                    <div class="chat-time">${formatTime(channel.lastMessageAt)}</div>
-                                </div>
-                                <div class="chat-preview">
-                                    <div class="chat-preview-text">${channel.description || 'Нет описания'}</div>
-                                    <div class="chat-unread">${channel.subscribers || 0}</div>
-                                </div>
-                            </div>
-                        `;
-                        
-                        channelList.appendChild(channelItem);
-                    });
-                }
-            } catch (error) {
-                console.error('Ошибка загрузки каналов:', error);
-            }
-        }
-
-        function updateMenuActive(activeItem) {
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            const items = {
-                'chats': 0,
-                'channels': 1,
-                'settings': 2
-            };
-            
-            if (items[activeItem] !== undefined) {
-                document.querySelectorAll('.menu-item')[items[activeItem]].classList.add('active');
-            }
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('active');
-        }
-
-        function searchChats() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const chatItems = document.querySelectorAll('.chat-item');
-            
-            chatItems.forEach(item => {
-                const chatName = item.querySelector('.chat-name').textContent.toLowerCase();
-                if (chatName.includes(query)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-
-        async function startNewChat() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/users`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                if (response.ok) {
-                    const users = await response.json();
-                    // Фильтруем текущего пользователя и уже имеющиеся чаты
-                    const availableUsers = users.filter(user => 
-                        user._id !== currentUser._id && 
-                        !chats.some(chat => 
-                            chat.type === 'private' && 
-                            chat.participants.some(p => p._id === user._id)
-                        )
-                    );
-                    
-                    if (availableUsers.length === 0) {
-                        showNotification('Нет доступных пользователей для нового чата', 'info');
-                        return;
-                    }
-                    
-                    // Создаем чат с первым пользователем (в реальном приложении нужно дать выбор)
-                    const otherUser = availableUsers[0];
-                    
-                    const createResponse = await fetch(`${API_BASE_URL}/chats`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify({
-                            type: 'private',
-                            participants: [otherUser._id]
-                        })
-                    });
-                    
-                    if (createResponse.ok) {
-                        const newChat = await createResponse.json();
-                        chats.push(newChat);
-                        selectChat(newChat);
-                        showNotification(`Начат чат с ${otherUser.name}`, 'success');
-                    }
-                }
-            } catch (error) {
-                console.error('Ошибка создания чата:', error);
-                showNotification('Ошибка создания чата', 'error');
-            }
-        }
-
-        function attachFile() {
-            showNotification('Функция в разработке', 'info');
-        }
-
-        function updateUnreadBadge() {
-            let totalUnread = 0;
-            
-            chats.forEach(chat => {
-                totalUnread += getUnreadCount(chat);
-            });
-            
-            document.getElementById('unreadBadge').textContent = totalUnread;
-        }
-
-        function adjustTextareaHeight(textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
         }
 
         // ==================== УВЕДОМЛЕНИЯ ====================
@@ -1524,7 +1815,6 @@
             
             body.textContent = message;
             
-            // Устанавливаем цвет в зависимости от типа
             if (type === 'error') {
                 title.innerHTML = '⚠️ Ошибка';
                 notification.style.borderLeft = '4px solid #ff3b30';
@@ -1532,13 +1822,12 @@
                 title.innerHTML = '✅ Успешно';
                 notification.style.borderLeft = '4px solid #4CAF50';
             } else {
-                title.innerHTML = 'ℹ️ Telegram';
+                title.innerHTML = 'ℹ️ Уведомление';
                 notification.style.borderLeft = '4px solid #0088cc';
             }
             
             notification.classList.add('active');
             
-            // Автоматическое скрытие
             setTimeout(() => {
                 notification.classList.remove('active');
             }, 3000);
@@ -1550,13 +1839,12 @@
 
         // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
         function setupEventListeners() {
-            // Автоматическое изменение высоты textarea
             const messageInput = document.getElementById('messageInput');
             messageInput.addEventListener('input', function() {
-                adjustTextareaHeight(this);
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
             });
 
-            // Отправка сообщения по Enter (без Shift)
             messageInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -1564,22 +1852,13 @@
                 }
             });
 
-            // Закрытие звонка по Escape
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && isCallActive) {
+                if (e.key === 'Escape' && isInCall) {
                     endCall();
-                }
-            });
-
-            // Адаптация к мобильным устройствам
-            window.addEventListener('resize', function() {
-                if (window.innerWidth > 768) {
-                    document.getElementById('sidebar').classList.remove('active');
                 }
             });
         }
 
-        // Инициализация обработчиков событий
         setupEventListeners();
     </script>
 </body>
