@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  githubId: { type: String, unique: true },
-  username: { type: String, required: true },
-  name: String,
-  email: String,
-  avatar: { type: String, default: '/images/default-avatar.png' },
-  bio: String,
-  isGold: { type: Boolean, default: false },
+  username: { type: String, required: true, unique: true },
+  name: { type: String, default: '' },
+  email: { type: String, default: '' },
+  avatar: { type: String, default: '/images/fron.jpg' },
+  bio: { type: String, default: '' },
+  isVerified: { type: Boolean, default: false },
   isAdmin: { type: Boolean, default: false },
+  friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   createdAt: { type: Date, default: Date.now }
 });
 
