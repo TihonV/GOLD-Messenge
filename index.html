@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Web - Реальный мессенджер</title>
+    <title>Telegram Web</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <style>
         * {
             margin: 0;
@@ -13,192 +14,91 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: #0e1621;
             color: #fff;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* АВТОРИЗАЦИЯ */
-        .auth-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            transition: opacity 0.3s;
-        }
-
-        .auth-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .auth-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            width: 90%;
-            max-width: 400px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 30px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .auth-tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.7);
-            transition: all 0.3s;
-        }
-
-        .auth-tab.active {
-            color: #fff;
-            border-bottom: 2px solid #fff;
-        }
-
-        .auth-form {
-            display: none;
-        }
-
-        .auth-form.active {
-            display: block;
-        }
-
-        .auth-title {
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            color: #fff;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #fff;
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .auth-btn {
-            width: 100%;
-            padding: 15px;
-            background: #fff;
-            color: #667eea;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .auth-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .auth-error {
-            color: #ff6b6b;
-            font-size: 14px;
-            margin-top: 10px;
-            text-align: center;
-            display: none;
-        }
-
-        .auth-error.active {
-            display: block;
-        }
-
-        /* ГЛАВНЫЙ КОНТЕЙНЕР */
+        /* КРАСИВЫЙ КОНТЕЙНЕР ПРИЛОЖЕНИЯ */
         .app-container {
             display: flex;
             height: 100vh;
-            position: relative;
+            background: linear-gradient(135deg, #0e1621 0%, #1a2536 100%);
         }
 
-        /* ЛЕВЫЙ БОКОВОЙ БАР */
+        /* ЛЕВОЕ МЕНЮ */
         .left-menu {
-            width: 70px;
-            background: #182533;
-            border-right: 1px solid #2d3b4d;
+            width: 80px;
+            background: rgba(24, 37, 51, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(45, 59, 77, 0.5);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 0;
-            gap: 25px;
+            padding: 30px 0;
+            gap: 30px;
             z-index: 10;
         }
 
         .menu-item {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #8a8a8a;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .menu-item:hover {
-            background: #2a3b52;
+            background: rgba(43, 82, 120, 0.3);
             color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 136, 204, 0.2);
         }
 
         .menu-item.active {
-            background: #2b5278;
+            background: linear-gradient(135deg, #0088cc, #00a2ff);
             color: #fff;
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.4);
+        }
+
+        .menu-item .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff3b30;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+            border: 2px solid #182533;
         }
 
         /* САЙДБАР */
         .sidebar {
-            width: 350px;
-            background: #182533;
-            border-right: 1px solid #2d3b4d;
+            width: 380px;
+            background: rgba(24, 37, 51, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(45, 59, 77, 0.5);
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s;
         }
 
+        /* ШАПКА САЙДБАРА */
         .sidebar-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #2d3b4d;
+            padding: 24px;
+            border-bottom: 1px solid rgba(45, 59, 77, 0.5);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -207,69 +107,195 @@
         .user-profile {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
             cursor: pointer;
+            padding: 12px;
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
             background: linear-gradient(135deg, #667eea, #764ba2);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 18px;
             position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .user-status {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 12px;
-            height: 12px;
+            bottom: -2px;
+            right: -2px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background: #4CAF50;
             border: 2px solid #182533;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .user-online {
+            font-size: 13px;
+            color: #8a8a8a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ПОИСК */
+        .search-container {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(45, 59, 77, 0.5);
+        }
+
+        .search-box {
+            background: rgba(14, 22, 33, 0.8);
+            border-radius: 16px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .search-box:focus-within {
+            border-color: #0088cc;
+            background: rgba(14, 22, 33, 0.9);
+            box-shadow: 0 0 0 4px rgba(0, 136, 204, 0.1);
+        }
+
+        .search-box i {
+            color: #8a8a8a;
+            font-size: 16px;
+        }
+
+        .search-input {
+            background: none;
+            border: none;
+            color: #fff;
+            flex: 1;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
         }
 
         /* СПИСОК ЧАТОВ */
         .chat-list {
             flex: 1;
             overflow-y: auto;
-            padding-bottom: 20px;
+            padding: 20px 0;
+        }
+
+        .chat-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .chat-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .chat-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .chat-item {
-            padding: 12px 20px;
+            padding: 16px 24px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
             cursor: pointer;
-            border-bottom: 1px solid #2d3b4d;
-            transition: background 0.2s;
+            border-bottom: 1px solid rgba(45, 59, 77, 0.3);
+            transition: all 0.3s;
+            position: relative;
+            margin: 0 12px;
+            border-radius: 16px;
         }
 
         .chat-item:hover {
-            background: #2a3b52;
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
         }
 
         .chat-item.active {
-            background: #2b5278;
+            background: linear-gradient(135deg, rgba(43, 82, 120, 0.3), rgba(0, 136, 204, 0.2));
+            border: 1px solid rgba(0, 136, 204, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.1);
+        }
+
+        .chat-avatar {
+            position: relative;
+            flex-shrink: 0;
         }
 
         .chat-avatar-img {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
             background: linear-gradient(135deg, #4CAF50, #8BC34A);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-avatar-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .chat-status {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #4CAF50;
+            border: 2px solid #182533;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
         }
 
         .chat-info {
@@ -277,12 +303,52 @@
             min-width: 0;
         }
 
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
         .chat-name {
             font-weight: 600;
-            font-size: 15px;
+            font-size: 16px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .chat-time {
+            font-size: 12px;
+            color: #8a8a8a;
+            font-weight: 500;
+        }
+
+        .chat-preview {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #8a8a8a;
+        }
+
+        .chat-preview-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+
+        .chat-unread {
+            background: linear-gradient(135deg, #0088cc, #00a2ff);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 12px;
+            min-width: 24px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 136, 204, 0.3);
         }
 
         /* ОСНОВНОЙ ЧАТ */
@@ -290,65 +356,156 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: #0e1621;
+            background: linear-gradient(135deg, #0e1621 0%, #141e2d 100%);
+            position: relative;
+            overflow: hidden;
         }
 
+        /* КРАСИВАЯ ШАПКА ЧАТА */
         .chat-header-main {
-            padding: 15px 20px;
-            border-bottom: 1px solid #2d3b4d;
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(45, 59, 77, 0.5);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #182533;
+            background: rgba(24, 37, 51, 0.95);
+            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 10;
         }
 
         .chat-contact {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
+        }
+
+        .chat-contact-info {
+            display: flex;
+            flex-direction: column;
         }
 
         .chat-contact-name {
-            font-weight: 600;
-            font-size: 16px;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .chat-contact-status {
+            font-size: 14px;
+            color: #8a8a8a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .online-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         .chat-actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            align-items: center;
         }
 
         .chat-action-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             color: #8a8a8a;
-            font-size: 18px;
-            transition: all 0.2s;
+            font-size: 20px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .chat-action-btn:hover {
-            background: #2a3b52;
+            background: rgba(43, 82, 120, 0.3);
             color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 136, 204, 0.2);
         }
 
-        /* СООБЩЕНИЯ */
+        /* КРАСИВЫЕ СООБЩЕНИЯ */
         .messages-container {
             flex: 1;
-            padding: 20px;
+            padding: 30px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 20px;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255,255,255,0.02) 0%, transparent 55%),
+                radial-gradient(circle at 75% 75%, rgba(255,255,255,0.02) 0%, transparent 55%);
+            position: relative;
+        }
+
+        .messages-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .messages-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .messages-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .messages-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .message-date {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .date-label {
+            background: linear-gradient(135deg, rgba(24, 37, 51, 0.9), rgba(43, 82, 120, 0.9));
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
 
         .message {
-            max-width: 70%;
-            margin-bottom: 10px;
+            max-width: 75%;
+            margin-bottom: 20px;
+            animation: messageAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .message.outgoing {
@@ -360,41 +517,99 @@
         }
 
         .message-bubble {
-            padding: 10px 15px;
-            border-radius: 12px;
+            padding: 16px 20px;
+            border-radius: 20px;
             position: relative;
             word-wrap: break-word;
-            line-height: 1.4;
+            line-height: 1.5;
+            font-size: 15px;
+            backdrop-filter: blur(10px);
         }
 
         .message.outgoing .message-bubble {
-            background: #2b5278;
-            border-bottom-right-radius: 5px;
+            background: linear-gradient(135deg, #2b5278, #0088cc);
+            border-bottom-right-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.2);
         }
 
         .message.incoming .message-bubble {
-            background: #182533;
-            border-bottom-left-radius: 5px;
+            background: linear-gradient(135deg, rgba(24, 37, 51, 0.9), rgba(42, 59, 82, 0.9));
+            border-bottom-left-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
         }
 
-        /* ВВОД СООБЩЕНИЙ */
+        .message-time {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 8px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        .message-time i {
+            font-size: 14px;
+        }
+
+        /* КРАСИВЫЙ ВВОД СООБЩЕНИЙ */
         .message-input-container {
-            padding: 15px 20px;
-            border-top: 1px solid #2d3b4d;
+            padding: 20px 30px;
+            border-top: 1px solid rgba(45, 59, 77, 0.5);
             display: flex;
             align-items: center;
-            gap: 15px;
-            background: #182533;
+            gap: 16px;
+            background: rgba(24, 37, 51, 0.95);
+            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .input-action-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #8a8a8a;
+            font-size: 20px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .input-action-btn:hover {
+            background: rgba(43, 82, 120, 0.3);
+            color: #fff;
+            transform: translateY(-2px);
         }
 
         .message-input-wrapper {
             flex: 1;
-            background: #0e1621;
-            border-radius: 25px;
-            padding: 10px 20px;
+            background: rgba(14, 22, 33, 0.8);
+            border-radius: 24px;
+            padding: 12px 24px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .message-input-wrapper:focus-within {
+            border-color: #0088cc;
+            background: rgba(14, 22, 33, 0.9);
+            box-shadow: 0 0 0 4px rgba(0, 136, 204, 0.1);
         }
 
         .message-input {
@@ -405,17 +620,22 @@
             font-size: 15px;
             resize: none;
             max-height: 120px;
-            min-height: 20px;
-            padding: 5px 0;
+            min-height: 24px;
+            padding: 4px 0;
             outline: none;
             font-family: inherit;
+            line-height: 1.5;
+        }
+
+        .message-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .send-button {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #0088cc;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #0088cc, #00a2ff);
             color: white;
             display: flex;
             align-items: center;
@@ -423,349 +643,797 @@
             cursor: pointer;
             border: none;
             font-size: 18px;
-            transition: background 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.3);
         }
 
         .send-button:hover {
-            background: #0077b3;
+            background: linear-gradient(135deg, #0077b3, #0088cc);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
         }
 
-        /* ВИДЕОЗВОНОК */
-        .call-overlay {
+        .send-button:active {
+            transform: translateY(0) scale(0.95);
+        }
+
+        /* КРАСИВОЕ МОДАЛЬНОЕ ОКНО ПРОФИЛЯ */
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: #000;
-            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
             display: none;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .call-overlay.active {
+        .modal-overlay.active {
             display: flex;
+            opacity: 1;
+            animation: modalFadeIn 0.3s ease-out;
         }
 
-        .call-container {
-            flex: 1;
-            position: relative;
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0);
+            }
+            to {
+                opacity: 1;
+                backdrop-filter: blur(10px);
+            }
+        }
+
+        .modal {
+            background: linear-gradient(135deg, rgba(24, 37, 51, 0.95), rgba(14, 22, 33, 0.95));
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 40px;
+            width: 90%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            animation: modalSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes modalSlideUp {
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .modal::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .modal::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #fff, #e3f2fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-close {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            color: #8a8a8a;
+            font-size: 24px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        .remote-video {
+        .modal-close:hover {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            transform: rotate(90deg);
+        }
+
+        .avatar-upload {
+            text-align: center;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .avatar-preview {
+            width: 140px;
+            height: 140px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            overflow: hidden;
+            position: relative;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .avatar-preview:hover {
+            transform: scale(1.05);
+            border-color: #0088cc;
+            box-shadow: 0 20px 40px rgba(0, 136, 204, 0.3);
+        }
+
+        .avatar-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            background: #111;
         }
 
-        .local-video {
+        .avatar-change {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 200px;
-            height: 150px;
-            border-radius: 10px;
-            border: 2px solid #fff;
-            object-fit: cover;
-            background: #333;
-        }
-
-        .call-info {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: white;
-            z-index: 10;
-        }
-
-        .call-name {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .call-status {
-            font-size: 14px;
-            color: #ccc;
-        }
-
-        .call-controls {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            z-index: 10;
-        }
-
-        .call-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 24px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 16px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-bottom-left-radius: 28px;
+            border-bottom-right-radius: 28px;
+        }
+
+        .avatar-preview:hover .avatar-change {
+            opacity: 1;
+        }
+
+        .avatar-change i {
+            margin-right: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.3px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 400;
+            transition: all 0.3s;
             backdrop-filter: blur(10px);
         }
 
-        .call-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
+        .modal-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
         }
 
-        .call-btn.end-call {
-            background: #ff3b30;
+        .modal-input:focus {
+            outline: none;
+            border-color: #0088cc;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 4px rgba(0, 136, 204, 0.2);
         }
 
-        .call-btn.end-call:hover {
-            background: #ff1f1f;
-        }
-
-        .call-btn.muted {
-            background: #ff3b30;
-        }
-
-        /* УВЕДОМЛЕНИЕ О ВХОДЯЩЕМ ЗВОНКЕ */
-        .incoming-call-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #182533;
-            border: 2px solid #2b5278;
-            border-radius: 15px;
-            padding: 20px;
-            width: 300px;
-            z-index: 2000;
-            display: none;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .incoming-call-notification.active {
-            display: block;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .call-notification-header {
+        .modal-actions {
             display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 16px;
+            justify-content: flex-end;
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .call-notification-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        .modal-btn {
+            padding: 16px 32px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 20px;
+            gap: 10px;
+            min-width: 120px;
         }
 
-        .call-notification-info {
+        .modal-btn-primary {
+            background: linear-gradient(135deg, #0088cc, #00a2ff);
+            color: white;
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.3);
+        }
+
+        .modal-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
+        }
+
+        .modal-btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* КРАСИВАЯ ПАНЕЛЬ НАСТРОЕК */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(24, 37, 51, 0.98), rgba(14, 22, 33, 0.98));
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(45, 59, 77, 0.5);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+            overflow-y: auto;
+            box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .settings-panel.active {
+            right: 0;
+        }
+
+        .settings-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .settings-panel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .settings-panel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .settings-header {
+            padding: 30px;
+            border-bottom: 1px solid rgba(45, 59, 77, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: rgba(24, 37, 51, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1;
+        }
+
+        .settings-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #fff, #e3f2fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .settings-close {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #8a8a8a;
+            font-size: 24px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .settings-close:hover {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            transform: rotate(90deg);
+        }
+
+        .settings-content {
+            padding: 30px;
+        }
+
+        .settings-section {
+            margin-bottom: 40px;
+        }
+
+        .settings-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #8a8a8a;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-section-title i {
+            font-size: 14px;
+        }
+
+        .setting-item {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .setting-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .setting-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .setting-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #0088cc, #00a2ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .setting-info {
             flex: 1;
         }
 
-        .call-notification-name {
+        .setting-label {
             font-weight: 600;
             font-size: 16px;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            color: rgba(255, 255, 255, 0.95);
         }
 
-        .call-notification-type {
+        .setting-desc {
             font-size: 14px;
-            color: #8a8a8a;
+            color: rgba(255, 255, 255, 0.6);
         }
 
-        .call-notification-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
+        .setting-arrow {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
         }
 
-        .call-notification-btn {
-            padding: 10px 20px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
+        .logout-btn {
+            background: linear-gradient(135deg, rgba(255, 59, 48, 0.2), rgba(255, 31, 31, 0.2));
+            border: 2px solid rgba(255, 59, 48, 0.3);
         }
 
-        .accept-call-btn {
-            background: #4CAF50;
-            color: white;
+        .logout-btn .setting-icon {
+            background: linear-gradient(135deg, #ff3b30, #ff1f1f);
         }
 
-        .accept-call-btn:hover {
-            background: #45a049;
-            transform: translateY(-2px);
+        .logout-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 59, 48, 0.3), rgba(255, 31, 31, 0.3));
+            border-color: rgba(255, 59, 48, 0.5);
         }
 
-        .reject-call-btn {
-            background: #ff3b30;
-            color: white;
-        }
-
-        .reject-call-btn:hover {
-            background: #ff1f1f;
-            transform: translateY(-2px);
-        }
-
-        /* ЗВОНЯЩИЙ ЭКРАН */
-        .calling-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #1a2b3c, #0e1621);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-
-        .calling-screen.active {
-            display: flex;
-        }
-
-        .calling-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 36px;
-            margin-bottom: 30px;
-        }
-
-        .calling-name {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .calling-status {
-            font-size: 18px;
-            color: #8a8a8a;
-            margin-bottom: 50px;
-        }
-
-        .calling-controls {
-            display: flex;
-            gap: 20px;
-        }
-
-        .calling-control-btn {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: none;
-            background: #ff3b30;
-            color: white;
-            font-size: 28px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .calling-control-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* УВЕДОМЛЕНИЯ */
+        /* КРАСИВЫЕ УВЕДОМЛЕНИЯ */
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #182533;
-            border: 1px solid #2d3b4d;
-            border-radius: 10px;
-            padding: 15px;
-            max-width: 300px;
+            background: linear-gradient(135deg, rgba(24, 37, 51, 0.95), rgba(14, 22, 33, 0.95));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(45, 59, 77, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 320px;
             z-index: 1000;
-            animation: slideIn 0.3s ease-out;
+            animation: notificationSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            transform-origin: top right;
             display: none;
         }
 
         .notification.active {
             display: block;
+            animation: notificationSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes notificationSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
         }
 
         .notification-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .notification-title {
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notification-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #8a8a8a;
+            font-size: 18px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .notification-close:hover {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            transform: rotate(90deg);
         }
 
         .notification-body {
             font-size: 14px;
-            color: #8a8a8a;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
         }
 
-        .notification-close {
-            cursor: pointer;
-            color: #8a8a8a;
-        }
-
-        /* ЗАГРУЗКА */
-        .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: #0e1621;
+        /* КРАСИВЫЙ ПОДТВЕРЖДЕНИЕ ВЫХОДА */
+        .confirm-dialog {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
             z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #2b5278;
+        .confirm-dialog.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .confirm-box {
+            background: linear-gradient(135deg, rgba(24, 37, 51, 0.95), rgba(14, 22, 33, 0.95));
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            transform: scale(0.9);
+            animation: confirmSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes confirmSlideUp {
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .confirm-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 59, 48, 0.2), rgba(255, 31, 31, 0.2));
+            border: 3px solid rgba(255, 59, 48, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+            color: #ff6b6b;
+        }
+
+        .confirm-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .confirm-message {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .confirm-btn {
+            padding: 16px 32px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        .confirm-btn.cancel {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .confirm-btn.cancel:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .confirm-btn.confirm {
+            background: linear-gradient(135deg, #ff3b30, #ff1f1f);
+            color: white;
+            box-shadow: 0 5px 20px rgba(255, 59, 48, 0.3);
+        }
+
+        .confirm-btn.confirm:hover {
+            background: linear-gradient(135deg, #ff1f1f, #ff0000);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 59, 48, 0.4);
+        }
+
+        /* АДАПТИВНОСТЬ */
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 80px;
+                height: 100%;
+                transform: translateX(-100%);
+                z-index: 50;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .settings-panel {
+                width: 100%;
+                max-width: 400px;
+                right: -100%;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .left-menu {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                width: 100%;
+                height: 70px;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 0 20px;
+                border-top: 1px solid rgba(45, 59, 77, 0.5);
+                border-right: none;
+                z-index: 100;
+            }
+
+            .sidebar {
+                width: 100%;
+                left: 0;
+                z-index: 90;
+            }
+
+            .main-chat {
+                margin-bottom: 70px;
+            }
+
+            .chat-header-main,
+            .message-input-container {
+                padding: 16px 20px;
+            }
+
+            .messages-container {
+                padding: 20px;
+            }
+
+            .modal {
+                padding: 30px 20px;
+                width: 95%;
+            }
+
+            .settings-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .confirm-box {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .message {
+                max-width: 90%;
+            }
+
+            .chat-action-btn,
+            .input-action-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .send-button {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .modal-btn {
+                padding: 14px 24px;
+                min-width: 100px;
+            }
+
+            .confirm-btn {
+                padding: 14px 24px;
+                min-width: 100px;
+            }
+        }
+
+        /* КНОПКА МЕНЮ ДЛЯ МОБИЛЬНОЙ ВЕРСИИ */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #0088cc, #00a2ff);
+            color: white;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 60;
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.3);
+            transition: all 0.3s;
+        }
+
+        .mobile-menu-btn:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        /* ЗАГРУЗКА */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0e1621 0%, #1a2536 100%);
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(20px);
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
             border-top: 3px solid #0088cc;
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px rgba(0, 136, 204, 0.3);
         }
 
         @keyframes spin {
@@ -773,78 +1441,141 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* ТЕКУЩИЙ ЧАТ НЕ ВЫБРАН */
+        .no-chat-selected {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 136, 204, 0.1) 0%, transparent 70%);
+        }
+
+        .no-chat-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0, 136, 204, 0.2), rgba(0, 162, 255, 0.2));
+            border: 3px solid rgba(0, 136, 204, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            font-size: 48px;
+            color: #0088cc;
+        }
+
+        .no-chat-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(45deg, #fff, #e3f2fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .no-chat-description {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
         /* СКРЫТЫЕ ЭЛЕМЕНТЫ */
         .hidden {
             display: none !important;
         }
+
+        /* АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИЛОЖЕНИЯ */
+        @keyframes appFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .app-container {
+            animation: appFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
     </style>
 </head>
 <body>
-    <!-- ЭКРАН АВТОРИЗАЦИИ -->
-    <div class="auth-screen" id="authScreen">
-        <div class="auth-container">
-            <div class="auth-tabs">
-                <div class="auth-tab active" onclick="showLoginForm()">Вход</div>
-                <div class="auth-tab" onclick="showRegisterForm()">Регистрация</div>
+    <!-- КРАСИВОЕ ПОДТВЕРЖДЕНИЕ ВЫХОДА -->
+    <div class="confirm-dialog" id="confirmDialog">
+        <div class="confirm-box">
+            <div class="confirm-icon">
+                <i class="fas fa-sign-out-alt"></i>
             </div>
-            
-            <form class="auth-form active" id="loginForm" onsubmit="return login(event)">
-                <div class="auth-title">Вход в мессенджер</div>
-                
-                <div class="form-group">
-                    <label class="form-label">Имя пользователя</label>
-                    <input type="text" class="form-input" id="loginUsername" placeholder="Введите имя" required>
-                </div>
-                
-                <div class="auth-error" id="loginError"></div>
-                
-                <button type="submit" class="auth-btn">Войти</button>
-            </form>
-            
-            <form class="auth-form" id="registerForm" onsubmit="return register(event)">
-                <div class="auth-title">Регистрация</div>
-                
-                <div class="form-group">
-                    <label class="form-label">Имя пользователя</label>
-                    <input type="text" class="form-input" id="registerUsername" placeholder="Придумайте имя" required>
-                </div>
-                
-                <div class="auth-error" id="registerError"></div>
-                
-                <button type="submit" class="auth-btn">Зарегистрироваться</button>
-            </form>
+            <div class="confirm-title">Выйти из аккаунта?</div>
+            <div class="confirm-message">
+                Вы действительно хотите выйти из своего аккаунта?<br>
+                Для входа потребуется снова ввести данные.
+            </div>
+            <div class="confirm-actions">
+                <button class="confirm-btn cancel" onclick="hideConfirmDialog()">
+                    <i class="fas fa-times"></i> Отмена
+                </button>
+                <button class="confirm-btn confirm" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- ЗАГРУЗКА -->
-    <div class="loading hidden" id="loading">
-        <div class="spinner"></div>
-    </div>
-
     <!-- ГЛАВНЫЙ КОНТЕЙНЕР -->
-    <div class="app-container hidden" id="appContainer">
+    <div class="app-container">
         <!-- ЛЕВОЕ МЕНЮ -->
         <div class="left-menu">
             <div class="menu-item active" title="Чаты" onclick="showChats()">
                 <i class="fas fa-comment-alt"></i>
+                <span class="badge" id="unreadBadge">3</span>
             </div>
+            <div class="menu-item" title="Контакты" onclick="showContacts()">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="menu-item" title="Настройки" onclick="showSettings()">
+                <i class="fas fa-cog"></i>
+            </div>
+        </div>
+
+        <!-- КНОПКА МЕНЮ ДЛЯ МОБИЛЬНОЙ ВЕРСИИ -->
+        <div class="mobile-menu-btn" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
         </div>
 
         <!-- САЙДБАР С ЧАТАМИ -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <div class="user-profile" onclick="showProfile()">
+                <div class="user-profile" onclick="showProfileModal()">
                     <div class="user-avatar" id="userAvatar">
                         <!-- Аватар загрузится через JS -->
                     </div>
                     <div class="user-info">
                         <div class="user-name" id="userName">Загрузка...</div>
-                        <div class="user-status" id="userStatusDot"></div>
+                        <div class="user-online">
+                            <i class="fas fa-circle" style="color: #4CAF50; font-size: 10px;"></i>
+                            <span id="userStatus">онлайн</span>
+                        </div>
                     </div>
+                </div>
+                <div class="chat-action-btn" title="Новый чат" onclick="startNewChat()">
+                    <i class="fas fa-edit"></i>
                 </div>
             </div>
 
-            <!-- СПИСОК ЧАТОВ -->
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="search-input" placeholder="Поиск" id="searchInput" oninput="searchChats()">
+                </div>
+            </div>
+
             <div class="chat-list" id="chatList">
                 <!-- ЧАТЫ БУДУТ ДОБАВЛЯТЬСЯ ЗДЕСЬ -->
             </div>
@@ -852,31 +1583,54 @@
 
         <!-- ОСНОВНОЙ ЧАТ -->
         <div class="main-chat">
-            <div class="chat-header-main">
+            <!-- КОГДА ЧАТ НЕ ВЫБРАН -->
+            <div class="no-chat-selected" id="noChatSelected">
+                <div class="no-chat-icon">
+                    <i class="fab fa-telegram"></i>
+                </div>
+                <div class="no-chat-title">Telegram Web</div>
+                <div class="no-chat-description">
+                    Выберите чат для начала общения<br>
+                    или создайте новый для связи с друзьями
+                </div>
+            </div>
+
+            <!-- КОГДА ЧАТ ВЫБРАН -->
+            <div class="chat-header-main hidden" id="chatHeader">
                 <div class="chat-contact">
                     <div class="user-avatar" id="currentChatAvatar">
                         <!-- Аватар чата загрузится через JS -->
                     </div>
                     <div class="chat-contact-info">
                         <div class="chat-contact-name" id="currentChatName">Выберите чат</div>
+                        <div class="chat-contact-status" id="currentChatStatus">
+                            <!-- Статус загрузится через JS -->
+                        </div>
                     </div>
                 </div>
                 <div class="chat-actions">
-                    <div class="chat-action-btn" title="Видеозвонок" onclick="startVideoCall()" id="videoCallBtn" style="display: none;">
+                    <div class="chat-action-btn" title="Видеозвонок" onclick="startVideoCall()" id="videoCallBtn">
                         <i class="fas fa-video"></i>
+                    </div>
+                    <div class="chat-action-btn" title="Информация" onclick="showChatInfo()">
+                        <i class="fas fa-info-circle"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- СООБЩЕНИЯ -->
-            <div class="messages-container" id="messagesContainer">
-                <div class="message-date">
-                    <span class="date-label">Выберите чат для начала общения</span>
-                </div>
+            <div class="messages-container hidden" id="messagesContainer">
+                <!-- СООБЩЕНИЯ БУДУТ ДОБАВЛЯТЬСЯ ЗДЕСЬ -->
             </div>
 
-            <!-- ВВОД СООБЩЕНИЙ -->
-            <div class="message-input-container" id="messageInputContainer" style="display: none;">
+            <div class="message-input-container hidden" id="messageInputContainer">
+                <div class="input-actions">
+                    <div class="input-action-btn" title="Прикрепить файл" onclick="attachFile()">
+                        <i class="fas fa-paperclip"></i>
+                    </div>
+                    <div class="input-action-btn" title="Эмодзи" onclick="showEmojiPicker()">
+                        <i class="far fa-smile"></i>
+                    </div>
+                </div>
                 <div class="message-input-wrapper">
                     <textarea class="message-input" placeholder="Сообщение" rows="1" id="messageInput"></textarea>
                 </div>
@@ -887,400 +1641,818 @@
         </div>
     </div>
 
-    <!-- ВИДЕОЗВОНОК -->
-    <div class="call-overlay" id="callOverlay">
-        <div class="call-container">
-            <div class="call-info">
-                <div class="call-name" id="callContactName">Соединение...</div>
-                <div class="call-status" id="callStatus">Установка соединения...</div>
+    <!-- КРАСИВОЕ МОДАЛЬНОЕ ОКНО ПРОФИЛЯ -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Редактировать профиль</div>
+                <div class="modal-close" onclick="hideProfileModal()">×</div>
             </div>
-            <video class="remote-video" id="remoteVideo" autoplay playsinline></video>
-            <video class="local-video" id="localVideo" autoplay playsinline muted></video>
-            <div class="call-controls">
-                <button class="call-btn" id="toggleAudioBtn" onclick="toggleAudio()">
-                    <i class="fas fa-microphone"></i>
+            
+            <div class="avatar-upload">
+                <div class="avatar-preview" id="avatarPreview" onclick="triggerAvatarUpload()">
+                    <!-- Аватар будет загружен через JS -->
+                    <div class="avatar-change">
+                        <i class="fas fa-camera"></i> Изменить фото
+                    </div>
+                </div>
+                <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Имя</label>
+                <input type="text" class="modal-input" id="profileName" placeholder="Введите ваше имя">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Статус</label>
+                <input type="text" class="modal-input" id="profileStatus" placeholder="Введите ваш статус">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="modal-input" id="profileEmail" placeholder="Введите ваш email">
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" onclick="hideProfileModal()">
+                    <i class="fas fa-times"></i> Отмена
                 </button>
-                <button class="call-btn" id="toggleVideoBtn" onclick="toggleVideo()">
-                    <i class="fas fa-video"></i>
-                </button>
-                <button class="call-btn end-call" onclick="endCall()">
-                    <i class="fas fa-phone-slash"></i>
+                <button class="modal-btn modal-btn-primary" onclick="saveProfile()">
+                    <i class="fas fa-save"></i> Сохранить
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- УВЕДОМЛЕНИЕ О ВХОДЯЩЕМ ЗВОНКЕ -->
-    <div class="incoming-call-notification" id="incomingCallNotification">
-        <div class="call-notification-header">
-            <div class="call-notification-avatar" id="incomingCallAvatar"></div>
-            <div class="call-notification-info">
-                <div class="call-notification-name" id="incomingCallName"></div>
-                <div class="call-notification-type" id="incomingCallType">Входящий видеозвонок</div>
+    <!-- КРАСИВАЯ ПАНЕЛЬ НАСТРОЕК -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <div class="settings-title">Настройки</div>
+            <div class="settings-close" onclick="hideSettings()">×</div>
+        </div>
+        <div class="settings-content">
+            <div class="settings-section">
+                <div class="settings-section-title">
+                    <i class="fas fa-user-cog"></i> Аккаунт
+                </div>
+                <div class="setting-item" onclick="showProfileModal()">
+                    <div class="setting-icon">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-label">Изменить профиль</div>
+                        <div class="setting-desc">Имя, фото, статус, email</div>
+                    </div>
+                    <div class="setting-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="setting-item" onclick="changePassword()">
+                    <div class="setting-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-label">Изменить пароль</div>
+                        <div class="setting-desc">Безопасность аккаунта</div>
+                    </div>
+                    <div class="setting-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="setting-item" onclick="showPrivacySettings()">
+                    <div class="setting-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-label">Конфиденциальность</div>
+                        <div class="setting-desc">Настройки приватности</div>
+                    </div>
+                    <div class="setting-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <div class="settings-section-title">
+                    <i class="fas fa-bell"></i> Уведомления
+                </div>
+                <div class="setting-item" onclick="toggleNotifications()">
+                    <div class="setting-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-label">Уведомления</div>
+                        <div class="setting-desc">Звуки, вибрация, всплывающие</div>
+                    </div>
+                    <div class="setting-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="setting-item" onclick="showChatSettings()">
+                    <div class="setting-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-label">Настройки чатов</div>
+                        <div class="setting-desc">Темы, фон, размер текста</div>
+                    </div>
+                    <div class="setting-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <div class="settings-section-title">
+                    <i class="fas fa-info-circle"></i> О программе
+                </div>
+                <div class="setting-item" onclick="showAbout()">
+                    <div class="setting-icon">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-label">О Telegram Web</div>
+                        <div class="setting-desc">Версия, лицензия, помощь</div>
+                    </div>
+                    <div class="setting-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="setting-item logout-btn" onclick="showConfirmDialog()">
+                    <div class="setting-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-label">Выйти</div>
+                        <div class="setting-desc">Завершить сеанс</div>
+                    </div>
+                    <div class="setting-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="call-notification-actions">
-            <button class="call-notification-btn reject-call-btn" onclick="rejectIncomingCall()">
-                <i class="fas fa-phone-slash"></i> Отклонить
-            </button>
-            <button class="call-notification-btn accept-call-btn" onclick="acceptIncomingCall()">
-                <i class="fas fa-phone"></i> Принять
-            </button>
-        </div>
     </div>
 
-    <!-- ЭКРАН ЗВОНКА (ЗВОНИТ) -->
-    <div class="calling-screen" id="callingScreen">
-        <div class="calling-avatar" id="callingAvatar"></div>
-        <div class="calling-name" id="callingName"></div>
-        <div class="calling-status" id="callingStatus">Вызов...</div>
-        <div class="calling-controls">
-            <button class="calling-control-btn" onclick="cancelOutgoingCall()">
-                <i class="fas fa-phone-slash"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- УВЕДОМЛЕНИЕ -->
+    <!-- КРАСИВЫЕ УВЕДОМЛЕНИЯ -->
     <div class="notification" id="notification">
         <div class="notification-header">
-            <div class="notification-title" id="notificationTitle">Мессенджер</div>
+            <div class="notification-title">
+                <i class="fas fa-bell"></i> Telegram
+            </div>
             <div class="notification-close" onclick="hideNotification()">×</div>
         </div>
         <div class="notification-body" id="notificationBody">Сообщение</div>
     </div>
 
+    <!-- ЗАГРУЗКА -->
+    <div class="loading" id="loading">
+        <div class="loader"></div>
+    </div>
+
     <script>
-        // ==================== КОНФИГУРАЦИЯ ====================
-        const SERVER_URL = window.location.hostname === 'localhost' 
-            ? 'http://localhost:3000' 
-            : window.location.origin;
-        
-        const WS_URL = window.location.hostname === 'localhost'
-            ? 'ws://localhost:3000'
-            : `wss://${window.location.host}`;
+        // ==================== БАЗА ДАННЫХ ====================
+        class Database {
+            constructor() {
+                this.initDatabase();
+            }
+
+            initDatabase() {
+                if (!localStorage.getItem('telegram_users')) {
+                    const defaultUsers = [
+                        {
+                            id: '1',
+                            username: 'tihon',
+                            email: 'tihon@example.com',
+                            password: '2011',
+                            name: 'Тихон Метелкин',
+                            avatar: null,
+                            status: '🎧 Слушаю музыку',
+                            isOnline: true,
+                            lastSeen: new Date().toISOString(),
+                            friends: ['2', '3'],
+                            chats: ['chat_1_2', 'chat_1_3'],
+                            createdAt: new Date().toISOString(),
+                            phone: '+7 (999) 123-45-67'
+                        },
+                        {
+                            id: '2',
+                            username: 'olga',
+                            email: 'olga@example.com',
+                            password: '123456',
+                            name: 'Ольга Метелкина',
+                            avatar: null,
+                            status: '💼 На работе',
+                            isOnline: true,
+                            lastSeen: new Date().toISOString(),
+                            friends: ['1', '3'],
+                            chats: ['chat_1_2', 'chat_2_3'],
+                            createdAt: new Date().toISOString(),
+                            phone: '+7 (999) 234-56-78'
+                        },
+                        {
+                            id: '3',
+                            username: 'pavel',
+                            email: 'pavel@example.com',
+                            password: 'qwerty',
+                            name: 'Павел Вилков',
+                            avatar: null,
+                            status: '🏠 Дома',
+                            isOnline: false,
+                            lastSeen: new Date(Date.now() - 3600000).toISOString(),
+                            friends: ['1', '2'],
+                            chats: ['chat_1_3', 'chat_2_3'],
+                            createdAt: new Date().toISOString(),
+                            phone: '+7 (999) 345-67-89'
+                        }
+                    ];
+
+                    localStorage.setItem('telegram_users', JSON.stringify(defaultUsers));
+                    localStorage.setItem('telegram_chats', JSON.stringify(this.createDefaultChats()));
+                    localStorage.setItem('telegram_messages', JSON.stringify(this.createDefaultMessages()));
+                    
+                    // Сохраняем аватарки в отдельное хранилище
+                    localStorage.setItem('avatars_store', JSON.stringify({}));
+                }
+            }
+
+            createDefaultChats() {
+                return [
+                    {
+                        id: 'chat_1_2',
+                        type: 'private',
+                        participants: ['1', '2'],
+                        lastMessage: {
+                            id: 'msg_1',
+                            text: 'Привет! Как дела?',
+                            senderId: '2',
+                            timestamp: new Date().toISOString()
+                        },
+                        unreadCount: 2,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'chat_1_3',
+                        type: 'private',
+                        participants: ['1', '3'],
+                        lastMessage: {
+                            id: 'msg_2',
+                            text: 'Встречаемся завтра?',
+                            senderId: '3',
+                            timestamp: new Date(Date.now() - 3600000).toISOString()
+                        },
+                        unreadCount: 1,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'chat_2_3',
+                        type: 'private',
+                        participants: ['2', '3'],
+                        lastMessage: {
+                            id: 'msg_3',
+                            text: 'Отправил тебе файл',
+                            senderId: '2',
+                            timestamp: new Date(Date.now() - 1800000).toISOString()
+                        },
+                        unreadCount: 0,
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+            }
+
+            createDefaultMessages() {
+                return [
+                    {
+                        id: 'msg_1',
+                        chatId: 'chat_1_2',
+                        senderId: '2',
+                        text: 'Привет! Как дела?',
+                        timestamp: new Date().toISOString(),
+                        readBy: ['1', '2']
+                    },
+                    {
+                        id: 'msg_2',
+                        chatId: 'chat_1_3',
+                        senderId: '3',
+                        text: 'Встречаемся завтра?',
+                        timestamp: new Date(Date.now() - 3600000).toISOString(),
+                        readBy: ['1']
+                    },
+                    {
+                        id: 'msg_3',
+                        chatId: 'chat_2_3',
+                        senderId: '2',
+                        text: 'Отправил тебе файл',
+                        timestamp: new Date(Date.now() - 1800000).toISOString(),
+                        readBy: ['2', '3']
+                    }
+                ];
+            }
+
+            // СОХРАНЕНИЕ ДАННЫХ С ОБНОВЛЕНИЕМ
+            saveUsers(users) {
+                localStorage.setItem('telegram_users', JSON.stringify(users));
+                // Также сохраняем в отдельное хранилище для быстрого доступа
+                localStorage.setItem('users_last_update', Date.now().toString());
+            }
+
+            saveChats(chats) {
+                localStorage.setItem('telegram_chats', JSON.stringify(chats));
+                localStorage.setItem('chats_last_update', Date.now().toString());
+            }
+
+            saveMessages(messages) {
+                localStorage.setItem('telegram_messages', JSON.stringify(messages));
+                localStorage.setItem('messages_last_update', Date.now().toString());
+            }
+
+            // ОБНОВЛЕННЫЕ МЕТОДЫ ДЛЯ АВАТАРОК
+            saveAvatar(userId, avatarData) {
+                try {
+                    // Получаем текущее хранилище аватарок
+                    const avatarsStore = JSON.parse(localStorage.getItem('avatars_store') || '{}');
+                    
+                    // Сохраняем аватарку
+                    avatarsStore[userId] = avatarData;
+                    localStorage.setItem('avatars_store', JSON.stringify(avatarsStore));
+                    
+                    // Также обновляем пользователя
+                    const users = JSON.parse(localStorage.getItem('telegram_users') || '[]');
+                    const userIndex = users.findIndex(u => u.id === userId);
+                    
+                    if (userIndex !== -1) {
+                        users[userIndex].avatar = avatarData;
+                        this.saveUsers(users);
+                    }
+                    
+                    // Сохраняем метку времени обновления
+                    localStorage.setItem(`avatar_update_${userId}`, Date.now().toString());
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Ошибка сохранения аватарки:', error);
+                    return false;
+                }
+            }
+
+            getAvatar(userId) {
+                try {
+                    // Сначала пробуем получить из хранилища аватарок
+                    const avatarsStore = JSON.parse(localStorage.getItem('avatars_store') || '{}');
+                    if (avatarsStore[userId]) {
+                        return avatarsStore[userId];
+                    }
+                    
+                    // Если нет в хранилище, ищем в пользователе
+                    const users = JSON.parse(localStorage.getItem('telegram_users') || '[]');
+                    const user = users.find(u => u.id === userId);
+                    return user?.avatar || null;
+                } catch (error) {
+                    console.error('Ошибка получения аватарки:', error);
+                    return null;
+                }
+            }
+
+            // ОБНОВЛЕННЫЕ МЕТОДЫ ДЛЯ НОВЫХ ПОЛЬЗОВАТЕЛЕЙ
+            createUser(userData) {
+                try {
+                    const users = JSON.parse(localStorage.getItem('telegram_users') || '[]');
+                    
+                    // Проверяем уникальность
+                    if (users.find(u => u.username === userData.username)) {
+                        return { success: false, error: 'Имя пользователя уже занято' };
+                    }
+                    
+                    if (users.find(u => u.email === userData.email)) {
+                        return { success: false, error: 'Email уже используется' };
+                    }
+
+                    const newUserId = `user_${Date.now()}`;
+                    const newUser = {
+                        id: newUserId,
+                        username: userData.username,
+                        email: userData.email,
+                        password: userData.password,
+                        name: userData.name,
+                        avatar: null,
+                        status: '🟢 В сети',
+                        isOnline: true,
+                        lastSeen: new Date().toISOString(),
+                        friends: ['1', '2', '3'], // Автоматически добавляем в друзья существующих пользователей
+                        chats: [],
+                        createdAt: new Date().toISOString(),
+                        phone: userData.phone || ''
+                    };
+
+                    users.push(newUser);
+                    this.saveUsers(users);
+
+                    // Автоматически создаем чаты с существующими пользователями
+                    this.createChatsForNewUser(newUserId);
+
+                    // Добавляем нового пользователя в друзья существующим пользователям
+                    users.forEach(user => {
+                        if (user.id !== newUserId && !user.friends.includes(newUserId)) {
+                            user.friends.push(newUserId);
+                        }
+                    });
+                    this.saveUsers(users);
+
+                    return { success: true, user: newUser };
+                } catch (error) {
+                    console.error('Ошибка создания пользователя:', error);
+                    return { success: false, error: 'Ошибка создания пользователя' };
+                }
+            }
+
+            createChatsForNewUser(userId) {
+                try {
+                    const chats = JSON.parse(localStorage.getItem('telegram_chats') || '[]');
+                    const users = JSON.parse(localStorage.getItem('telegram_users') || '[]');
+                    
+                    users.forEach(existingUser => {
+                        if (existingUser.id !== userId) {
+                            const chatId = `chat_${userId}_${existingUser.id}`;
+                            
+                            if (!chats.find(chat => chat.id === chatId)) {
+                                chats.push({
+                                    id: chatId,
+                                    type: 'private',
+                                    participants: [userId, existingUser.id],
+                                    lastMessage: null,
+                                    unreadCount: 0,
+                                    createdAt: new Date().toISOString()
+                                });
+
+                                // Обновляем списки чатов у пользователей
+                                existingUser.chats.push(chatId);
+                                
+                                const newUser = users.find(u => u.id === userId);
+                                if (newUser) {
+                                    newUser.chats.push(chatId);
+                                }
+                            }
+                        }
+                    });
+
+                    this.saveChats(chats);
+                    this.saveUsers(users);
+                } catch (error) {
+                    console.error('Ошибка создания чатов:', error);
+                }
+            }
+
+            // ДОПОЛНИТЕЛЬНЫЕ МЕТОДЫ
+            getUserById(id) {
+                const users = JSON.parse(localStorage.getItem('telegram_users') || '[]');
+                return users.find(user => user.id === id);
+            }
+
+            getUserByUsername(username) {
+                const users = JSON.parse(localStorage.getItem('telegram_users') || '[]');
+                return users.find(user => user.username === username);
+            }
+
+            getUserByEmail(email) {
+                const users = JSON.parse(localStorage.getItem('telegram_users') || '[]');
+                return users.find(user => user.email === email);
+            }
+
+            authenticate(username, password) {
+                const users = JSON.parse(localStorage.getItem('telegram_users') || '[]');
+                const user = users.find(u => 
+                    (u.username === username || u.email === username) && 
+                    u.password === password
+                );
+                return user || null;
+            }
+
+            updateUser(userId, updates) {
+                try {
+                    const users = JSON.parse(localStorage.getItem('telegram_users') || '[]');
+                    const userIndex = users.findIndex(u => u.id === userId);
+                    
+                    if (userIndex === -1) return false;
+
+                    users[userIndex] = { ...users[userIndex], ...updates };
+                    this.saveUsers(users);
+                    return true;
+                } catch (error) {
+                    console.error('Ошибка обновления пользователя:', error);
+                    return false;
+                }
+            }
+
+            getAllUsers() {
+                return JSON.parse(localStorage.getItem('telegram_users') || '[]');
+            }
+
+            getChatsForUser(userId) {
+                const chats = JSON.parse(localStorage.getItem('telegram_chats') || '[]');
+                return chats.filter(chat => 
+                    chat.participants.includes(userId)
+                );
+            }
+
+            getChatById(chatId) {
+                const chats = JSON.parse(localStorage.getItem('telegram_chats') || '[]');
+                return chats.find(chat => chat.id === chatId);
+            }
+
+            getOrCreateChat(userId1, userId2) {
+                const chats = JSON.parse(localStorage.getItem('telegram_chats') || '[]');
+                let chat = chats.find(chat => 
+                    chat.type === 'private' && 
+                    chat.participants.includes(userId1) && 
+                    chat.participants.includes(userId2)
+                );
+
+                if (!chat) {
+                    const chatId = `chat_${userId1}_${userId2}`;
+                    chat = {
+                        id: chatId,
+                        type: 'private',
+                        participants: [userId1, userId2],
+                        lastMessage: null,
+                        unreadCount: 0,
+                        createdAt: new Date().toISOString()
+                    };
+
+                    chats.push(chat);
+                    this.saveChats(chats);
+
+                    // Добавляем чат пользователям
+                    this.addChatToUser(userId1, chatId);
+                    this.addChatToUser(userId2, chatId);
+                }
+
+                return chat;
+            }
+
+            addChatToUser(userId, chatId) {
+                const user = this.getUserById(userId);
+                if (user && !user.chats.includes(chatId)) {
+                    user.chats.push(chatId);
+                    this.updateUser(userId, { chats: user.chats });
+                }
+            }
+
+            updateChat(chatId, updates) {
+                const chats = JSON.parse(localStorage.getItem('telegram_chats') || '[]');
+                const chatIndex = chats.findIndex(c => c.id === chatId);
+                
+                if (chatIndex === -1) return false;
+
+                chats[chatIndex] = { ...chats[chatIndex], ...updates };
+                this.saveChats(chats);
+                return true;
+            }
+
+            getMessagesForChat(chatId) {
+                const messages = JSON.parse(localStorage.getItem('telegram_messages') || '[]');
+                return messages.filter(msg => msg.chatId === chatId)
+                    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            }
+
+            addMessage(messageData) {
+                const messages = JSON.parse(localStorage.getItem('telegram_messages') || '[]');
+                
+                const message = {
+                    id: `msg_${Date.now()}`,
+                    chatId: messageData.chatId,
+                    senderId: messageData.senderId,
+                    text: messageData.text,
+                    timestamp: new Date().toISOString(),
+                    readBy: [messageData.senderId]
+                };
+
+                messages.push(message);
+                this.saveMessages(messages);
+
+                // Обновляем последнее сообщение в чате
+                this.updateChat(messageData.chatId, {
+                    lastMessage: {
+                        id: message.id,
+                        text: messageData.text,
+                        senderId: messageData.senderId,
+                        timestamp: message.timestamp
+                    }
+                });
+
+                return message;
+            }
+
+            markMessagesAsRead(chatId, userId) {
+                const messages = JSON.parse(localStorage.getItem('telegram_messages') || '[]');
+                let updated = false;
+                
+                const updatedMessages = messages.map(msg => {
+                    if (msg.chatId === chatId && msg.senderId !== userId && !msg.readBy.includes(userId)) {
+                        updated = true;
+                        return {
+                            ...msg,
+                            readBy: [...msg.readBy, userId]
+                        };
+                    }
+                    return msg;
+                });
+
+                if (updated) {
+                    this.saveMessages(updatedMessages);
+                    
+                    // Обновляем счетчик непрочитанных
+                    const chat = this.getChatById(chatId);
+                    if (chat) {
+                        const unreadCount = updatedMessages.filter(msg => 
+                            msg.chatId === chatId && 
+                            msg.senderId !== userId && 
+                            !msg.readBy.includes(userId)
+                        ).length;
+                        
+                        this.updateChat(chatId, { unreadCount });
+                    }
+                }
+            }
+
+            // СИНХРОНИЗАЦИЯ ДАННЫХ
+            syncData() {
+                try {
+                    // Проверяем все данные на целостность
+                    const users = this.getAllUsers();
+                    const chats = JSON.parse(localStorage.getItem('telegram_chats') || '[]');
+                    const messages = JSON.parse(localStorage.getItem('telegram_messages') || '[]');
+                    
+                    // Восстанавливаем связи если что-то сломалось
+                    users.forEach(user => {
+                        if (!user.chats) user.chats = [];
+                        if (!user.friends) user.friends = [];
+                    });
+                    
+                    this.saveUsers(users);
+                    this.saveChats(chats);
+                    this.saveMessages(messages);
+                    
+                    console.log('Данные синхронизированы');
+                    return true;
+                } catch (error) {
+                    console.error('Ошибка синхронизации:', error);
+                    return false;
+                }
+            }
+        }
 
         // ==================== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ====================
+        let db = null;
         let currentUser = null;
         let currentChat = null;
-        let users = [];
-        let chats = [];
+        let allUsers = [];
+        let userChats = [];
         let socket = null;
-        let peerConnection = null;
-        let localStream = null;
-        let remoteStream = null;
-        let isCaller = false;
-        let isInCall = false;
-        let currentCall = null;
-        let callOffer = null;
-        let isAudioMuted = false;
-        let isVideoOff = false;
-
-        // Конфигурация STUN/ТURN серверов
-        const iceServers = {
-            iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' },
-                { urls: 'stun:stun2.l.google.com:19302' },
-                { urls: 'stun:stun3.l.google.com:19302' },
-                { urls: 'stun:stun4.l.google.com:19302' }
-            ]
-        };
 
         // ==================== ИНИЦИАЛИЗАЦИЯ ====================
         document.addEventListener('DOMContentLoaded', function() {
-            checkExistingUser();
+            initApp();
         });
 
-        function checkExistingUser() {
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
+        async function initApp() {
+            try {
                 showLoading();
+                
+                // Проверяем авторизацию
+                const session = localStorage.getItem('telegram_session');
+                if (!session) {
+                    // Перенаправляем на страницу авторизации
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                const sessionData = JSON.parse(session);
+                if (sessionData.expires < Date.now()) {
+                    // Сессия истекла
+                    localStorage.removeItem('telegram_session');
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // Инициализируем базу данных
+                db = new Database();
+                
+                // Синхронизируем данные
+                db.syncData();
+                
+                // Получаем текущего пользователя
+                currentUser = db.getUserById(sessionData.userId);
+                if (!currentUser) {
+                    // Пользователь не найден
+                    localStorage.removeItem('telegram_session');
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // Обновляем статус пользователя
+                db.updateUser(currentUser.id, {
+                    isOnline: true,
+                    lastSeen: new Date().toISOString()
+                });
+
+                // Загружаем данные
+                await loadAppData();
+                
+                // Показываем приложение
                 setTimeout(() => {
-                    currentUser = JSON.parse(savedUser);
-                    completeLogin();
+                    hideLoading();
+                    setupEventListeners();
+                    
+                    // Показываем приветственное уведомление если это первый вход
+                    const firstLogin = localStorage.getItem('first_login');
+                    if (firstLogin === 'true') {
+                        showNotification(`Добро пожаловать, ${currentUser.name}!`, 'success');
+                        localStorage.removeItem('first_login');
+                    }
                 }, 1000);
-            } else {
-                showAuthScreen();
+
+            } catch (error) {
+                console.error('Ошибка инициализации:', error);
+                showNotification('Ошибка загрузки приложения', 'error');
+                hideLoading();
             }
         }
 
-        function showAuthScreen() {
-            document.getElementById('authScreen').classList.remove('hidden');
-            document.getElementById('loading').classList.add('hidden');
+        async function loadAppData() {
+            try {
+                // Загружаем всех пользователей
+                allUsers = db.getAllUsers().filter(user => user.id !== currentUser.id);
+                
+                // Загружаем чаты текущего пользователя
+                userChats = db.getChatsForUser(currentUser.id);
+                
+                // Обновляем интерфейс
+                updateUserProfile();
+                renderChatList();
+                updateUnreadBadge();
+                
+                // Показываем первый чат если есть
+                if (userChats.length > 0) {
+                    selectChat(userChats[0]);
+                }
+                
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+                throw error;
+            }
         }
 
+        // ==================== ИНТЕРФЕЙС ====================
         function showLoading() {
-            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('loading').classList.add('active');
         }
 
         function hideLoading() {
-            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('loading').classList.remove('active');
         }
 
-        // ==================== АВТОРИЗАЦИЯ ====================
-        function showLoginForm() {
-            document.getElementById('loginForm').classList.add('active');
-            document.getElementById('registerForm').classList.remove('active');
-            document.querySelectorAll('.auth-tab').forEach((tab, index) => {
-                tab.classList.toggle('active', index === 0);
-            });
-            clearErrors();
+        function updateUserProfile() {
+            if (!currentUser) return;
+            
+            // Обновляем имя и статус
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userStatus').textContent = currentUser.isOnline ? 'онлайн' : 'не в сети';
+            
+            // Обновляем аватар
+            updateAvatar(currentUser.id, 'userAvatar');
+            
+            // Обновляем информацию в модальном окне профиля
+            document.getElementById('profileName').value = currentUser.name;
+            document.getElementById('profileStatus').value = currentUser.status || '';
+            document.getElementById('profileEmail').value = currentUser.email || '';
+            
+            // Обновляем аватар в модальном окне
+            updateAvatar(currentUser.id, 'avatarPreview');
         }
 
-        function showRegisterForm() {
-            document.getElementById('loginForm').classList.remove('active');
-            document.getElementById('registerForm').classList.add('active');
-            document.querySelectorAll('.auth-tab').forEach((tab, index) => {
-                tab.classList.toggle('active', index === 1);
-            });
-            clearErrors();
-        }
-
-        function clearErrors() {
-            document.getElementById('loginError').classList.remove('active');
-            document.getElementById('registerError').classList.remove('active');
-        }
-
-        async function login(event) {
-            event.preventDefault();
+        function updateAvatar(userId, elementId) {
+            const avatar = db.getAvatar(userId);
+            const element = document.getElementById(elementId);
             
-            const username = document.getElementById('loginUsername').value.trim();
-            
-            if (!username) {
-                showError('loginError', 'Введите имя пользователя');
-                return false;
-            }
-
-            showLoading();
-            
-            try {
-                // Проверяем существование пользователя на сервере
-                const response = await fetch(`${SERVER_URL}/api/users/${username}`);
-                
-                if (response.ok) {
-                    const user = await response.json();
-                    currentUser = user;
-                    completeLogin();
-                } else if (response.status === 404) {
-                    // Пользователь не найден, создаем нового
-                    await registerUser(username);
-                } else {
-                    hideLoading();
-                    showError('loginError', 'Ошибка сервера');
-                }
-            } catch (error) {
-                hideLoading();
-                showError('loginError', 'Ошибка соединения');
-                // Для демонстрации создаем локального пользователя
-                createLocalUser(username);
-            }
-            
-            return false;
-        }
-
-        async function register(event) {
-            event.preventDefault();
-            
-            const username = document.getElementById('registerUsername').value.trim();
-            
-            if (!username) {
-                showError('registerError', 'Введите имя пользователя');
-                return false;
-            }
-
-            if (username.length < 2) {
-                showError('registerError', 'Имя должно быть не менее 2 символов');
-                return false;
-            }
-
-            showLoading();
-            
-            try {
-                await registerUser(username);
-            } catch (error) {
-                hideLoading();
-                showError('registerError', 'Ошибка регистрации');
-                // Для демонстрации создаем локального пользователя
-                createLocalUser(username);
-            }
-            
-            return false;
-        }
-
-        async function registerUser(username) {
-            const response = await fetch(`${SERVER_URL}/api/users`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: username,
-                    name: username
-                })
-            });
-
-            if (response.ok) {
-                const user = await response.json();
-                currentUser = user;
-                completeLogin();
+            if (avatar) {
+                // Отображаем загруженную аватарку
+                element.innerHTML = `<img src="${avatar}" alt="Аватар">`;
             } else {
-                hideLoading();
-                showError('registerError', 'Имя пользователя уже занято');
+                // Показываем инициалы
+                const user = db.getUserById(userId);
+                if (user) {
+                    const initials = getInitials(user.name);
+                    const color = getAvatarColor(userId);
+                    element.innerHTML = initials;
+                    element.style.background = color;
+                }
             }
         }
 
-        function createLocalUser(username) {
-            currentUser = {
-                id: Date.now().toString(),
-                username: username,
-                name: username,
-                isOnline: true
-            };
-            completeLogin();
-        }
-
-        function completeLogin() {
-            // Сохраняем пользователя
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            
-            // Показываем главный экран
-            document.getElementById('authScreen').classList.add('hidden');
-            document.getElementById('appContainer').classList.remove('hidden');
-            hideLoading();
-            
-            // Инициализируем интерфейс
-            updateUserProfile();
-            loadUsers();
-            connectWebSocket();
-            
-            showNotification(`Добро пожаловать, ${currentUser.name}!`, 'success');
-        }
-
-        function showError(elementId, message) {
-            const errorElement = document.getElementById(elementId);
-            errorElement.textContent = message;
-            errorElement.classList.add('active');
-        }
-
-        // ==================== WEB SOCKET ====================
-        function connectWebSocket() {
-            socket = new WebSocket(`${WS_URL}/ws`);
-            
-            socket.onopen = function() {
-                console.log('WebSocket подключен');
-                // Отправляем информацию о пользователе
-                socket.send(JSON.stringify({
-                    type: 'login',
-                    user: currentUser
-                }));
-                
-                showNotification('Подключено к серверу', 'success');
-            };
-            
-            socket.onmessage = async function(event) {
-                const data = JSON.parse(event.data);
-                console.log('Получено сообщение:', data);
-                
-                switch (data.type) {
-                    case 'users':
-                        handleUsersList(data.users);
-                        break;
-                    case 'chat':
-                        handleChatMessage(data.message);
-                        break;
-                    case 'call_offer':
-                        handleCallOffer(data);
-                        break;
-                    case 'call_answer':
-                        handleCallAnswer(data);
-                        break;
-                    case 'ice_candidate':
-                        handleIceCandidate(data.candidate);
-                        break;
-                    case 'call_end':
-                        handleCallEnd(data);
-                        break;
-                    case 'call_rejected':
-                        handleCallRejected(data);
-                        break;
-                    case 'user_online':
-                        handleUserOnline(data.userId);
-                        break;
-                    case 'user_offline':
-                        handleUserOffline(data.userId);
-                        break;
-                }
-            };
-            
-            socket.onclose = function() {
-                console.log('WebSocket отключен');
-                showNotification('Соединение потеряно. Переподключение...', 'error');
-                // Пытаемся переподключиться
-                setTimeout(connectWebSocket, 3000);
-            };
-            
-            socket.onerror = function(error) {
-                console.error('WebSocket ошибка:', error);
-            };
-        }
-
-        function sendWebSocketMessage(message) {
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify(message));
-            }
-        }
-
-        // ==================== ПОЛЬЗОВАТЕЛИ ====================
-        async function loadUsers() {
-            try {
-                const response = await fetch(`${SERVER_URL}/api/users`);
-                if (response.ok) {
-                    const allUsers = await response.json();
-                    // Фильтруем текущего пользователя
-                    users = allUsers.filter(user => user.id !== currentUser.id);
-                    renderUserList();
-                }
-            } catch (error) {
-                console.error('Ошибка загрузки пользователей:', error);
-            }
-        }
-
-        function handleUsersList(userList) {
-            users = userList.filter(user => user.id !== currentUser.id);
-            renderUserList();
-        }
-
-        function renderUserList() {
-            const chatList = document.getElementById('chatList');
-            chatList.innerHTML = '';
-            
-            users.forEach(user => {
-                const chatItem = document.createElement('div');
-                chatItem.className = 'chat-item';
-                if (currentChat && user.id === currentChat.id) {
-                    chatItem.classList.add('active');
-                }
-                
-                chatItem.innerHTML = `
-                    <div class="chat-avatar-img" style="background: ${getAvatarColor(user.id)}">
-                        ${getUserInitials(user)}
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-name">
-                            ${user.name}
-                            ${user.isOnline ? '<span style="color: #4CAF50; font-size: 12px;"> ●</span>' : ''}
-                        </div>
-                    </div>
-                `;
-                
-                chatItem.onclick = () => selectUser(user);
-                chatList.appendChild(chatItem);
-            });
-        }
-
-        function getUserInitials(user) {
-            return user.name
+        function getInitials(name) {
+            return name
                 .split(' ')
                 .map(word => word[0])
                 .join('')
@@ -1305,80 +2477,294 @@
             return colors[index];
         }
 
-        function selectUser(user) {
-            currentChat = user;
-            updateChatUI();
-            loadMessages();
+        // ==================== ЧАТЫ ====================
+        function renderChatList() {
+            const chatList = document.getElementById('chatList');
+            chatList.innerHTML = '';
             
-            document.getElementById('messageInputContainer').style.display = 'flex';
-            document.getElementById('videoCallBtn').style.display = 'flex';
+            if (userChats.length === 0) {
+                chatList.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: rgba(255, 255, 255, 0.5);">
+                        <i class="fas fa-comments" style="font-size: 48px; margin-bottom: 16px;"></i>
+                        <div style="font-size: 16px; font-weight: 500;">Нет чатов</div>
+                        <div style="font-size: 14px; margin-top: 8px;">Начните новый чат с пользователем</div>
+                    </div>
+                `;
+                return;
+            }
             
-            // Обновляем список
-            renderUserList();
+            // Сортируем чаты по последнему сообщению
+            userChats.sort((a, b) => {
+                const timeA = a.lastMessage ? new Date(a.lastMessage.timestamp).getTime() : 0;
+                const timeB = b.lastMessage ? new Date(b.lastMessage.timestamp).getTime() : 0;
+                return timeB - timeA;
+            });
+            
+            userChats.forEach(chat => {
+                const chatItem = createChatItem(chat);
+                chatList.appendChild(chatItem);
+            });
+        }
+
+        function createChatItem(chat) {
+            const chatItem = document.createElement('div');
+            chatItem.className = 'chat-item';
+            if (currentChat && chat.id === currentChat.id) {
+                chatItem.classList.add('active');
+            }
+            
+            // Находим собеседника
+            const otherUserId = chat.participants.find(id => id !== currentUser.id);
+            const otherUser = db.getUserById(otherUserId);
+            
+            if (!otherUser) return chatItem;
+            
+            // Получаем информацию о чате
+            const lastMessage = chat.lastMessage;
+            const unreadCount = chat.unreadCount || 0;
+            const isOnline = otherUser.isOnline || false;
+            const lastSeen = formatLastSeen(otherUser.lastSeen);
+            
+            chatItem.innerHTML = `
+                <div class="chat-avatar">
+                    <div class="chat-avatar-img" style="background: ${getAvatarColor(otherUser.id)}">
+                        ${getInitials(otherUser.name)}
+                    </div>
+                    ${isOnline ? '<div class="chat-status"></div>' : ''}
+                </div>
+                <div class="chat-info">
+                    <div class="chat-header">
+                        <div class="chat-name">${otherUser.name}</div>
+                        <div class="chat-time">${lastMessage ? formatTime(lastMessage.timestamp) : ''}</div>
+                    </div>
+                    <div class="chat-preview">
+                        <div class="chat-preview-text">${getLastMessagePreview(chat)}</div>
+                        ${unreadCount > 0 ? `<div class="chat-unread">${unreadCount}</div>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            chatItem.onclick = () => selectChat(chat);
+            return chatItem;
+        }
+
+        function getLastMessagePreview(chat) {
+            if (!chat.lastMessage) {
+                return 'Нет сообщений';
+            }
+            
+            const isFromCurrentUser = chat.lastMessage.senderId === currentUser.id;
+            const prefix = isFromCurrentUser ? 'Вы: ' : '';
+            const messageText = chat.lastMessage.text || 'Вложение';
+            
+            return prefix + (messageText.length > 30 
+                ? messageText.substring(0, 30) + '...' 
+                : messageText);
+        }
+
+        function formatTime(timestamp) {
+            if (!timestamp) return '';
+            
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60 * 1000) {
+                return 'только что';
+            } else if (diff < 60 * 60 * 1000) {
+                const minutes = Math.floor(diff / (60 * 1000));
+                return `${minutes} мин`;
+            } else if (diff < 24 * 60 * 60 * 1000) {
+                return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            } else if (diff < 7 * 24 * 60 * 60 * 1000) {
+                const days = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+                return days[date.getDay()];
+            } else {
+                return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+            }
+        }
+
+        function formatLastSeen(timestamp) {
+            if (!timestamp) return 'давно';
+            
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60 * 1000) {
+                return 'только что';
+            } else if (diff < 60 * 60 * 1000) {
+                const minutes = Math.floor(diff / (60 * 1000));
+                return `${minutes} мин назад`;
+            } else if (diff < 24 * 60 * 60 * 1000) {
+                const hours = Math.floor(diff / (60 * 60 * 1000));
+                return `${hours} ч назад`;
+            } else {
+                const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+                return `${days} дн назад`;
+            }
+        }
+
+        async function selectChat(chat) {
+            try {
+                currentChat = chat;
+                
+                // Скрываем экран "чат не выбран"
+                document.getElementById('noChatSelected').classList.add('hidden');
+                document.getElementById('chatHeader').classList.remove('hidden');
+                document.getElementById('messagesContainer').classList.remove('hidden');
+                document.getElementById('messageInputContainer').classList.remove('hidden');
+                
+                // Обновляем UI чата
+                updateChatUI();
+                
+                // Загружаем сообщения
+                loadMessages();
+                
+                // Отмечаем сообщения как прочитанные
+                db.markMessagesAsRead(chat.id, currentUser.id);
+                
+                // Обновляем список чатов
+                renderChatList();
+                updateUnreadBadge();
+                
+                // На мобильных устройствах скрываем сайдбар
+                if (window.innerWidth <= 1024) {
+                    document.getElementById('sidebar').classList.remove('active');
+                }
+                
+            } catch (error) {
+                console.error('Ошибка выбора чата:', error);
+                showNotification('Ошибка загрузки чата', 'error');
+            }
         }
 
         function updateChatUI() {
             if (!currentChat) return;
             
-            document.getElementById('currentChatName').textContent = currentChat.name;
-            document.getElementById('currentChatAvatar').innerHTML = `
-                <div class="chat-avatar-img" style="background: ${getAvatarColor(currentChat.id)}">
-                    ${getUserInitials(currentChat)}
-                </div>
-            `;
+            // Находим собеседника
+            const otherUserId = currentChat.participants.find(id => id !== currentUser.id);
+            const otherUser = db.getUserById(otherUserId);
             
-            document.getElementById('callContactName').textContent = currentChat.name;
+            if (!otherUser) return;
+            
+            // Обновляем имя
+            document.getElementById('currentChatName').textContent = otherUser.name;
+            
+            // Обновляем аватар
+            updateAvatar(otherUser.id, 'currentChatAvatar');
+            
+            // Обновляем статус
+            const statusText = otherUser.isOnline ? 'в сети' : `был(а) ${formatLastSeen(otherUser.lastSeen)}`;
+            const statusHtml = otherUser.isOnline 
+                ? '<span class="online-indicator"></span> в сети'
+                : `<span style="color: #8a8a8a;">${statusText}</span>`;
+            
+            document.getElementById('currentChatStatus').innerHTML = statusHtml;
         }
 
-        function updateUserProfile() {
-            if (!currentUser) return;
+        function loadMessages() {
+            if (!currentChat) return;
             
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userAvatar').innerHTML = getUserInitials(currentUser);
-            document.getElementById('userAvatar').style.background = getAvatarColor(currentUser.id);
-        }
-
-        function handleUserOnline(userId) {
-            const user = users.find(u => u.id === userId);
-            if (user) {
-                user.isOnline = true;
-                renderUserList();
-                
-                if (currentChat && currentChat.id === userId) {
-                    updateChatUI();
-                }
+            const container = document.getElementById('messagesContainer');
+            container.innerHTML = '';
+            
+            // Получаем сообщения для текущего чата
+            const messages = db.getMessagesForChat(currentChat.id);
+            
+            if (messages.length === 0) {
+                container.innerHTML = `
+                    <div class="message-date">
+                        <span class="date-label">Начните общение</span>
+                    </div>
+                `;
+                return;
             }
+            
+            // Группируем сообщения по датам
+            let currentDate = null;
+            
+            messages.forEach(msg => {
+                const messageDate = new Date(msg.timestamp).toDateString();
+                
+                if (currentDate !== messageDate) {
+                    currentDate = messageDate;
+                    const dateDiv = document.createElement('div');
+                    dateDiv.className = 'message-date';
+                    dateDiv.innerHTML = `<span class="date-label">${formatMessageDate(msg.timestamp)}</span>`;
+                    container.appendChild(dateDiv);
+                }
+                
+                addMessageToUI(msg, false);
+            });
+            
+            // Прокручиваем вниз
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 100);
         }
 
-        function handleUserOffline(userId) {
-            const user = users.find(u => u.id === userId);
-            if (user) {
-                user.isOnline = false;
-                renderUserList();
-                
-                if (currentChat && currentChat.id === userId) {
-                    updateChatUI();
-                }
+        function formatMessageDate(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            
+            if (date.toDateString() === now.toDateString()) {
+                return 'Сегодня';
+            }
+            
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (date.toDateString() === yesterday.toDateString()) {
+                return 'Вчера';
+            }
+            
+            if (now - date < 7 * 24 * 60 * 60 * 1000) {
+                const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+                return days[date.getDay()];
+            }
+            
+            return date.toLocaleDateString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+
+        function addMessageToUI(message, scroll = true) {
+            if (!currentChat) return;
+            
+            const container = document.getElementById('messagesContainer');
+            const isOutgoing = message.senderId === currentUser.id;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isOutgoing ? 'outgoing' : 'incoming'}`;
+            messageDiv.setAttribute('data-message-id', message.id);
+            
+            const sender = db.getUserById(message.senderId);
+            const senderName = sender ? sender.name : 'Неизвестный';
+            
+            let messageHtml = `
+                <div class="message-bubble">${message.text}</div>
+                <div class="message-time">${formatTime(message.timestamp)}`;
+            
+            if (isOutgoing) {
+                const isRead = message.readBy && message.readBy.length > 1;
+                messageHtml += ` <i class="fas fa-check${isRead ? '-double' : ''}" 
+                    style="color: ${isRead ? '#4CAF50' : 'rgba(255, 255, 255, 0.5)'};"></i>`;
+            }
+            
+            messageHtml += `</div>`;
+            messageDiv.innerHTML = messageHtml;
+            
+            container.appendChild(messageDiv);
+            
+            if (scroll) {
+                container.scrollTop = container.scrollHeight;
             }
         }
 
         // ==================== СООБЩЕНИЯ ====================
-        function loadMessages() {
-            const container = document.getElementById('messagesContainer');
-            container.innerHTML = `
-                <div class="message-date">
-                    <span class="date-label">Начните общение</span>
-                </div>
-            `;
-        }
-
-        function handleChatMessage(message) {
-            if (currentChat && message.senderId === currentChat.id) {
-                addMessageToUI(message, false);
-            }
-        }
-
-        function sendMessage() {
+        async function sendMessage() {
             if (!currentChat || !currentUser) return;
             
             const input = document.getElementById('messageInput');
@@ -1386,425 +2772,446 @@
             
             if (!text) return;
             
-            const message = {
-                id: Date.now().toString(),
-                senderId: currentUser.id,
-                receiverId: currentChat.id,
-                text: text,
-                timestamp: new Date().toISOString()
-            };
+            try {
+                // Создаем сообщение
+                const message = db.addMessage({
+                    chatId: currentChat.id,
+                    senderId: currentUser.id,
+                    text: text
+                });
+                
+                // Добавляем в UI
+                addMessageToUI(message);
+                
+                // Обновляем список чатов
+                userChats = db.getChatsForUser(currentUser.id);
+                renderChatList();
+                updateUnreadBadge();
+                
+                // Очищаем поле ввода
+                input.value = '';
+                adjustTextareaHeight(input);
+                
+                // Симулируем ответ через 1-3 секунды
+                if (Math.random() > 0.3) {
+                    setTimeout(() => {
+                        simulateResponse(currentChat.id);
+                    }, 1000 + Math.random() * 2000);
+                }
+                
+            } catch (error) {
+                console.error('Ошибка отправки сообщения:', error);
+                showNotification('Ошибка отправки сообщения', 'error');
+            }
+        }
+
+        function simulateResponse(chatId) {
+            if (!currentChat || currentChat.id !== chatId) return;
             
-            // Отправляем через WebSocket
-            sendWebSocketMessage({
-                type: 'chat',
-                message: message
+            // Находим собеседника
+            const otherUserId = currentChat.participants.find(id => id !== currentUser.id);
+            const otherUser = db.getUserById(otherUserId);
+            
+            if (!otherUser) return;
+            
+            // Проверяем, онлайн ли пользователь
+            if (!otherUser.isOnline) return;
+            
+            // Случайные ответы
+            const responses = [
+                'Привет! Как дела?',
+                'Очень интересно!',
+                'Да, согласен с тобой',
+                'Расскажи подробнее',
+                'Отличная идея!',
+                'Сколько времени?',
+                'Что нового?',
+                'Как твои успехи?'
+            ];
+            
+            const response = responses[Math.floor(Math.random() * responses.length)];
+            
+            // Добавляем ответ
+            const replyMessage = db.addMessage({
+                chatId: currentChat.id,
+                senderId: otherUserId,
+                text: response
             });
             
             // Добавляем в UI
-            addMessageToUI(message, true);
-            
-            // Очищаем поле ввода
-            input.value = '';
+            if (currentChat.id === currentChat.id) {
+                addMessageToUI(replyMessage);
+                userChats = db.getChatsForUser(currentUser.id);
+                renderChatList();
+                updateUnreadBadge();
+                
+                // Показываем уведомление
+                showNotification(`Новое сообщение от ${otherUser.name}`, 'info');
+            }
         }
 
-        function addMessageToUI(message, isOutgoing = true) {
-            const container = document.getElementById('messagesContainer');
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isOutgoing ? 'outgoing' : 'incoming'}`;
-            
-            messageDiv.innerHTML = `
-                <div class="message-bubble">${message.text}</div>
-            `;
-            
-            container.appendChild(messageDiv);
-            container.scrollTop = container.scrollHeight;
+        // ==================== ПРОФИЛЬ И АВАТАРКИ ====================
+        function showProfileModal() {
+            document.getElementById('profileModal').classList.add('active');
         }
 
-        // ==================== ВИДЕОЗВОНКИ (WebRTC) ====================
-        async function startVideoCall() {
-            if (!currentChat || !currentUser) {
-                showNotification('Выберите собеседника', 'error');
+        function hideProfileModal() {
+            document.getElementById('profileModal').classList.remove('active');
+        }
+
+        function triggerAvatarUpload() {
+            document.getElementById('avatarInput').click();
+        }
+
+        async function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Проверяем тип файла
+            if (!file.type.startsWith('image/')) {
+                showNotification('Пожалуйста, выберите изображение', 'error');
                 return;
             }
-
-            if (!currentChat.isOnline) {
-                showNotification('Пользователь не в сети', 'error');
+            
+            // Проверяем размер файла (максимум 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('Изображение должно быть меньше 5MB', 'error');
                 return;
             }
-
-            isCaller = true;
-            currentCall = {
-                from: currentUser.id,
-                to: currentChat.id,
-                type: 'video'
-            };
-
-            // Показываем экран звонка
-            document.getElementById('callingScreen').classList.add('active');
-            document.getElementById('callingName').textContent = currentChat.name;
-            document.getElementById('callingAvatar').innerHTML = getUserInitials(currentChat);
-            document.getElementById('callingStatus').textContent = 'Вызов...';
-
+            
             try {
-                // Запрашиваем медиаустройства
-                localStream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 },
-                        facingMode: 'user'
-                    },
-                    audio: {
-                        echoCancellation: true,
-                        noiseSuppression: true,
-                        sampleRate: 44100
+                showLoading();
+                
+                // Читаем файл как Data URL
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // Сохраняем аватарку в базу данных
+                    const success = db.saveAvatar(currentUser.id, e.target.result);
+                    
+                    if (success) {
+                        // Обновляем аватарки в интерфейсе
+                        updateAvatar(currentUser.id, 'userAvatar');
+                        updateAvatar(currentUser.id, 'avatarPreview');
+                        
+                        showNotification('Аватар успешно обновлен', 'success');
+                    } else {
+                        showNotification('Ошибка сохранения аватарки', 'error');
                     }
-                });
-
-                // Создаем PeerConnection
-                await createPeerConnection();
-
-                // Добавляем локальный поток
-                localStream.getTracks().forEach(track => {
-                    peerConnection.addTrack(track, localStream);
-                });
-
-                // Создаем offer
-                const offer = await peerConnection.createOffer();
-                await peerConnection.setLocalDescription(offer);
-
-                // Отправляем offer другому пользователю
-                sendWebSocketMessage({
-                    type: 'call_offer',
-                    from: currentUser.id,
-                    to: currentChat.id,
-                    offer: offer,
-                    callType: 'video'
-                });
-
+                    
+                    hideLoading();
+                };
+                
+                reader.onerror = function() {
+                    showNotification('Ошибка чтения файла', 'error');
+                    hideLoading();
+                };
+                
+                reader.readAsDataURL(file);
+                
             } catch (error) {
-                console.error('Ошибка начала звонка:', error);
-                showNotification('Ошибка доступа к камере/микрофону', 'error');
-                cancelOutgoingCall();
+                console.error('Ошибка загрузки аватарки:', error);
+                showNotification('Ошибка загрузки аватарки', 'error');
+                hideLoading();
             }
         }
 
-        async function createPeerConnection() {
-            peerConnection = new RTCPeerConnection(iceServers);
-
-            // Обработка удаленного потока
-            peerConnection.ontrack = (event) => {
-                if (event.streams && event.streams[0]) {
-                    remoteStream = event.streams[0];
-                    document.getElementById('remoteVideo').srcObject = remoteStream;
-                }
-            };
-
-            // Обработка ICE кандидатов
-            peerConnection.onicecandidate = (event) => {
-                if (event.candidate) {
-                    sendWebSocketMessage({
-                        type: 'ice_candidate',
-                        from: currentUser.id,
-                        to: currentChat.id,
-                        candidate: event.candidate
-                    });
-                }
-            };
-
-            // Обработка состояния соединения
-            peerConnection.onconnectionstatechange = () => {
-                console.log('Состояние соединения:', peerConnection.connectionState);
-                
-                switch (peerConnection.connectionState) {
-                    case 'connected':
-                        showNotification('Соединение установлено', 'success');
-                        document.getElementById('callStatus').textContent = 'Соединено';
-                        break;
-                    case 'disconnected':
-                        showNotification('Соединение прервано', 'error');
-                        break;
-                    case 'failed':
-                        showNotification('Ошибка соединения', 'error');
-                        endCall();
-                        break;
-                    case 'closed':
-                        endCall();
-                        break;
-                }
-            };
-        }
-
-        // ==================== ОБРАБОТКА ВХОДЯЩИХ ЗВОНКОВ ====================
-        function handleCallOffer(data) {
-            if (isInCall) {
-                // Уже в звонке, отклоняем
-                sendWebSocketMessage({
-                    type: 'call_rejected',
-                    from: currentUser.id,
-                    to: data.from,
-                    reason: 'Пользователь занят'
-                });
+        async function saveProfile() {
+            const name = document.getElementById('profileName').value.trim();
+            const status = document.getElementById('profileStatus').value.trim();
+            const email = document.getElementById('profileEmail').value.trim();
+            
+            if (!name) {
+                showNotification('Введите имя', 'error');
                 return;
             }
-
-            callOffer = data;
-            currentCall = {
-                from: data.from,
-                to: currentUser.id,
-                type: data.callType
-            };
-
-            // Находим информацию о звонящем
-            const caller = users.find(user => user.id === data.from);
-            if (!caller) return;
-
-            // Показываем уведомление о входящем звонке
-            document.getElementById('incomingCallName').textContent = caller.name;
-            document.getElementById('incomingCallAvatar').innerHTML = getUserInitials(caller);
-            document.getElementById('incomingCallType').textContent = 
-                data.callType === 'video' ? 'Входящий видеозвонок' : 'Входящий аудиозвонок';
             
-            document.getElementById('incomingCallNotification').classList.add('active');
-
-            // Автоматически скрываем через 30 секунд
-            setTimeout(() => {
-                if (document.getElementById('incomingCallNotification').classList.contains('active')) {
-                    rejectIncomingCall();
-                }
-            }, 30000);
-        }
-
-        async function acceptIncomingCall() {
-            if (!callOffer) return;
-
-            isCaller = false;
-            isInCall = true;
-
-            // Скрываем уведомление
-            document.getElementById('incomingCallNotification').classList.remove('active');
-
-            // Показываем экран звонка
-            document.getElementById('callOverlay').classList.add('active');
-            document.getElementById('callStatus').textContent = 'Соединение...';
-
+            if (!email || !isValidEmail(email)) {
+                showNotification('Введите корректный email', 'error');
+                return;
+            }
+            
             try {
-                // Получаем медиаустройства
-                localStream = await navigator.mediaDevices.getUserMedia({
-                    video: callOffer.callType === 'video' ? {
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 },
-                        facingMode: 'user'
-                    } : false,
-                    audio: {
-                        echoCancellation: true,
-                        noiseSuppression: true,
-                        sampleRate: 44100
-                    }
-                });
-
-                // Показываем локальное видео
-                document.getElementById('localVideo').srcObject = localStream;
-
-                // Создаем PeerConnection
-                await createPeerConnection();
-
-                // Добавляем локальный поток
-                localStream.getTracks().forEach(track => {
-                    peerConnection.addTrack(track, localStream);
-                });
-
-                // Устанавливаем удаленное описание (offer)
-                await peerConnection.setRemoteDescription(new RTCSessionDescription(callOffer.offer));
-
-                // Создаем answer
-                const answer = await peerConnection.createAnswer();
-                await peerConnection.setLocalDescription(answer);
-
-                // Отправляем answer
-                sendWebSocketMessage({
-                    type: 'call_answer',
-                    from: currentUser.id,
-                    to: callOffer.from,
-                    answer: answer
-                });
-
+                showLoading();
+                
+                // Проверяем уникальность email
+                const existingUser = db.getUserByEmail(email);
+                if (existingUser && existingUser.id !== currentUser.id) {
+                    showNotification('Этот email уже используется другим пользователем', 'error');
+                    hideLoading();
+                    return;
+                }
+                
+                // Обновляем профиль
+                const updates = {
+                    name: name,
+                    status: status,
+                    email: email
+                };
+                
+                const success = db.updateUser(currentUser.id, updates);
+                
+                if (success) {
+                    // Обновляем текущего пользователя
+                    currentUser = { ...currentUser, ...updates };
+                    
+                    // Обновляем интерфейс
+                    updateUserProfile();
+                    renderChatList();
+                    
+                    // Закрываем модальное окно
+                    hideProfileModal();
+                    
+                    showNotification('Профиль успешно обновлен', 'success');
+                } else {
+                    showNotification('Ошибка обновления профиля', 'error');
+                }
+                
+                hideLoading();
+                
             } catch (error) {
-                console.error('Ошибка принятия звонка:', error);
-                showNotification('Ошибка принятия звонка', 'error');
-                endCall();
+                console.error('Ошибка сохранения профиля:', error);
+                showNotification('Ошибка сохранения профиля', 'error');
+                hideLoading();
             }
         }
 
-        function rejectIncomingCall() {
-            document.getElementById('incomingCallNotification').classList.remove('active');
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // ==================== НАСТРОЙКИ ====================
+        function showSettings() {
+            document.getElementById('settingsPanel').classList.add('active');
+        }
+
+        function hideSettings() {
+            document.getElementById('settingsPanel').classList.remove('active');
+        }
+
+        function changePassword() {
+            const oldPassword = prompt('Введите текущий пароль:');
+            if (!oldPassword) return;
             
-            if (callOffer) {
-                sendWebSocketMessage({
-                    type: 'call_rejected',
-                    from: currentUser.id,
-                    to: callOffer.from,
-                    reason: 'Отклонен'
+            if (oldPassword !== currentUser.password) {
+                showNotification('Неверный текущий пароль', 'error');
+                return;
+            }
+            
+            const newPassword = prompt('Введите новый пароль:');
+            if (!newPassword) return;
+            
+            if (newPassword.length < 6) {
+                showNotification('Пароль должен быть не менее 6 символов', 'error');
+                return;
+            }
+            
+            const confirmPassword = prompt('Повторите новый пароль:');
+            if (newPassword !== confirmPassword) {
+                showNotification('Пароли не совпадают', 'error');
+                return;
+            }
+            
+            // Обновляем пароль
+            db.updateUser(currentUser.id, { password: newPassword });
+            currentUser.password = newPassword;
+            
+            showNotification('Пароль успешно изменен', 'success');
+        }
+
+        function showPrivacySettings() {
+            showNotification('Настройки конфиденциальности в разработке', 'info');
+        }
+
+        function toggleNotifications() {
+            showNotification('Настройки уведомлений в разработке', 'info');
+        }
+
+        function showChatSettings() {
+            showNotification('Настройки чатов в разработке', 'info');
+        }
+
+        function showAbout() {
+            alert('Telegram Web v1.0\n\nБыстро. Безопасно. Бесплатно.\n\n© 2024 Все права защищены');
+        }
+
+        function showConfirmDialog() {
+            document.getElementById('confirmDialog').classList.add('active');
+            hideSettings();
+        }
+
+        function hideConfirmDialog() {
+            document.getElementById('confirmDialog').classList.remove('active');
+        }
+
+        function logout() {
+            // Обновляем статус пользователя
+            if (currentUser) {
+                db.updateUser(currentUser.id, {
+                    isOnline: false,
+                    lastSeen: new Date().toISOString()
                 });
             }
             
-            callOffer = null;
-            currentCall = null;
+            // Очищаем сессию
+            localStorage.removeItem('telegram_session');
+            
+            // Перенаправляем на страницу авторизации
+            window.location.href = 'index.html';
         }
 
-        function handleCallAnswer(data) {
-            if (!peerConnection || !isCaller) return;
-
-            // Скрываем экран звонка
-            document.getElementById('callingScreen').classList.remove('active');
-
-            // Показываем экран разговора
-            document.getElementById('callOverlay').classList.add('active');
-
-            // Устанавливаем удаленный description
-            peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer))
-                .then(() => {
-                    console.log('Удаленное описание установлено');
-                    isInCall = true;
-                })
-                .catch(error => {
-                    console.error('Ошибка установки удаленного описания:', error);
-                    endCall();
-                });
+        // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
+        function showChats() {
+            // Уже на вкладке чатов
+            document.querySelectorAll('.menu-item').forEach((item, index) => {
+                item.classList.toggle('active', index === 0);
+            });
         }
 
-        function handleIceCandidate(candidate) {
-            if (peerConnection && peerConnection.remoteDescription) {
-                peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
-                    .catch(error => {
-                        console.error('Ошибка добавления ICE кандидата:', error);
-                    });
-            }
+        function showContacts() {
+            showNotification('Список контактов в разработке', 'info');
+            document.querySelectorAll('.menu-item').forEach((item, index) => {
+                item.classList.toggle('active', index === 1);
+            });
         }
 
-        function handleCallEnd(data) {
-            showNotification('Звонок завершен', 'info');
-            endCall();
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
         }
 
-        function handleCallRejected(data) {
-            document.getElementById('callingScreen').classList.remove('active');
-            showNotification('Звонок отклонен', 'error');
-            endCall();
-        }
-
-        // ==================== УПРАВЛЕНИЕ ЗВОНКОМ ====================
-        function cancelOutgoingCall() {
-            document.getElementById('callingScreen').classList.remove('active');
+        function searchChats() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const chatItems = document.querySelectorAll('.chat-item');
             
-            if (currentCall) {
-                sendWebSocketMessage({
-                    type: 'call_end',
-                    from: currentUser.id,
-                    to: currentCall.to
-                });
-            }
+            let hasResults = false;
             
-            endCall();
-        }
-
-        function endCall() {
-            isInCall = false;
-            isCaller = false;
-            currentCall = null;
-            callOffer = null;
-            
-            // Останавливаем медиапотоки
-            if (localStream) {
-                localStream.getTracks().forEach(track => track.stop());
-                localStream = null;
-            }
-            
-            // Закрываем PeerConnection
-            if (peerConnection) {
-                peerConnection.close();
-                peerConnection = null;
-            }
-            
-            // Очищаем видео
-            document.getElementById('localVideo').srcObject = null;
-            document.getElementById('remoteVideo').srcObject = null;
-            
-            // Скрываем все экраны звонка
-            document.getElementById('callOverlay').classList.remove('active');
-            document.getElementById('callingScreen').classList.remove('active');
-            document.getElementById('incomingCallNotification').classList.remove('active');
-            
-            // Сбрасываем состояние кнопок
-            isAudioMuted = false;
-            isVideoOff = false;
-            
-            const audioBtn = document.getElementById('toggleAudioBtn');
-            const videoBtn = document.getElementById('toggleVideoBtn');
-            audioBtn.classList.remove('muted');
-            audioBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-            videoBtn.classList.remove('muted');
-            videoBtn.innerHTML = '<i class="fas fa-video"></i>';
-        }
-
-        function toggleAudio() {
-            if (localStream) {
-                const audioTrack = localStream.getAudioTracks()[0];
-                if (audioTrack) {
-                    audioTrack.enabled = !audioTrack.enabled;
-                    isAudioMuted = !audioTrack.enabled;
-                    
-                    const btn = document.getElementById('toggleAudioBtn');
-                    if (isAudioMuted) {
-                        btn.classList.add('muted');
-                        btn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
-                        showNotification('Микрофон выключен', 'info');
-                    } else {
-                        btn.classList.remove('muted');
-                        btn.innerHTML = '<i class="fas fa-microphone"></i>';
-                        showNotification('Микрофон включен', 'info');
-                    }
+            chatItems.forEach(item => {
+                const chatName = item.querySelector('.chat-name').textContent.toLowerCase();
+                if (chatName.includes(query)) {
+                    item.style.display = 'flex';
+                    hasResults = true;
+                } else {
+                    item.style.display = 'none';
                 }
-            }
-        }
-
-        function toggleVideo() {
-            if (localStream) {
-                const videoTrack = localStream.getVideoTracks()[0];
-                if (videoTrack) {
-                    videoTrack.enabled = !videoTrack.enabled;
-                    isVideoOff = !videoTrack.enabled;
-                    
-                    const btn = document.getElementById('toggleVideoBtn');
-                    if (isVideoOff) {
-                        btn.classList.add('muted');
-                        btn.innerHTML = '<i class="fas fa-video-slash"></i>';
-                        showNotification('Камера выключена', 'info');
-                    } else {
-                        btn.classList.remove('muted');
-                        btn.innerHTML = '<i class="fas fa-video"></i>';
-                        showNotification('Камера включена', 'info');
-                    }
+            });
+            
+            // Показываем сообщение если нет результатов
+            const chatList = document.getElementById('chatList');
+            const noResults = chatList.querySelector('.no-results');
+            
+            if (!hasResults && query) {
+                if (!noResults) {
+                    const noResultsDiv = document.createElement('div');
+                    noResultsDiv.className = 'no-results';
+                    noResultsDiv.innerHTML = `
+                        <div style="text-align: center; padding: 40px 20px; color: rgba(255, 255, 255, 0.5);">
+                            <i class="fas fa-search" style="font-size: 48px; margin-bottom: 16px;"></i>
+                            <div style="font-size: 16px; font-weight: 500;">Ничего не найдено</div>
+                            <div style="font-size: 14px; margin-top: 8px;">Попробуйте другой запрос</div>
+                        </div>
+                    `;
+                    chatList.appendChild(noResultsDiv);
                 }
+            } else if (noResults) {
+                noResults.remove();
             }
         }
 
-        function showProfile() {
-            // Простая реализация профиля
-            const newName = prompt('Изменить имя:', currentUser.name);
-            if (newName && newName.trim()) {
-                currentUser.name = newName.trim();
-                updateUserProfile();
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                
-                // Обновляем на сервере через WebSocket
-                sendWebSocketMessage({
-                    type: 'update_profile',
-                    user: currentUser
-                });
-                
-                showNotification('Имя изменено', 'success');
+        function startNewChat() {
+            // Показываем список всех пользователей для создания нового чата
+            const users = db.getAllUsers().filter(user => user.id !== currentUser.id);
+            
+            if (users.length === 0) {
+                showNotification('Нет других пользователей', 'info');
+                return;
             }
+            
+            // Создаем список пользователей для выбора
+            let userList = 'Выберите пользователя для чата:\n\n';
+            users.forEach((user, index) => {
+                userList += `${index + 1}. ${user.name} (${user.username})\n`;
+            });
+            
+            const choice = prompt(userList + '\nВведите номер пользователя:');
+            if (!choice) return;
+            
+            const index = parseInt(choice) - 1;
+            if (isNaN(index) || index < 0 || index >= users.length) {
+                showNotification('Неверный выбор', 'error');
+                return;
+            }
+            
+            const selectedUser = users[index];
+            
+            // Создаем или получаем чат
+            const chat = db.getOrCreateChat(currentUser.id, selectedUser.id);
+            
+            // Выбираем этот чат
+            selectChat(chat);
+            
+            showNotification(`Начат чат с ${selectedUser.name}`, 'success');
+        }
+
+        function startVideoCall() {
+            if (!currentChat) {
+                showNotification('Выберите чат для звонка', 'error');
+                return;
+            }
+            
+            showNotification('Видеозвонок в разработке', 'info');
+        }
+
+        function showChatInfo() {
+            if (!currentChat) return;
+            
+            // Находим собеседника
+            const otherUserId = currentChat.participants.find(id => id !== currentUser.id);
+            const otherUser = db.getUserById(otherUserId);
+            
+            if (!otherUser) return;
+            
+            const info = `
+Имя: ${otherUser.name}
+Имя пользователя: ${otherUser.username}
+Email: ${otherUser.email || 'не указан'}
+Телефон: ${otherUser.phone || 'не указан'}
+Статус: ${otherUser.status || 'не указан'}
+В сети: ${otherUser.isOnline ? 'да' : 'нет'}
+Последний раз в сети: ${formatLastSeen(otherUser.lastSeen)}
+            `.trim();
+            
+            alert(info);
+        }
+
+        function attachFile() {
+            showNotification('Отправка файлов в разработке', 'info');
+        }
+
+        function showEmojiPicker() {
+            showNotification('Выбор эмодзи в разработке', 'info');
+        }
+
+        function updateUnreadBadge() {
+            let totalUnread = 0;
+            
+            userChats.forEach(chat => {
+                totalUnread += chat.unreadCount || 0;
+            });
+            
+            const badge = document.getElementById('unreadBadge');
+            if (totalUnread > 0) {
+                badge.textContent = totalUnread > 99 ? '99+' : totalUnread;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function adjustTextareaHeight(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
         }
 
         // ==================== УВЕДОМЛЕНИЯ ====================
@@ -1815,19 +3222,21 @@
             
             body.textContent = message;
             
+            // Устанавливаем иконку в зависимости от типа
             if (type === 'error') {
-                title.innerHTML = '⚠️ Ошибка';
+                title.innerHTML = '<i class="fas fa-exclamation-circle" style="color: #ff6b6b;"></i> Ошибка';
                 notification.style.borderLeft = '4px solid #ff3b30';
             } else if (type === 'success') {
-                title.innerHTML = '✅ Успешно';
+                title.innerHTML = '<i class="fas fa-check-circle" style="color: #4CAF50;"></i> Успешно';
                 notification.style.borderLeft = '4px solid #4CAF50';
             } else {
-                title.innerHTML = 'ℹ️ Уведомление';
+                title.innerHTML = '<i class="fas fa-info-circle" style="color: #0088cc;"></i> Telegram';
                 notification.style.borderLeft = '4px solid #0088cc';
             }
             
             notification.classList.add('active');
             
+            // Автоматическое скрытие
             setTimeout(() => {
                 notification.classList.remove('active');
             }, 3000);
@@ -1839,27 +3248,118 @@
 
         // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
         function setupEventListeners() {
+            // Автоматическое изменение высоты textarea
             const messageInput = document.getElementById('messageInput');
-            messageInput.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-            });
+            if (messageInput) {
+                messageInput.addEventListener('input', function() {
+                    adjustTextareaHeight(this);
+                });
 
-            messageInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
+                // Отправка сообщения по Enter (без Shift)
+                messageInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+            }
+
+            // Закрытие модальных окон по клику вне их
+            document.addEventListener('click', function(e) {
+                // Закрытие модального окна профиля
+                const profileModal = document.getElementById('profileModal');
+                if (profileModal.classList.contains('active') && 
+                    e.target === profileModal) {
+                    hideProfileModal();
+                }
+                
+                // Закрытие подтверждения выхода
+                const confirmDialog = document.getElementById('confirmDialog');
+                if (confirmDialog.classList.contains('active') && 
+                    e.target === confirmDialog) {
+                    hideConfirmDialog();
                 }
             });
 
+            // Закрытие по Escape
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && isInCall) {
-                    endCall();
+                if (e.key === 'Escape') {
+                    hideProfileModal();
+                    hideSettings();
+                    hideConfirmDialog();
+                }
+            });
+
+            // Адаптация к мобильным устройствам
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 1024) {
+                    document.getElementById('sidebar').classList.remove('active');
+                }
+            });
+
+            // Периодическая проверка обновлений статусов
+            setInterval(() => {
+                updateUserStatuses();
+            }, 30000); // Каждые 30 секунд
+        }
+
+        function updateUserStatuses() {
+            // Обновляем статусы пользователей (симуляция)
+            const users = db.getAllUsers();
+            
+            users.forEach(user => {
+                if (user.id !== currentUser.id && Math.random() > 0.7) {
+                    const wasOnline = user.isOnline;
+                    user.isOnline = Math.random() > 0.4;
+                    
+                    if (wasOnline !== user.isOnline) {
+                        db.updateUser(user.id, { 
+                            isOnline: user.isOnline,
+                            lastSeen: new Date().toISOString()
+                        });
+                        
+                        // Обновляем интерфейс если чат с этим пользователем открыт
+                        if (currentChat) {
+                            const otherUserId = currentChat.participants.find(id => id !== currentUser.id);
+                            if (otherUserId === user.id) {
+                                updateChatUI();
+                            }
+                        }
+                        
+                        // Обновляем список чатов
+                        renderChatList();
+                    }
                 }
             });
         }
 
-        setupEventListeners();
+        // Делаем функции глобальными для обработчиков событий
+        window.showProfileModal = showProfileModal;
+        window.hideProfileModal = hideProfileModal;
+        window.triggerAvatarUpload = triggerAvatarUpload;
+        window.handleAvatarUpload = handleAvatarUpload;
+        window.saveProfile = saveProfile;
+        window.showSettings = showSettings;
+        window.hideSettings = hideSettings;
+        window.changePassword = changePassword;
+        window.showPrivacySettings = showPrivacySettings;
+        window.toggleNotifications = toggleNotifications;
+        window.showChatSettings = showChatSettings;
+        window.showAbout = showAbout;
+        window.showConfirmDialog = showConfirmDialog;
+        window.hideConfirmDialog = hideConfirmDialog;
+        window.logout = logout;
+        window.showChats = showChats;
+        window.showContacts = showContacts;
+        window.toggleSidebar = toggleSidebar;
+        window.searchChats = searchChats;
+        window.startNewChat = startNewChat;
+        window.startVideoCall = startVideoCall;
+        window.showChatInfo = showChatInfo;
+        window.attachFile = attachFile;
+        window.showEmojiPicker = showEmojiPicker;
+        window.sendMessage = sendMessage;
+        window.hideNotification = hideNotification;
     </script>
 </body>
 </html>
