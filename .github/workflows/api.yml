@@ -1,0 +1,43 @@
+name: Messenger API Server
+on:
+  # Запускаем при каждом push для обновления API
+  push:
+    paths:
+      - 'backend/api/**'
+      - '.github/workflows/api.yml'
+  
+  # Запускаем при каждом issue event (для чатов)
+  issues:
+    types: [opened, edited, closed]
+  
+  # Запускаем workflow dispatch для ручного запуска
+  workflow_dispatch:
+  
+  # Запускаем каждые 30 секунд для polling
+  schedule:
+    - cron: '*/30 * * * * *'
+
+jobs:
+  api-server:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        npm ci
+    
+    - name: Run API server (чередованием)
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      run: |
+        # Запускаем сервер на 30 секунд, потом перезапускаем
+        timeout 30s node backend/server.js || true
