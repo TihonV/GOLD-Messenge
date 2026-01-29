@@ -1,0 +1,227 @@
+/* КРАСИВЫЕ ВСПЛЫВАЮЩИЕ ОКНА */
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.dialog-overlay.active {
+    display: flex;
+    opacity: 1;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0);
+    }
+    to {
+        opacity: 1;
+        backdrop-filter: blur(10px);
+    }
+}
+
+.dialog-box {
+    background: linear-gradient(135deg, rgba(24, 37, 51, 0.95), rgba(14, 22, 33, 0.95));
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 400px;
+    width: 90%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    animation: dialogSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes dialogSlideUp {
+    to {
+        transform: scale(1);
+    }
+}
+
+.dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.dialog-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 59, 48, 0.2), rgba(255, 31, 31, 0.2));
+    border: 3px solid rgba(255, 59, 48, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #ff6b6b;
+}
+
+.dialog-title {
+    flex: 1;
+    font-size: 24px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.dialog-message {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.dialog-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+}
+
+.dialog-btn {
+    padding: 14px 28px;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 120px;
+}
+
+.dialog-btn.cancel {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.dialog-btn.cancel:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.dialog-btn.confirm {
+    background: linear-gradient(135deg, #ff3b30, #ff1f1f);
+    color: white;
+    box-shadow: 0 5px 20px rgba(255, 59, 48, 0.3);
+}
+
+.dialog-btn.confirm:hover {
+    background: linear-gradient(135deg, #ff1f1f, #ff0000);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 59, 48, 0.4);
+}
+
+/* КРАСИВЫЕ ПРОМПТЫ И АЛЕРТЫ */
+.custom-prompt {
+    background: linear-gradient(135deg, rgba(24, 37, 51, 0.95), rgba(14, 22, 33, 0.95));
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 32px;
+    max-width: 400px;
+    width: 90%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+}
+
+.custom-prompt-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.custom-prompt-input {
+    width: 100%;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 24px;
+    transition: all 0.3s;
+    backdrop-filter: blur(10px);
+}
+
+.custom-prompt-input:focus {
+    outline: none;
+    border-color: #0088cc;
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 0 4px rgba(0, 136, 204, 0.2);
+}
+
+.custom-prompt-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+/* КНОПКИ ДОЛЖНЫ БЫТЬ КЛИКАБЕЛЬНЫМИ */
+.clickable {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+.no-click {
+    pointer-events: none !important;
+    opacity: 0.5 !important;
+}
+
+/* ИСПРАВЛЕНИЕ Z-INDEX */
+.menu-item,
+.chat-item,
+.chat-action-btn,
+.input-action-btn,
+.send-button,
+.modal-close,
+.settings-close,
+.notification-close {
+    z-index: 1 !important;
+}
+
+/* ПРЕДОТВРАЩЕНИЕ ПЕРЕКРЫТИЯ */
+.user-profile,
+.chat-contact,
+.avatar-preview {
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* ПРОЗРАЧНОСТЬ ДЛЯ НЕАКТИВНЫХ ЭЛЕМЕНТОВ */
+.chat-action-btn:disabled,
+.input-action-btn:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+/* ХОВЕР ЭФФЕКТЫ ДЛЯ КНОПОК */
+.menu-item:hover,
+.chat-action-btn:hover,
+.input-action-btn:hover,
+.send-button:hover,
+.modal-btn:hover,
+.dialog-btn:hover,
+.confirm-btn:hover {
+    transform: translateY(-2px) !important;
+    transition: all 0.3s ease !important;
+}
